@@ -20,12 +20,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //이렇게 한번에 선언해줘도 되고.
         let searchVC = UINavigationController(rootViewController: SearchController()) // 맨 처음 보여줄 ViewController
         //이렇게 두줄에 걸쳐 해도 된다.
-        let playerVC = TopPlayerController()
-        let navigationController = UINavigationController(rootViewController: playerVC) // 내비게이션 컨트롤러에 처음으로 보여질 화면을 rootView로 지정해주고!
+        let CommissionVC = CommissionController()
+        let navigationController = UINavigationController(rootViewController: CommissionVC) // 내비게이션 컨트롤러에 처음으로 보여질 화면을 rootView로 지정해주고!
 
         //이것만 해놓으면 탭바는 만들어져있지만 탭바아이템이 설정되어있지않아 아무것도 출력도지 않는다.
         let tabbarController = UITabBarController()
-        tabbarController.setViewControllers([searchVC, playerVC], animated: true)
+        tabbarController.setViewControllers([searchVC, navigationController], animated: true)
         
         
         //그래서 탭바아이템 설정을 해준다.
@@ -34,9 +34,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             tabbarItem[0].selectedImage = UIImage(systemName: "person.fill")
             tabbarItem[0].title = "유저검색"
             
-            tabbarItem[1].image = UIImage(systemName: "star")
-            tabbarItem[1].selectedImage = UIImage(systemName: "star.fill")
-            tabbarItem[1].title = "인기선수"
+            tabbarItem[1].image = UIImage(systemName: "gear")
+            tabbarItem[1].selectedImage = UIImage(systemName: "gear.fill")
+            tabbarItem[1].title = "수수료계산기"
         }
         
         /*
