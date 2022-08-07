@@ -12,6 +12,7 @@ import Then    //라이브러리 설정에 용이한 오픈소스
 import RxSwift
 import RxCocoa
 
+//후에 선수들의 값이 더 높아지면 Int64나 UInt를 써야할거같다.
 class CommissionController: UIViewController {
     
     //네비게이션아이템은 네비게이션바안에 있기 떄문에 이곳에서 직접 설정은 불가능 하다.
@@ -74,6 +75,8 @@ class CommissionController: UIViewController {
         $0.textColor = .black
         $0.borderStyle = .bezel
         $0.textAlignment = .right
+        //터치시 입력 방지.
+        $0.isUserInteractionEnabled = false
     }
     
     let discountamountLabel = UILabel().then {
@@ -98,6 +101,7 @@ class CommissionController: UIViewController {
         $0.textColor = .black
         $0.borderStyle = .bezel
         $0.textAlignment = .right
+        $0.isUserInteractionEnabled = false
     }
     
     let receiveLabel = UILabel().then {
@@ -155,35 +159,43 @@ class CommissionController: UIViewController {
         
         configure()
         cashTextField.delegate = self
-        
+        couponTextField.delegate = self
     
         //이벤트가 발생했을 때
-        couponTextField.rx.controlEvent([.editingChanged])
-            .asObservable()
-            .subscribe(onNext: {_ in
-                print("터치되었다")
-            }).disposed(by: bag)
-
-        //다른 텍스트필드에의해 바뀔떈 호출안된다.
-//        receiveTextField.rx.controlEvent([.editingChanged])
+//        discountamountTextField.rx.controlEvent([.editingChanged])
 //            .asObservable()
 //            .subscribe(onNext: {_ in
-//                print("변경되었다")
+//                print("터치되었다")
 //            }).disposed(by: bag)
 
-        
+        //delegate에 의해 이것들은 값이 nil때만 호출이 된다.
         //textfield.rx.text의 변경이 있을 때
-//        receiveTextField.rx.text
+//        cashTextField.rx.text
 //            .subscribe(onNext: { newValue in
-//                print("리시브변경됨")
 //                //self.receiveTextField.text = self.changeValue(self.receiveTextField.text)
-//            print(newValue)
+//                print(newValue)
 //            }).disposed(by: bag)
+        
+        //textfield.text는 옵셔널 값을 반환하기 떄문에 orEmpty를 써보자
+//        cashTextField.rx.text.orEmpty
+//            .skip(1)  //공백없애기
+//            .subscribe(onNext: { newValue in
+//                self.receiveTextField.text = nil
+//                self.discountamountTextField.text = nil
+//            }).disposed(by: bag)
+        
+        //값이 변경됐을'때만' 호출.
+        cashTextField.rx.text.orEmpty
+            .distinctUntilChanged()
+            .subscribe(onNext: { newValue in
+                print("언틸체인지드 호출됨")
+                
+            }).disposed(by: bag)
         
         //textfield.text의 변경이 있을 때
         cashTextField.rx.observe(String.self, "text")
             .subscribe(onNext: {_ in
-                //입력이 될때마다 culc호출.
+                //입력이 될때마다 culc호출
                 self.culc()
             }).disposed(by: bag)
         
@@ -195,18 +207,14 @@ class CommissionController: UIViewController {
                 }
             }).disposed(by: bag)
         
+        //선택이 안됐을때도 호출이 되네..
         discountSegControl.rx.selectedSegmentIndex
             .subscribe(onNext: {_ in
                 print("segcontrol 인덱스 값이 변경됨")
                 self.culc()
             }).disposed(by: bag)
         
-        receiveTextField.rx.observe(String.self, "text")
-            .subscribe(onNext: {newValue in
-                //입력이 될때마다 culc호출.
-                print("받을금액 변경됨")
-            }).disposed(by: bag)
-        
+        //취소버튼 눌렀을때
         cancelBtn.rx.tap
             .subscribe(onNext: {_ in
                 self.cashTextField.text = nil
@@ -214,6 +222,7 @@ class CommissionController: UIViewController {
                 self.discountamountTextField.text = nil
                 self.receiveTextField.text = nil
             }).disposed(by: bag)
+        
         
     }
     
@@ -224,6 +233,23 @@ class CommissionController: UIViewController {
             self.couponTextField.text = String(count[..<index])
         }
     }
+
+    
+    func changeValue(_ change: String?) -> String {
+        var returnValue = ""
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal // 1,000,000
+        formatter.locale = Locale.current
+        formatter.maximumFractionDigits = 0 // 허용하는 소숫점 자리수
+
+        if let receiveChange = change {
+            if let changeInt = Int(receiveChange) {
+                returnValue = formatter.string(from: NSNumber(value: changeInt))!
+            }
+        }
+        return returnValue
+    }
     
     func culc() {
         var cash = 0
@@ -231,8 +257,8 @@ class CommissionController: UIViewController {
         //,를 줄이기 위해.
         let filtered = self.cashTextField.text?.description.replacingOccurrences(of: ",", with: "")
         
+        
         if let personcash = filtered {
-            
             if let filtercash = Double(personcash) {
                 print(filtercash)
                 let baseCommission = Int(filtercash * 0.6)
@@ -245,24 +271,33 @@ class CommissionController: UIViewController {
                 //기본 수수료는 40% , 그러니 기본으로 받는가격은 60%
                 //let commission = Double(filtercash * 0.4)
                 //let culcCash = commission * useCoupon
-
+                //수수료자체 할인인것. 예를들어 수수료가 4천만원인 상태에서 50퍼 쿠폰을쓰면 수수료 2천만 할인.
             }
         }
         
-        self.receiveTextField.text = String(culc)
+        //self.receiveTextField.text = String(culc)
         
         //받을금액 , 찍기
-        var returnValue = ""
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal // 1,000,000
-        formatter.locale = Locale.current
-        formatter.maximumFractionDigits = 0 // 허용하는 소숫점 자리수
-        if let receiveChange = self.receiveTextField.text {
-            if let changeInt = Int(receiveChange) {
-                returnValue = formatter.string(from: NSNumber(value: changeInt))!
-            }
+//        var returnValue = ""
+//        let formatter = NumberFormatter()
+//        formatter.numberStyle = .decimal // 1,000,000
+//        formatter.locale = Locale.current
+//        formatter.maximumFractionDigits = 0 // 허용하는 소숫점 자리수
+//        if let receiveChange = self.receiveTextField.text {
+//            if let changeInt = Int(receiveChange) {
+//                returnValue = formatter.string(from: NSNumber(value: changeInt))!
+//            }
+//        }
+//        self.receiveTextField.text = returnValue
+        
+        //초기값 플레이스홀더
+        if culc == 0 {
+            self.discountamountTextField.text = nil
+            self.receiveTextField.text = nil
+        } else {
+        self.discountamountTextField.text = self.changeValue(String(culc))
+        self.receiveTextField.text = self.changeValue(String(culc))
         }
-        self.receiveTextField.text = returnValue
         
     }
     
