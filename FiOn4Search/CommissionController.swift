@@ -26,6 +26,11 @@ class CommissionController: UIViewController {
         $0.textColor = .black
         $0.borderStyle = .bezel
         $0.textAlignment = .right
+        
+        //숫자패드로 사용하기. 허나 이렇게하면 각 textfield에 추가해줘야한다.
+        //그래서 delegate에 한줄로 해결?...?.....그렇다기엔 delegate등록도 어차피 해야되니까..음...
+        //근데 다른용도로 쓰는 textfield가 존재할시엔 이렇게 따로 설정해주는게 맞는거같다.
+        //$0.keyboardType = .numberPad
     }
     
     let cashLabel = UILabel().then {
@@ -209,8 +214,8 @@ class CommissionController: UIViewController {
         
         //선택이 안됐을때도 호출이 되네..
         discountSegControl.rx.selectedSegmentIndex
-            .subscribe(onNext: {_ in
-                print("segcontrol 인덱스 값이 변경됨")
+            .subscribe(onNext: {index in
+                print("segcontrol 인덱스 값이 변경됨 : ", index)
                 self.culc()
             }).disposed(by: bag)
         
@@ -254,49 +259,54 @@ class CommissionController: UIViewController {
     func culc() {
         var cash = 0
         var culc = 0
+        var coupon:Double = 0
+        var segValue:Double = 0
+        var commission:Double = 0
         //,를 줄이기 위해.
         let filtered = self.cashTextField.text?.description.replacingOccurrences(of: ",", with: "")
+        let segfiltered = self.discountSegControl.selectedSegmentIndex
+        if segfiltered == 0 {
+            segValue = 0.3
+        } else if segfiltered == 1 {
+            segValue = 0.2
+        } else if segfiltered == 2 {
+            segValue = 0.5
+        } else { segValue = 0 }
+        //print(segfiltered)
+        //print(segValue)
         
-        
+        //기본 수수료를 계산한 가격 구하기.
         if let personcash = filtered {
             if let filtercash = Double(personcash) {
-                print(filtercash)
-                let baseCommission = Int(filtercash * 0.6)
-                culc = baseCommission
+                //print(filtercash)
+                let baseprice = Int(filtercash * 0.6)
+                let baseCommission = Double(filtercash * 0.4)
+                culc = baseprice
+                commission = baseCommission
             }
         }
 
+        //입력받은 수수료 쿠폰값을 저장.
         if let coupontext = self.couponTextField.text {
             if let useCoupon = Double(coupontext) {
+                coupon = useCoupon / 100
                 //기본 수수료는 40% , 그러니 기본으로 받는가격은 60%
-                //let commission = Double(filtercash * 0.4)
+//                let commission = Double(filtercash * 0.4)
                 //let culcCash = commission * useCoupon
                 //수수료자체 할인인것. 예를들어 수수료가 4천만원인 상태에서 50퍼 쿠폰을쓰면 수수료 2천만 할인.
             }
         }
         
-        //self.receiveTextField.text = String(culc)
-        
-        //받을금액 , 찍기
-//        var returnValue = ""
-//        let formatter = NumberFormatter()
-//        formatter.numberStyle = .decimal // 1,000,000
-//        formatter.locale = Locale.current
-//        formatter.maximumFractionDigits = 0 // 허용하는 소숫점 자리수
-//        if let receiveChange = self.receiveTextField.text {
-//            if let changeInt = Int(receiveChange) {
-//                returnValue = formatter.string(from: NSNumber(value: changeInt))!
-//            }
-//        }
-//        self.receiveTextField.text = returnValue
+        let discount = Int(commission * (coupon + segValue))
+        cash = culc + discount
         
         //초기값 플레이스홀더
         if culc == 0 {
             self.discountamountTextField.text = nil
             self.receiveTextField.text = nil
         } else {
-        self.discountamountTextField.text = self.changeValue(String(culc))
-        self.receiveTextField.text = self.changeValue(String(culc))
+            self.discountamountTextField.text = self.changeValue(String(discount))
+            self.receiveTextField.text = self.changeValue(String(cash))
         }
         
     }
