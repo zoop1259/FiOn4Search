@@ -42,7 +42,6 @@ class SearchController: UIViewController {
     //$0.text = "Data based on NEXON DEVELOPERS"
     private var viewModel = ProductViewModel()
     private var bag = DisposeBag()
-    var userName = ""
     //스토리보드로 라이브러리를 추가하는게 아니라 코드로 라이브러리를 추가해줘야하기 때문에.
     //let 이름 = 라이브러리이름 후에 () 로 개체로 만든다.
     
@@ -98,29 +97,23 @@ class SearchController: UIViewController {
         
         configure()
         bindTableViewData()
-//        searchBar.rx.text.orEmpty
-//            .subscribe(onNext: { text in
-//
-//                self.getId()
-//                print(text)
-//            }).disposed(by: bag)
+
         searchTextField.rx.text.orEmpty
             .subscribe(onNext: { count in
                 //입력이 될때마다 culc호출
                 self.userNameCount(count)
                 print(count)
-                
+                userSerialNumber = count
             }).disposed(by: bag)
         
         searchBtn.rx.tap
             .subscribe(onNext: {_ in
-                self.getUserId()
+                getUserId()
+                
             }).disposed(by: bag)
     }
         
         
-    
-    
     //MARK: - configure
     func configure() {
         //요소가 보이는 부분은 view다.
@@ -209,39 +202,7 @@ class SearchController: UIViewController {
 //            }.disposed(by: bag)
 //    }
     
-    func getUserId() {
-        /*
-         Type      KeyName          Content Type
-         Header    Authorization    String
-         */
-//        let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname=아프리카TV규직"
-        let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname="
-        let url = urlString + userName
-        //이게 기본 방식.
-//        let headers: HTTPHeaders = [
-//            "Content-Type": "String",
-//            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE0MDkzMDI3MDAiLCJhdXRoX2lkIjoiMiIsImV4cCI6MTY3NDg5NjIxMCwiaWF0IjoxNjU5MzQ0MjEwLCJuYmYiOjE2NTkzNDQyMTAsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.nwgL3AMU216uu88opO2R4br3uMRE1_86V9w0Uh7TbN0"
-//            "Accept": "application/json",
-//            "Content-Type": "application/json"
-//        ]
-        
-        //그런데 이렇게 해도 된다. 이게 더 이쁜듯...
-        let headers: HTTPHeaders = [.authorization("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE0MDkzMDI3MDAiLCJhdXRoX2lkIjoiMiIsImV4cCI6MTY3NDg5NjIxMCwiaWF0IjoxNjU5MzQ0MjEwLCJuYmYiOjE2NTkzNDQyMTAsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.nwgL3AMU216uu88opO2R4br3uMRE1_86V9w0Uh7TbN0")]
-     
-//        AF.request(url + searchBar.text!, headers: headers)
-//            .responseJSON { response in
-//                print(response)
-//            }
-        AF.request(url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get ,headers: headers)
-            .response { response in
-                switch response.result {
-                case .success:
-                    print(response)
-                case .failure(let error):
-                    print(error)
-                }
-            }
-    }
+
     
     func userNameCount(_ count: String) {
         //15자 이상 입력 방지.
