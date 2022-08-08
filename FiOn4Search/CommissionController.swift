@@ -438,3 +438,20 @@ extension CommissionController: UITextFieldDelegate {
         return true
     }
 }
+
+
+
+
+
+
+
+
+
+
+/*
+ 
+ 문자 필터링을 extension이 아닌 함수로 해버리고 싶긴하다.
+ 
+ 
+ 
+ */
