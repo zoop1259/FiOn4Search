@@ -50,7 +50,7 @@ func getUserId() {
 //                print(response)
 //            }
     AF.request(url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get ,headers: headers)
-        .responseString { response in
+        .responseJSON { response in
             switch response.result {
             case .success(let res):
                 print("res: ", res)
