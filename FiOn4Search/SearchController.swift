@@ -4,6 +4,7 @@
 //
 //  Created by 강대민 on 2022/08/03.
 //
+//사용자들이 원하는 스쿼드 메이커??
 
 import UIKit
 
@@ -13,6 +14,7 @@ import RxSwift
 import RxCocoa
 import SwiftyJSON
 import Alamofire
+import CloudKit
 
 //임시모델
 struct Product {
@@ -51,7 +53,7 @@ class SearchController: UIViewController {
 
     //1:1공식경기와 2:2공식경기의 티어를 나타낼 페이지컨트롤
     let tierPageControl = UIPageControl().then {
-        $0.frame = CGRect(x: 50, y: 300, width: 200, height: 20)
+        $0.numberOfPages = 2
     }
     
     let searchTextField = UITextField().then {
@@ -64,7 +66,7 @@ class SearchController: UIViewController {
     lazy var searchBtn = UIButton().then {
         $0.tintColor = .black
         $0.backgroundColor = .white
-        $0.setTitle(" 검색 ", for: .normal)
+        $0.setTitle("검색", for: .normal)
         $0.setTitleColor(.black, for: .normal)
         $0.layer.cornerRadius = 10
         $0.layer.borderWidth = 0.5
@@ -153,6 +155,9 @@ class SearchController: UIViewController {
             $0.leading.equalToSuperview().offset(24)
             //trailing은 끝나는 방향 -24만큼 띄워져서 끝남?
             $0.trailing.equalToSuperview().offset(-24)
+            self.searchBtn.snp.makeConstraints {
+                $0.width.equalTo(50)
+            }
         }
 
         //UILabel
@@ -167,14 +172,17 @@ class SearchController: UIViewController {
             $0.leading.trailing.equalTo(self.searchstackView)
         }
         
-        //        self.tierPageControl.snp.makeConstraints {
-        //            $0.top.equalTo(self.searchBar.snp.bottom).offset(10)
-        //            $0.leading.trailing.equalTo(self.searchBar)
-        //        }
+        self.tierPageControl.snp.makeConstraints {
+            $0.top.equalTo(self.nameLabel.snp.bottom).offset(10)
+            $0.leading.trailing.equalToSuperview().offset(10)
+            //높이와 너비는 이런식으로!
+            $0.height.equalTo(150)
+            
+        }
         
         self.scoreTableView.snp.makeConstraints {
-            $0.top.equalTo(self.nameLabel.snp.bottom).offset(10)
-            $0.leading.trailing.equalTo(self.searchstackView)
+            $0.top.equalTo(self.tierPageControl.snp.bottom).offset(10)
+            $0.leading.trailing.equalTo(self.tierPageControl)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(10)
         }
 
@@ -252,7 +260,8 @@ class SearchController: UIViewController {
                         
         //티어 찾기.
         let tierUrl = baseUrl + "/\(urlList.accessId)/maxdivision"
-        AF.request(tierUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get, headers: headers).responseJSON { tier in
+        AF.request(tierUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get, headers: headers)
+            .responseJSON { tier in
             print("tierUrl", tierUrl)
             switch tier.result {
             case .success(let tiers):
@@ -260,9 +269,16 @@ class SearchController: UIViewController {
                 print("tiers:", tiers)
                 do {
                     let tierJSON = try JSONSerialization.data(withJSONObject: tiers, options: .prettyPrinted)
-                    let tierList = try JSONDecoder().decode(Tier.self, from: tierJSON)
+                    let tierList = try JSONDecoder().decode([TierInfo].self, from: tierJSON)
                     
                     print(tierList)
+                    
+                    for i in tierList {
+                        print(i.division)
+                        
+                    }
+                    
+                    
                     
                 } catch {
                     //나중에 페이저뷰를 가리고 라벨 띄우게.

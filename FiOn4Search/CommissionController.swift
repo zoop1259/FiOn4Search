@@ -26,6 +26,8 @@ class CommissionController: UIViewController {
         $0.textColor = .black
         $0.borderStyle = .bezel
         $0.textAlignment = .right
+        $0.keyboardType = .decimalPad
+        //textField.keyboardType = .decimalPad
         
         //숫자패드로 사용하기. 허나 이렇게하면 각 textfield에 추가해줘야한다.
         //그래서 delegate에 한줄로 해결?...?.....그렇다기엔 delegate등록도 어차피 해야되니까..음...
@@ -51,10 +53,11 @@ class CommissionController: UIViewController {
     }
     
     let couponTextField = UITextField().then {
-        $0.placeholder = "수수료 쿠폰 %"
+        $0.placeholder = "수수료 쿠폰 % (Max: 50%)"
         $0.textColor = .black
         $0.borderStyle = .bezel
         $0.textAlignment = .right
+        $0.keyboardType = .decimalPad
     }
     
     let couponLabel = UILabel().then {
@@ -164,10 +167,9 @@ class CommissionController: UIViewController {
         
         configure()
         cashTextField.delegate = self
-        couponTextField.delegate = self
-    
+        
         //이벤트가 발생했을 때
-//        discountamountTextField.rx.controlEvent([.editingChanged])
+//        cashTextField.rx.controlEvent([.editingChanged])
 //            .asObservable()
 //            .subscribe(onNext: {_ in
 //                print("터치되었다")
@@ -177,7 +179,7 @@ class CommissionController: UIViewController {
         //textfield.rx.text의 변경이 있을 때
 //        cashTextField.rx.text
 //            .subscribe(onNext: { newValue in
-//                //self.receiveTextField.text = self.changeValue(self.receiveTextField.text)
+//                self.cashTextField.text = self.changeValue(newValue)
 //                print(newValue)
 //            }).disposed(by: bag)
         
@@ -190,27 +192,38 @@ class CommissionController: UIViewController {
 //            }).disposed(by: bag)
         
         //값이 변경됐을'때만' 호출.
-        cashTextField.rx.text.orEmpty
+//        cashTextField.rx.text.orEmpty
+//            .distinctUntilChanged()
+//            .subscribe(onNext: { newValue in
+//                print("cashTex가 변경됨 :", newValue)
+//                self.cashTextField.text = self.numberFormat(newValue)
+//                self.culc()
+//            }).disposed(by: bag)
+        
+        couponTextField.rx.text.orEmpty
             .distinctUntilChanged()
-            .subscribe(onNext: { newValue in
-                print("언틸체인지드 호출됨")
-                
-            }).disposed(by: bag)
-        
-        //textfield.text의 변경이 있을 때
-        cashTextField.rx.observe(String.self, "text")
-            .subscribe(onNext: {_ in
-                //입력이 될때마다 culc호출
-                self.culc()
-            }).disposed(by: bag)
-        
-        couponTextField.rx.observe(String.self, "text")
             .subscribe(onNext: {count in
+                print("couponTextField가 변경됨 :", count)
                 if let count = self.couponTextField.text {
                     self.couponCount(count)
                     self.culc()
                 }
             }).disposed(by: bag)
+        
+       //textfield.text의 변경이 있을 때
+        cashTextField.rx.observe(String.self, "text")
+            .subscribe(onNext: {str in
+                //입력이 될때마다 culc호출
+                self.culc()
+            }).disposed(by: bag)
+        
+//        couponTextField.rx.observe(String.self, "text")
+//            .subscribe(onNext: {count in
+//                if let count = self.couponTextField.text {
+//                    self.couponCount(count)
+//                    self.culc()
+//                }
+//            }).disposed(by: bag)
         
         //선택이 안됐을때도 호출이 되네..
         discountSegControl.rx.selectedSegmentIndex
@@ -226,19 +239,23 @@ class CommissionController: UIViewController {
                 self.couponTextField.text = nil
                 self.discountamountTextField.text = nil
                 self.receiveTextField.text = nil
+                self.discountSegControl.selectedSegmentIndex = -1
             }).disposed(by: bag)
-        
-        
     }
     
+    
+    //MARK: - 여기서부터 계산에 필요한 함수들
     func couponCount(_ count: String) {
         //100퍼 이상 할인은 없기 떄문에 2자리수로 제한.
         if count.count > 2 {
             let index = count.index(count.startIndex, offsetBy: 2)
             self.couponTextField.text = String(count[..<index])
         }
+        
+        if Int(count) ?? 0 >= 51 {
+            self.couponTextField.text = String("50")
+        }
     }
-
     
     func changeValue(_ change: String?) -> String {
         var returnValue = ""
@@ -377,6 +394,7 @@ class CommissionController: UIViewController {
     }
 }
 
+
 //MARK: - TextFieldDelegate
 extension CommissionController: UITextFieldDelegate {
     
@@ -393,8 +411,10 @@ extension CommissionController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        //숫자용 키패드
-        textField.keyboardType = .decimalPad
+        //현재 100경까지만. 나중에 선수값이 기하급수적으로 오르면 culc에서 int를 수정해야함.
+        if textField.text?.count ?? 0 >= 25 {
+            return false
+        }
         
         //단순히 숫자만 입력받기
 //        let allowedCharacters = CharacterSet.decimalDigits
