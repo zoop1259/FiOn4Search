@@ -42,6 +42,7 @@ class SearchController: UIViewController {
     //$0.text = "Data based on NEXON DEVELOPERS"
     private var viewModel = ProductViewModel()
     private var bag = DisposeBag()
+    var userNickName = ""
     //스토리보드로 라이브러리를 추가하는게 아니라 코드로 라이브러리를 추가해줘야하기 때문에.
     //let 이름 = 라이브러리이름 후에 () 로 개체로 만든다.
     
@@ -103,14 +104,21 @@ class SearchController: UIViewController {
                 //입력이 될때마다 culc호출
                 self.userNameCount(count)
                 print(count)
-                userSerialNumber = count
+                self.userNickName = count
             }).disposed(by: bag)
         
         searchBtn.rx.tap
             .subscribe(onNext: {_ in
-                getUserId()
-                
+                //getUserId()
+                self.MaingetUserId()
             }).disposed(by: bag)
+        
+//        nameLabel.rx.observe(String.self, "text")
+//            .subscribe(onNext: { text in
+//                print("nameLabel 변경됨")
+//                self.nameLabel.textColor = .black
+//            }).disposed(by: bag)
+        
     }
         
         
@@ -212,7 +220,45 @@ class SearchController: UIViewController {
         }
     }
     
-    
+    func MaingetUserId() {
+        var userSerialNumber = ""
+        var accessId = ""
+        var level = 0
+
+        let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname="
+        
+        print("닉네임 : ", userNickName)
+        let url = urlString + userNickName
+        
+        //그런데 이렇게 해도 된다. 이게 더 이쁜듯...
+        let headers: HTTPHeaders = [.authorization("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE0MDkzMDI3MDAiLCJhdXRoX2lkIjoiMiIsImV4cCI6MTY3NDg5NjIxMCwiaWF0IjoxNjU5MzQ0MjEwLCJuYmYiOjE2NTkzNDQyMTAsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.nwgL3AMU216uu88opO2R4br3uMRE1_86V9w0Uh7TbN0")]
+     
+        AF.request(url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get ,headers: headers)
+            .responseJSON { response in
+                switch response.result {
+                case .success(let res):
+                    //print("res: ", res)
+                    do {
+                        let dataJSON = try JSONSerialization.data(withJSONObject: res, options: .prettyPrinted)
+                        let urlList = try JSONDecoder().decode(UserInfo.self, from: dataJSON)
+                        //print("액세스 아이디: ",urlList.accessId)
+                        accessId = urlList.accessId
+                        level = urlList.level
+                        self.nameLabel.text = "\(self.userNickName)  \(urlList.level)"
+                        self.nameLabel.textColor = .black
+                    } catch {
+                        self.nameLabel.textColor = .red
+                        self.nameLabel.text = "아이디가 없습니다."
+                    }
+                    
+                case .failure(let error):
+                    print(error)
+                }
+                //여기까진 데이터가 남는군.
+                print("과연 밖에서도 데이터가 연결될까? :", accessId)
+            }
+        //여기선 데이터 증발
+    }
 }
 
 

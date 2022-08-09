@@ -10,18 +10,18 @@ import Alamofire
 import SwiftyJSON
 import UIKit
 
-//func getId() {
-//
-//    let url = API.BASE_URL
-//    AF.request(
-//
-//}
+
+
+/*
 var searchData = SearchController()
-var userSerialNumber = ""
-var accessId = ""
-var level = 0
+var userNickName = ""
 
 func getUserId() {
+    var userSerialNumber = ""
+    var accessId = ""
+    var level = 0
+
+    
     /*
      Type      KeyName          Content Type
      Header    Authorization    String
@@ -31,8 +31,8 @@ func getUserId() {
     
    // guard let data = sear
     
-    print("닉네임 : ", userSerialNumber)
-    let url = urlString + userSerialNumber
+    print("닉네임 : ", userNickName)
+    let url = urlString + userNickName
     
     //이게 기본 방식.
 //        let headers: HTTPHeaders = [
@@ -53,21 +53,29 @@ func getUserId() {
         .responseJSON { response in
             switch response.result {
             case .success(let res):
-                print("res: ", res)
+                //print("res: ", res)
                 do {
                     let dataJSON = try JSONSerialization.data(withJSONObject: res, options: .prettyPrinted)
-                    let urlList = try JSONDecoder().decode(UserId.self, from: dataJSON)
-                    print("액세스 아이디: ",urlList.accessId)
+                    let urlList = try JSONDecoder().decode(UserInfo.self, from: dataJSON)
+                    //print("액세스 아이디: ",urlList.accessId)
+                    accessId = urlList.accessId
+                    level = urlList.level
+            
+                    searchData.nameLabel.text! = "\(userNickName)  \(urlList.level)"
+                    print(searchData.nameLabel.text)
+
                 } catch {
+                    print("아이디가 없습니다.")
                 }
-
-
+                
             case .failure(let error):
                 print(error)
             }
+            //여기까진 데이터가 남는군.
+            print("과연 밖에서도 데이터가 연결될까? :", accessId)
         }
-                
+    //여기선 데이터 증발
 }
-    
+*/
 
 
