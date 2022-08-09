@@ -221,57 +221,22 @@ class SearchController: UIViewController {
     }
     
     func MaingetUserId() {
-        var userSerialNumber = ""
         var accessId = ""
-        var level = 0
+        
+        let baseUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users"
+        let accessUrl = baseUrl + "?nickname=" + userNickName
+        let matchUrl = baseUrl + "/\(accessId)/matches?matchtype=50&offset=0&limit=10"
+       // let matchInfoUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/matches/" + matchId
 
-        let tierUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users/eb70ee1d2d036a119ec6682c/maxdivision"
-        /*
-         [
-                 {
-                         "matchType": 50,
-                         "division": 800,
-                         "achievementDate": "2020-08-23T12:39:59"
-                 },
-                 {
-                         "matchType": 52,
-                         "division": 900,
-                         "achievementDate": "2021-02-01T19:00:57"
-                 }
-         ]
-         */
         let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname="
-        /*
-         {
-                 "accessId": "eb70ee1d2d036a119ec6682c",
-                 "nickname": "아프리카TV규직",
-                 "level": 1583
-         }
-         */
-        
-        let matchId = "https://api.nexon.co.kr/fifaonline4/v1.0/users/eb70ee1d2d036a119ec6682c/matches?matchtype=50&offset=0&limit=10"
-        /*
-         [ //offset이 최근경기 //limit 최근경기 몇경기?
-                 "62f11f9b948c1e080f85055b",
-                 "62f11d26e19d9d86cf78fc40",
-                 "62f119fcb84fd533db451bcb",
-                 "62f0eaecca720e6218e2eeb6",
-                 "62f0e5f655df3e4cd0fe5016",
-                 "62f0e3646703ac900db4f9ea",
-                 "62f0e0df14f42d1bbe8f3d51",
-                 "62f0de5158cc5450aef5c463",
-                 "62f0d6520a11bb1c41554e81",
-                 "62f0d3498d6342ce627f1ad0"
-         ]
-         */
-        
-        
+
         print("닉네임 : ", userNickName)
         let url = urlString + userNickName
         
         //그런데 이렇게 해도 된다. 이게 더 이쁜듯...
         let headers: HTTPHeaders = [.authorization("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE0MDkzMDI3MDAiLCJhdXRoX2lkIjoiMiIsImV4cCI6MTY3NDg5NjIxMCwiaWF0IjoxNjU5MzQ0MjEwLCJuYmYiOjE2NTkzNDQyMTAsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.nwgL3AMU216uu88opO2R4br3uMRE1_86V9w0Uh7TbN0")]
      
+        //AccessId 찾기.
         AF.request(url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get ,headers: headers)
             .responseJSON { response in
                 switch response.result {
@@ -285,7 +250,28 @@ class SearchController: UIViewController {
                         self.nameLabel.text = "\(self.userNickName)  \(urlList.level)"
                         self.nameLabel.textColor = .black
                         
-                        AF.request(<#T##convertible: URLConvertible##URLConvertible#>)
+        //티어 찾기.
+        let tierUrl = baseUrl + "/\(urlList.accessId)/maxdivision"
+        AF.request(tierUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get, headers: headers).responseJSON { tier in
+            print("tierUrl", tierUrl)
+            switch tier.result {
+            case .success(let tiers):
+                
+                print("tiers:", tiers)
+                do {
+                    let tierJSON = try JSONSerialization.data(withJSONObject: tiers, options: .prettyPrinted)
+                    let tierList = try JSONDecoder().decode(Tier.self, from: tierJSON)
+                    
+                    print(tierList)
+                    
+                } catch {
+                    //나중에 페이저뷰를 가리고 라벨 띄우게.
+                    print(error)
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
                         
                     } catch {
                         self.nameLabel.textColor = .red
