@@ -154,19 +154,7 @@ class SearchController: UIViewController {
             //trailing은 끝나는 방향 -24만큼 띄워져서 끝남?
             $0.trailing.equalToSuperview().offset(-24)
         }
-        
-//        self.tierPageControl.snp.makeConstraints {
-//            $0.top.equalTo(self.searchBar.snp.bottom).offset(10)
-//            $0.leading.trailing.equalTo(self.searchBar)
-//        }
-        
-        self.scoreTableView.snp.makeConstraints {
-            $0.top.equalTo(self.searchstackView.snp.bottom).offset(10)
-            $0.leading.trailing.equalTo(self.searchstackView)
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(10)
-        }
-        
-        
+
         //UILabel
         self.nameLabel.snp.makeConstraints {
             //nameLabel의 위치는 nameTextfield의 아래에 위치하기 때문에
@@ -178,6 +166,18 @@ class SearchController: UIViewController {
             //만약 좌우를 같게 설정한다면 아래처럼 줄여서 쓸 수 있다.
             $0.leading.trailing.equalTo(self.searchstackView)
         }
+        
+        //        self.tierPageControl.snp.makeConstraints {
+        //            $0.top.equalTo(self.searchBar.snp.bottom).offset(10)
+        //            $0.leading.trailing.equalTo(self.searchBar)
+        //        }
+        
+        self.scoreTableView.snp.makeConstraints {
+            $0.top.equalTo(self.nameLabel.snp.bottom).offset(10)
+            $0.leading.trailing.equalTo(self.searchstackView)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(10)
+        }
+
     }
     
     func bindTableViewData() {
@@ -225,7 +225,46 @@ class SearchController: UIViewController {
         var accessId = ""
         var level = 0
 
+        let tierUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users/eb70ee1d2d036a119ec6682c/maxdivision"
+        /*
+         [
+                 {
+                         "matchType": 50,
+                         "division": 800,
+                         "achievementDate": "2020-08-23T12:39:59"
+                 },
+                 {
+                         "matchType": 52,
+                         "division": 900,
+                         "achievementDate": "2021-02-01T19:00:57"
+                 }
+         ]
+         */
         let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname="
+        /*
+         {
+                 "accessId": "eb70ee1d2d036a119ec6682c",
+                 "nickname": "아프리카TV규직",
+                 "level": 1583
+         }
+         */
+        
+        let matchId = "https://api.nexon.co.kr/fifaonline4/v1.0/users/eb70ee1d2d036a119ec6682c/matches?matchtype=50&offset=0&limit=10"
+        /*
+         [ //offset이 최근경기 //limit 최근경기 몇경기?
+                 "62f11f9b948c1e080f85055b",
+                 "62f11d26e19d9d86cf78fc40",
+                 "62f119fcb84fd533db451bcb",
+                 "62f0eaecca720e6218e2eeb6",
+                 "62f0e5f655df3e4cd0fe5016",
+                 "62f0e3646703ac900db4f9ea",
+                 "62f0e0df14f42d1bbe8f3d51",
+                 "62f0de5158cc5450aef5c463",
+                 "62f0d6520a11bb1c41554e81",
+                 "62f0d3498d6342ce627f1ad0"
+         ]
+         */
+        
         
         print("닉네임 : ", userNickName)
         let url = urlString + userNickName
@@ -243,9 +282,11 @@ class SearchController: UIViewController {
                         let urlList = try JSONDecoder().decode(UserInfo.self, from: dataJSON)
                         //print("액세스 아이디: ",urlList.accessId)
                         accessId = urlList.accessId
-                        level = urlList.level
                         self.nameLabel.text = "\(self.userNickName)  \(urlList.level)"
                         self.nameLabel.textColor = .black
+                        
+                        AF.request(<#T##convertible: URLConvertible##URLConvertible#>)
+                        
                     } catch {
                         self.nameLabel.textColor = .red
                         self.nameLabel.text = "아이디가 없습니다."
