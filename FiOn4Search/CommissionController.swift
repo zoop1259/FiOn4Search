@@ -192,13 +192,13 @@ class CommissionController: UIViewController {
 //            }).disposed(by: bag)
         
         //값이 변경됐을'때만' 호출.
-//        cashTextField.rx.text.orEmpty
-//            .distinctUntilChanged()
-//            .subscribe(onNext: { newValue in
-//                print("cashTex가 변경됨 :", newValue)
-//                self.cashTextField.text = self.numberFormat(newValue)
-//                self.culc()
-//            }).disposed(by: bag)
+        cashTextField.rx.text.orEmpty
+            .distinctUntilChanged()
+            .subscribe(onNext: { newValue in
+                print("cashTex가 변경됨 :", newValue)
+                //self.cashTextField.text = self.numberFormat(newValue)
+                //self.culc()
+            }).disposed(by: bag)
         
         couponTextField.rx.text.orEmpty
             .distinctUntilChanged()
@@ -208,7 +208,7 @@ class CommissionController: UIViewController {
                     self.couponCount(count)
                     self.culc()
                 }
-            }).disposed(by: bag)
+            }, onCompleted: {print("완료됨")}).disposed(by: bag)
         
        //textfield.text의 변경이 있을 때
         cashTextField.rx.observe(String.self, "text")
@@ -247,14 +247,14 @@ class CommissionController: UIViewController {
     //MARK: - 여기서부터 계산에 필요한 함수들
     func couponCount(_ count: String) {
         //100퍼 이상 할인은 없기 떄문에 2자리수로 제한.
-        if count.count > 2 {
+        if count.count >= 2 {
             let index = count.index(count.startIndex, offsetBy: 2)
             self.couponTextField.text = String(count[..<index])
         }
         
-        if Int(count) ?? 0 >= 51 {
+        if Int(count) ?? 0 >= 50 {
             self.couponTextField.text = String("50")
-        }
+        } 
     }
     
     func changeValue(_ change: String?) -> String {
@@ -314,6 +314,8 @@ class CommissionController: UIViewController {
             }
         }
         
+        
+        
         let discount = Int(commission * (coupon + segValue))
         cash = culc + discount
         
@@ -321,10 +323,13 @@ class CommissionController: UIViewController {
         if culc == 0 {
             self.discountamountTextField.text = nil
             self.receiveTextField.text = nil
+        } else if Int(coupon + segValue) == 1 {
+            self.receiveTextField.text = self.cashTextField.text
         } else {
             self.discountamountTextField.text = self.changeValue(String(discount))
             self.receiveTextField.text = self.changeValue(String(cash))
         }
+        
         
     }
     
@@ -409,6 +414,7 @@ extension CommissionController: UITextFieldDelegate {
 //        }
 //    }
     
+    //이렇게 힘들게 할 필요가 없었는데..
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         //현재 100경까지만. 나중에 선수값이 기하급수적으로 오르면 culc에서 int를 수정해야함.
@@ -459,6 +465,16 @@ extension CommissionController: UITextFieldDelegate {
     }
 }
 
+extension Int {
+    var comma: String {
+        let format = NumberFormatter()
+        format.numberStyle = .decimal
+        format.groupingSize = 3 //숫자 3자리마다
+        format.groupingSeparator = "," //,를 추가하겠다
+        
+        return format.string(from: self as NSNumber) ?? ""
+    }
+}
 
 
 
