@@ -85,6 +85,7 @@ class CommissionController: UIViewController {
         $0.textAlignment = .right
         //터치시 입력 방지.
         $0.isUserInteractionEnabled = false
+        $0.keyboardType = .decimalPad
     }
     
     let discountamountLabel = UILabel().then {
@@ -166,7 +167,7 @@ class CommissionController: UIViewController {
         view.backgroundColor = .white
         
         configure()
-        cashTextField.delegate = self
+        //cashTextField.delegate = self
         
         //이벤트가 발생했을 때
 //        cashTextField.rx.controlEvent([.editingChanged])
@@ -197,7 +198,15 @@ class CommissionController: UIViewController {
             .subscribe(onNext: { newValue in
                 print("cashTex가 변경됨 :", newValue)
                 //self.cashTextField.text = self.numberFormat(newValue)
-                //self.culc()
+                self.culc()
+                
+                let sort = newValue.filter("0123456789.".contains)
+                
+                if let intValue = Int(sort) {
+                       self.cashTextField.text = self.format(number: intValue)
+                }
+
+                
             }).disposed(by: bag)
         
         couponTextField.rx.text.orEmpty
@@ -211,11 +220,11 @@ class CommissionController: UIViewController {
             }, onCompleted: {print("완료됨")}).disposed(by: bag)
         
        //textfield.text의 변경이 있을 때
-        cashTextField.rx.observe(String.self, "text")
-            .subscribe(onNext: {str in
-                //입력이 될때마다 culc호출
-                self.culc()
-            }).disposed(by: bag)
+//        cashTextField.rx.observe(String.self, "text")
+//            .subscribe(onNext: {str in
+//                //입력이 될때마다 culc호출
+//                //self.culc()
+//            }).disposed(by: bag)
         
 //        couponTextField.rx.observe(String.self, "text")
 //            .subscribe(onNext: {count in
@@ -252,9 +261,22 @@ class CommissionController: UIViewController {
             self.couponTextField.text = String(count[..<index])
         }
         
-        if Int(count) ?? 0 >= 50 {
-            self.couponTextField.text = String("50")
-        } 
+        if let count = Int(count) {
+            if count >= 50 {
+                self.couponTextField.text = String("50")
+            }
+        }
+        
+//        if Int(count) ?? 0 > 49 {
+//            self.couponTextField.text = String("50")
+//        }
+    }
+    
+    func format(number: Int) -> String {
+        let format = NumberFormatter()
+        format.numberStyle = .decimal
+//        format.groupingSize = 3
+        return format.string(from: NSNumber(value: number))!
     }
     
     func changeValue(_ change: String?) -> String {
@@ -403,18 +425,7 @@ class CommissionController: UIViewController {
 //MARK: - TextFieldDelegate
 extension CommissionController: UITextFieldDelegate {
     
-    //터치시 플레이스홀더 지우기.
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        textField.placeholder = nil
-//    }
-    //입력이 없을시 플레이스홀더 되돌리기.
-//    func textFieldDidEndEditing(_ textField: UITextField) {
-//        if textField.text!.count == 0 {
-//            textField.placeholder = "선수금액"
-//        }
-//    }
-    
-    //이렇게 힘들게 할 필요가 없었는데..
+    //이 로직을 어떻게 rx로 구현할것인가.
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         //현재 100경까지만. 나중에 선수값이 기하급수적으로 오르면 culc에서 int를 수정해야함.
@@ -464,24 +475,6 @@ extension CommissionController: UITextFieldDelegate {
         return true
     }
 }
-
-extension Int {
-    var comma: String {
-        let format = NumberFormatter()
-        format.numberStyle = .decimal
-        format.groupingSize = 3 //숫자 3자리마다
-        format.groupingSeparator = "," //,를 추가하겠다
-        
-        return format.string(from: self as NSNumber) ?? ""
-    }
-}
-
-
-
-
-
-
-
 
 
 /*

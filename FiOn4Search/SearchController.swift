@@ -278,8 +278,7 @@ class SearchController: UIViewController {
                         
                     }
                     
-                    
-                    
+        //여기서 매칭 정보 구하기.
                 } catch {
                     //나중에 페이저뷰를 가리고 라벨 띄우게.
                     print(error)
