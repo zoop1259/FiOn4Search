@@ -41,6 +41,8 @@ struct ProductViewModel {
 
 class SearchController: UIViewController {
 
+    var mytier = 0
+    
     //$0.text = "Data based on NEXON DEVELOPERS"
     private var viewModel = ProductViewModel()
     private var bag = DisposeBag()
@@ -219,7 +221,7 @@ class SearchController: UIViewController {
 //    }
     
 
-    
+    //MARK: - 입력제한
     func userNameCount(_ count: String) {
         //15자 이상 입력 방지.
         if count.count > 15 {
@@ -228,6 +230,7 @@ class SearchController: UIViewController {
         }
     }
     
+    //MARK: - Fetch
     func MaingetUserId() {
         var accessId = ""
         
@@ -275,7 +278,10 @@ class SearchController: UIViewController {
                     
                     for i in tierList {
                         print(i.division)
+                        let a = i.division
                         
+                        tierFind(tier: i.division)
+                        print("구하려는 값 : ",tierFind(tier: i.division))
                     }
                     
         //여기서 매칭 정보 구하기.
@@ -312,4 +318,9 @@ class SearchController: UIViewController {
  4. 최근 전적.
  */
 
+/*
+ 리팩토링시에 해야할것 (후에 적용할것, 생각나는대로 적는중)
+ 1. API Manager
+ 
+ */
 

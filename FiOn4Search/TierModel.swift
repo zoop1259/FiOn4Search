@@ -7,6 +7,8 @@
 
 import Foundation
 
+let search = SearchController()
+
 // MARK: - WelcomeElement
 struct TierInfo: Codable {
     let matchType, division: Int
@@ -25,6 +27,15 @@ typealias Tier  = [TierInfo]
 //https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank3.png
 //    ....
 //이런식인듯.
+
+func tierFind(tier: Int) {
+    switch search.mytier {
+    case 800:
+        print("슈챔이다")
+    default:
+        print("언랭크")
+    }
+}
 
 /*
  
