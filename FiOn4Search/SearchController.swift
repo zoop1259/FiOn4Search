@@ -6,6 +6,24 @@
 //
 //사용자들이 원하는 스쿼드 메이커??
 
+/*
+ 서치 화면
+ 1. 선수 아이디로 검색
+ 2. 처음 줄 닉네임, 레벨? 정도.
+ 3. 현재 티어와, 최고 티어. //이걸 페이지컨트롤로 할지, 아니면 컬렉션뷰로 할지.
+ 4. 컬렉션뷰는 첫 프로젝트에서 사용해봤으니 페이징킷을 사용하여 한번 표현해보고 싶을뿐이다.
+ 5. 최근 전적.
+ */
+
+/*
+ 리팩토링시에 해야할것 (후에 적용할것, 생각나는대로 적는중). 라고하기엔 당장 시작하는것이 좋겠다.
+ 1. escaping 확실히 배우기 notification을 사용하지 않기 위함. (노티도 결국 escaping을 사용)
+ 2. escaping을 통해 textfield의 값을 전달하여 검색하는 api를 우선 생성
+ 3. 기본적인 api구성후 중복을 방지하고 클린코드를 위해 복잡한escaping을 통해 API Manager 생성하기
+ 4.
+ */
+
+
 import UIKit
 
 import SnapKit
@@ -47,6 +65,7 @@ class SearchController: UIViewController {
     private var viewModel = ProductViewModel()
     private var bag = DisposeBag()
     var userNickName = ""
+    var sendNickName = ""
     //스토리보드로 라이브러리를 추가하는게 아니라 코드로 라이브러리를 추가해줘야하기 때문에.
     //let 이름 = 라이브러리이름 후에 () 로 개체로 만든다.
     
@@ -102,6 +121,7 @@ class SearchController: UIViewController {
         
         configure()
         bindTableViewData()
+        tierFind()
 
         searchTextField.rx.text.orEmpty
             .subscribe(onNext: { count in
@@ -109,6 +129,7 @@ class SearchController: UIViewController {
                 self.userNameCount(count)
                 print(count)
                 self.userNickName = count
+                
             }).disposed(by: bag)
         
         searchBtn.rx.tap
@@ -190,6 +211,12 @@ class SearchController: UIViewController {
 
     }
     
+    //escaping쓰고싶어..
+//    func sendNick(complition: @escaping() -> Void) {
+//        self.sendNickName = complition
+//    }
+    
+    
     func bindTableViewData() {
         //세가지를 먼저 하고 싶다.
         //1. bind items to table
@@ -221,12 +248,25 @@ class SearchController: UIViewController {
 //    }
     
 
+    
+    
     //MARK: - 입력제한
     func userNameCount(_ count: String) {
         //15자 이상 입력 방지.
         if count.count > 15 {
             let index = count.index(count.startIndex, offsetBy: 15)
             self.searchTextField.text = String(count[..<index])
+        }
+    }
+    
+    //MARK: - Tier
+    //escaping을 통해 값을 받아와야함.
+    func tierFind(tier: Int) {
+        switch search.mytier {
+        case 800:
+            print("슈챔이다")
+        default:
+            print("언랭크")
         }
     }
     
@@ -258,7 +298,7 @@ class SearchController: UIViewController {
                         let urlList = try JSONDecoder().decode(UserInfo.self, from: dataJSON)
                         //print("액세스 아이디: ",urlList.accessId)
                         accessId = urlList.accessId
-                        self.nameLabel.text = "\(self.userNickName)  \(urlList.level)"
+                        self.nameLabel.text = "구단주 닉네임 : \(self.userNickName)  구단주 레벨 : \(urlList.level)"
                         self.nameLabel.textColor = .black
                         
         //티어 찾기.
@@ -280,8 +320,9 @@ class SearchController: UIViewController {
                         print(i.division)
                         let a = i.division
                         
-                        tierFind(tier: i.division)
-                        print("구하려는 값 : ",tierFind(tier: i.division))
+                        //탈출클로저가 필요하다.
+                        self.tierFind(tier: i.division)
+                        print("구하려는 값 : ",self.tierFind(tier: a))
                     }
                     
         //여기서 매칭 정보 구하기.
@@ -309,18 +350,4 @@ class SearchController: UIViewController {
     }
 }
 
-
-/*
- 서치 화면
- 1. 선수 아이디로 검색
- 2. 처음 줄 닉네임, 레벨? 정도.
- 3. 현재 티어와, 최고 티어.
- 4. 최근 전적.
- */
-
-/*
- 리팩토링시에 해야할것 (후에 적용할것, 생각나는대로 적는중)
- 1. API Manager
- 
- */
 

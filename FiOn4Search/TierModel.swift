@@ -28,15 +28,6 @@ typealias Tier  = [TierInfo]
 //    ....
 //이런식인듯.
 
-func tierFind(tier: Int) {
-    switch search.mytier {
-    case 800:
-        print("슈챔이다")
-    default:
-        print("언랭크")
-    }
-}
-
 /*
  
  [

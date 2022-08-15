@@ -10,6 +10,15 @@ import Alamofire
 import SwiftyJSON
 import UIKit
 
+
+var searchController = SearchController()
+var AFMNickName = searchController.searchTextField.text
+
+func printNick() {
+    if let nick = AFMNickName {
+        print("이거",nick)
+    }
+}
 /*
 var search = SearchController()
 
