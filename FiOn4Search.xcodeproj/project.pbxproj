@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C574E8B028AB6F1400F547A8 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C574E8AF28AB6F1400F547A8 /* ServiceManager.swift */; };
 		C58FB33928A1CBFD00E90968 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FB33828A1CBFD00E90968 /* UserModel.swift */; };
 		C58FB33B28A1FA5800E90968 /* TierModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FB33A28A1FA5800E90968 /* TierModel.swift */; };
 		C58FB33D28A1FA6100E90968 /* MatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FB33C28A1FA6100E90968 /* MatchModel.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C574E8AF28AB6F1400F547A8 /* ServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceManager.swift; sourceTree = "<group>"; };
 		C58FB33828A1CBFD00E90968 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		C58FB33A28A1FA5800E90968 /* TierModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierModel.swift; sourceTree = "<group>"; };
 		C58FB33C28A1FA6100E90968 /* MatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchModel.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				C58FB33C28A1FA6100E90968 /* MatchModel.swift */,
 				C58FB33E28A1FA7000E90968 /* MatchInfoModel.swift */,
 				C59954F828A0CD8B00D0D617 /* AlamofireManager.swift */,
+				C574E8AF28AB6F1400F547A8 /* ServiceManager.swift */,
 				C5995488289A36EF00D0D617 /* CommissionController.swift */,
 				C599547A289A32AB00D0D617 /* Assets.xcassets */,
 				C599547C289A32AB00D0D617 /* LaunchScreen.storyboard */,
@@ -188,6 +191,7 @@
 				C5995489289A36EF00D0D617 /* CommissionController.swift in Sources */,
 				C5995474289A32A700D0D617 /* SceneDelegate.swift in Sources */,
 				C59954F928A0CD8B00D0D617 /* AlamofireManager.swift in Sources */,
+				C574E8B028AB6F1400F547A8 /* ServiceManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

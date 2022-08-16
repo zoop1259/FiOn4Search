@@ -58,14 +58,12 @@ struct ProductViewModel {
 }
 
 class SearchController: UIViewController {
-
-    var mytier = 0
-    
+    public static let shared = SearchController()
+ 
     //$0.text = "Data based on NEXON DEVELOPERS"
     private var viewModel = ProductViewModel()
     private var bag = DisposeBag()
     var userNickName = ""
-    var sendNickName = ""
     //스토리보드로 라이브러리를 추가하는게 아니라 코드로 라이브러리를 추가해줘야하기 때문에.
     //let 이름 = 라이브러리이름 후에 () 로 개체로 만든다.
     
@@ -121,7 +119,7 @@ class SearchController: UIViewController {
         
         configure()
         bindTableViewData()
-        tierFind()
+        //tierFind()
 
         searchTextField.rx.text.orEmpty
             .subscribe(onNext: { count in
@@ -143,6 +141,18 @@ class SearchController: UIViewController {
 //                print("nameLabel 변경됨")
 //                self.nameLabel.textColor = .black
 //            }).disposed(by: bag)
+        
+        /*
+         ApiManager.shared.AFPokemos { (response) in
+             
+             if let pokemons = response.results, pokemons.count > 0 {
+                 print("af이름 : \(pokemons[0].name ?? "")")
+             }
+         } fail: {
+             print("패치 실패")
+         }
+         */
+        
         
     }
         
@@ -261,14 +271,35 @@ class SearchController: UIViewController {
     
     //MARK: - Tier
     //escaping을 통해 값을 받아와야함.
+    //(success: @escaping ((UserInfo) -> Void),
+//    func tierFind(tier: Int, complition: @escaping ((Int) -> Void)) {
+//        switch tier {
+//        case 800:
+//            print("슈챔이다", search.mytier)
+//        default:
+//            print("언랭크", search.mytier)
+//        }
+//    }
     func tierFind(tier: Int) {
-        switch search.mytier {
+        let str = "1:1 공경 division값\(tier)"
+        switch tier {
         case 800:
-            print("슈챔이다")
+            print("슈챔이다", str)
         default:
-            print("언랭크")
+            print("언랭크 ", str)
         }
     }
+    
+    func tierFind2(tier: Int) {
+        let str = "2:2 공경 division값\(tier)"
+        switch tier {
+        case 800:
+            print("슈챔이다", str)
+        default:
+            print("언랭크 ", str)
+        }
+    }
+    
     
     //MARK: - Fetch
     func MaingetUserId() {
@@ -318,11 +349,20 @@ class SearchController: UIViewController {
                     
                     for i in tierList {
                         print(i.division)
-                        let a = i.division
+                        //아프리카TV규직
+//                        print("모든정보? : ",findTier(rankType: i.matchType, tier: i.division))
                         
-                        //탈출클로저가 필요하다.
-                        self.tierFind(tier: i.division)
-                        print("구하려는 값 : ",self.tierFind(tier: a))
+//                        if i.matchType == 50 {
+//                            let a = i.division
+//                            self.tierFind(tier: a)
+////                            let b = self.tierFind(tier: a)
+////                            print("1:1 : ", b)
+//                        } else {
+//                            let c = i.division
+//                            self.tierFind2(tier: c)
+////                            let d = self.tierFind2(tier: c)
+////                            print("2:2 :", d)
+//                        }
                     }
                     
         //여기서 매칭 정보 구하기.

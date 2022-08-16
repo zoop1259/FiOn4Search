@@ -10,15 +10,22 @@ import Alamofire
 import SwiftyJSON
 import UIKit
 
+class AlamofireManager {
+    public static let shared = AlamofireManager()
 
-var searchController = SearchController()
-var AFMNickName = searchController.searchTextField.text
-
-func printNick() {
-    if let nick = AFMNickName {
-        print("이거",nick)
+    func AFPokemos(success: @escaping ((UserInfo) -> Void),
+                    fail: @escaping (() -> Void)) {
+        
+        ServiceManager.shared.AFService(urlString: "https://pokeapi.co/api/v2/pokemon/") { (response: UserInfo) in success(response)
+        } fail : {
+            fail()
+        }
     }
+
 }
+
+
+
 /*
 var search = SearchController()
 
