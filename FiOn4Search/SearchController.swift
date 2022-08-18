@@ -138,7 +138,8 @@ class SearchController: UIViewController {
         searchBtn.rx.tap
             .subscribe(onNext: {_ in
                 //getUserId()
-                self.MaingetUserId()
+                //self.MaingetUserId()
+                self.getRequest()
             }).disposed(by: bag)
         
 //        nameLabel.rx.observe(String.self, "text")
@@ -408,6 +409,72 @@ class SearchController: UIViewController {
             }
         //여기선 데이터 증발
     }
+    
+    
+    //MARK: - 제네릭 클로저
+    /// 통신 요청 (with Generic)
+    /// - Parameters:
+    ///     - dataType: Generic으로 선언된 자료형의 타입을 받는다.
+    ///     - complete: 클로저 - 성공시 T의 객체, 실패시 선언해둔 에러
+    func request<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,CustomError>)->())) {
+        
+        // 1. 위에 선언한 요청 메소드를 통해 NSDictionary를 받는다.
+        request(dataType: T.self) { result in
+            switch result {
+            case .success(let dict):
+                
+                // 2. 데이터 존재 확인
+//                guard let dicData = dict else {
+//                    // 데이터 미존재 에러
+//                    complete(.failure(.invalidData))
+//                    return
+//                }
+                
+                // 3. 얻은 NSDictionary를 JSON 데이터로 바꾼뒤 T형태로 Decode 해준다.
+                guard
+                    let json = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted),
+                    let data = try? JSONDecoder().decode(T.self, from: json)
+                else {
+                    // 4. Decode실패
+                    complete(.failure(.invalidState))
+                    return
+                }
+                
+                // 5. T 객체 생성 성공!
+                complete(.success(data))
+                
+            case .failure(let e):
+                // 6. Request 실패
+                complete(.failure(e))
+            }
+        }
+    }
+    
+    
+    func getRequest() {
+        let api = API.getAccessId(name: self.userNickName)
+        api.request { result in
+            print(result)
+            switch result {
+            case .success(let dict):
+                print(dict)
+                
+            case .failure(let e):
+                print(e)
+            }
+        }
+    }
+        
+        
+//        api.request(dataType: UserInfo.self) { result in
+//            switch result {
+//            case .success(let data):
+//                print(data)
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+    
 }
 
 
