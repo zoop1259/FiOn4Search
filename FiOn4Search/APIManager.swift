@@ -198,6 +198,41 @@ extension API {
             }
     }
     
+    func arrrequest<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,CustomError>)->())) {
+        
+        // 1. 위에 선언한 요청 메소드를 통해 NSDictionary를 받는다.
+        arrrequest { result in
+            //print(result)
+            switch result {
+            case .success(let dict):
+                
+                // 2. 데이터 존재 확인
+                guard let dicData = dict else {
+                    // 데이터 미존재 에러
+                    complete(.failure(.invalidData))
+                    return
+                }
+                
+                // 3. 얻은 NSDictionary를 JSON 데이터로 바꾼뒤 T형태로 Decode 해준다.
+                guard
+                    let json = try? JSONSerialization.data(withJSONObject: dicData, options: .prettyPrinted),
+                    let data = try? JSONDecoder().decode(T.self, from: json)
+                else {
+                    // 4. Decode실패
+                    complete(.failure(.invalidState))
+                    return
+                }
+                
+                // 5. T 객체 생성 성공!
+                complete(.success(data))
+                
+            case .failure(let e):
+                // 6. Request 실패
+                complete(.failure(e))
+            }
+        }
+    }
+    
     
 //    func apirequest<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,CustomError>)->())) {
 //

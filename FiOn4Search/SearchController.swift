@@ -434,22 +434,25 @@ class SearchController: UIViewController {
                 print(dict)
                 //티어찾기.
                 let tier = API.getTier(accessId: dict.accessId)
-//                tier.request(dataType: TierInfo.self) { tierresult in
-//                    switch tierresult {
-//                    case .success(let tier):
-//                        print(tier)
-//                    case .failure(let error):
-//                        print(error)
-//                    }
-//                }
-                tier.arrrequest { tierResult in
-                    switch tierResult {
-                    case .success(let tierdict):
-                        print("tier", tierdict)
+                tier.arrrequest(dataType: [TierInfo].self) { tierresult in
+                    switch tierresult {
+                    case .success(let tier):
+                        print(tier)
+                        for list in tier {
+                            
+                        }
                     case .failure(let error):
                         print(error)
                     }
                 }
+//                tier.arrrequest { tierResult in
+//                    switch tierResult {
+//                    case .success(let tierdict):
+//                        print("tier", tierdict)
+//                    case .failure(let error):
+//                        print(error)
+//                    }
+//                }
             case .failure(let error):
                 print(error)
             }
