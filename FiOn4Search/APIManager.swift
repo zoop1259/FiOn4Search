@@ -186,10 +186,13 @@ extension API {
                     // 성공
                     let a = dict as? NSDictionary
                     let b = dict as? NSArray
+                    //다운캐스팅 실패시 String으로
                     if a == nil && b == nil {
                         complete(.success(dict as? NSString))
+                    //딕셔너리 다운캐스팅 실패시 Array로
                     } else if a == nil {
                         complete(.success(dict as? NSArray))
+                    //어레이 다운캐스팅 실패시 Dictionary로
                     } else if b == nil {
                         complete(.success(dict as? NSDictionary))
                     }
