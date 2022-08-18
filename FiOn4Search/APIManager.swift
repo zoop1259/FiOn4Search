@@ -127,6 +127,40 @@ extension API {
             }
     }
     
+    func request<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,CustomError>)->())) {
+        
+        // 1. 위에 선언한 요청 메소드를 통해 NSDictionary를 받는다.
+        request { result in
+            switch result {
+            case .success(let dict):
+                
+                // 2. 데이터 존재 확인
+                guard let dicData = dict else {
+                    // 데이터 미존재 에러
+                    complete(.failure(.invalidData))
+                    return
+                }
+                
+                // 3. 얻은 NSDictionary를 JSON 데이터로 바꾼뒤 T형태로 Decode 해준다.
+                guard
+                    let json = try? JSONSerialization.data(withJSONObject: dicData, options: .prettyPrinted),
+                    let data = try? JSONDecoder().decode(T.self, from: json)
+                else {
+                    // 4. Decode실패
+                    complete(.failure(.invalidState))
+                    return
+                }
+                
+                // 5. T 객체 생성 성공!
+                complete(.success(data))
+                
+            case .failure(let e):
+                // 6. Request 실패
+                complete(.failure(e))
+            }
+        }
+    }
+    
 //    func apirequest<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,CustomError>)->())) {
 //
 //        // 1. 위에 선언한 요청 메소드를 통해 NSDictionary를 받는다.
@@ -162,3 +196,23 @@ extension API {
 //    }
     
 }
+
+/*
+ 본문을 참조하여 제가 사용하는 모델에 맞게 코드를 작성해보았습니다.
+ 작성도중 NS딕셔너리를 이용한 클로저는 정상적으로 작동이 됐습니다.
+ 그런데..제네릭을 이용한 클로저에서 오류가 발생했습니다.
+ func request<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,NetworkError>)->())) {
+  
+     // 1. 위에 선언한 요청 메소드를 통해 NSDictionary를 받는다.
+     request { result in     // <- 여기서 dataType관련하여 에러가 발생했습니다.
+
+ 바보처럼 (dataType: T.self) 이렇게 작성하고
+ 2번부분을 주석처리한후
+ 3번의 dictata를 dict로 변경하니
+
+ 에러가 발생한 라인에서 'function call causes an infinite recursion' 에러가 발생했습니다.
+
+ 역시나 실행했더니 동작이 멈췄습니다.
+
+ 제네릭과 escaping에 대해서 복습하고왔지만 아직도 원인을 모르겠습니다..
+ */
