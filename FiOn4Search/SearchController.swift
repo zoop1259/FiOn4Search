@@ -425,15 +425,33 @@ class SearchController: UIViewController {
 //    }
     
     func getRequest() {
-        let api = API.getAccessId(name: self.userNickName)
-        api.request(dataType: UserInfo.self) { result in
+        //엑세스아이디찾기
+        let accessid = API.getAccessId(name: self.userNickName)
+        accessid.request(dataType: UserInfo.self) { result in
             print(result)
             switch result {
             case .success(let dict):
                 print(dict)
-                
-            case .failure(let e):
-                print(e)
+                //티어찾기.
+                let tier = API.getTier(accessId: dict.accessId)
+//                tier.request(dataType: TierInfo.self) { tierresult in
+//                    switch tierresult {
+//                    case .success(let tier):
+//                        print(tier)
+//                    case .failure(let error):
+//                        print(error)
+//                    }
+//                }
+                tier.arrrequest { tierResult in
+                    switch tierResult {
+                    case .success(let tierdict):
+                        print("tier", tierdict)
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            case .failure(let error):
+                print(error)
             }
         }
     }
