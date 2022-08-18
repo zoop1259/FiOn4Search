@@ -165,7 +165,9 @@ extension API {
         }
     }
     
-    func arrrequest(complete: @escaping ((Result<NSArray?,CustomError>)->())) {
+    //배열로 시작하는 경우가 있었기 떄문에 제네릭값을 수정하여 원했던 결과를 받아낸다!
+    func arrrequest(complete: @escaping ((Result<Any?,CustomError>)->())) {
+//    func arrrequest(complete: @escaping ((Result<NSArray?,CustomError>)->())) {
         var url = domain
         
         let headers: HTTPHeaders = [.authorization("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE0MDkzMDI3MDAiLCJhdXRoX2lkIjoiMiIsImV4cCI6MTY3NDg5NjIxMCwiaWF0IjoxNjU5MzQ0MjEwLCJuYmYiOjE2NTkzNDQyMTAsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.nwgL3AMU216uu88opO2R4br3uMRE1_86V9w0Uh7TbN0")]
@@ -177,19 +179,28 @@ extension API {
         AF.request(url, method: method, parameters: parameter, headers: headers)
             .responseJSON { response in
                 print(url) //여기서 찾아낸 url에러!
-                print(response.result)
+                //print(response.result)
                 // 통신 결과 처리
                 switch response.result {
                 case .success(let dict):
                     // 성공
+                    let a = dict as? NSDictionary
+                    let b = dict as? NSArray
+                    if a == nil && b == nil {
+                        complete(.success(dict as? NSString))
+                    } else if a == nil {
+                        complete(.success(dict as? NSArray))
+                    } else if b == nil {
+                        complete(.success(dict as? NSDictionary))
+                    }
                     
-                    complete(.success(dict as? NSArray))
                 case .failure:
                     
                     // 결과는 없지만 statusCode에 따라 확인이 필요할 수 있음.
                     if let stCode = response.response?.statusCode, 200..<300 ~= stCode {
                         // 성공
                         complete(.success(nil))
+                        
                     } else {
                         // 진짜 실패
                         complete(.failure(.invalidState))

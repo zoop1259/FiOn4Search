@@ -427,7 +427,7 @@ class SearchController: UIViewController {
     func getRequest() {
         //엑세스아이디찾기
         let accessid = API.getAccessId(name: self.userNickName)
-        accessid.request(dataType: UserInfo.self) { result in
+        accessid.arrrequest(dataType: UserInfo.self) { result in
             print(result)
             switch result {
             case .success(let dict):
@@ -439,20 +439,38 @@ class SearchController: UIViewController {
                     case .success(let tier):
                         print(tier)
                         for list in tier {
-                            
+
                         }
                     case .failure(let error):
                         print(error)
                     }
                 }
-//                tier.arrrequest { tierResult in
-//                    switch tierResult {
-//                    case .success(let tierdict):
-//                        print("tier", tierdict)
-//                    case .failure(let error):
-//                        print(error)
-//                    }
-//                }
+                //매치 목록 id 구하기.
+                let matchId = API.getMatchId(accessId: dict.accessId, limit: 10)
+                matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
+                    switch matchIdresult {
+                    case .success(let matchIdresult):
+                        print("matchId fin:",matchIdresult)
+                        
+                        for match in matchIdresult  {
+
+                            //매치 정보 구하기.
+                            let matchInfo = API.getMatchInfo(matchId: match)
+                            matchInfo.arrrequest(dataType: Match.self) { matchresult in
+                                switch matchresult {
+                                case .success(let matchresult):
+                                    print(matchresult)
+                                case .failure(let error):
+                                    print(error)
+                                }
+
+                            }
+
+                        }
+                    case .failure(let error):
+                        print("matchId error : ",error)
+                    }
+                }
             case .failure(let error):
                 print(error)
             }
