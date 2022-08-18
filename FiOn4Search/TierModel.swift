@@ -123,8 +123,8 @@ func findTier(rankType: Int, tier: Int) {
             print("유망주3", str)
         default:
             print("언랭크 ", str)
+        }
     }
-
 }
 
 

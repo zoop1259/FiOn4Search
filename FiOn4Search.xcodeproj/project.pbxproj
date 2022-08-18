@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C574E8B028AB6F1400F547A8 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C574E8AF28AB6F1400F547A8 /* ServiceManager.swift */; };
+		C574E8B228ABDCB200F547A8 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C574E8B128ABDCB200F547A8 /* APIManager.swift */; };
 		C58FB33928A1CBFD00E90968 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FB33828A1CBFD00E90968 /* UserModel.swift */; };
 		C58FB33B28A1FA5800E90968 /* TierModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FB33A28A1FA5800E90968 /* TierModel.swift */; };
 		C58FB33D28A1FA6100E90968 /* MatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FB33C28A1FA6100E90968 /* MatchModel.swift */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		C574E8AF28AB6F1400F547A8 /* ServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceManager.swift; sourceTree = "<group>"; };
+		C574E8B128ABDCB200F547A8 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		C58FB33828A1CBFD00E90968 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		C58FB33A28A1FA5800E90968 /* TierModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierModel.swift; sourceTree = "<group>"; };
 		C58FB33C28A1FA6100E90968 /* MatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchModel.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				C5995471289A32A700D0D617 /* AppDelegate.swift */,
 				C5995473289A32A700D0D617 /* SceneDelegate.swift */,
 				C5995475289A32A700D0D617 /* SearchController.swift */,
+				C574E8B128ABDCB200F547A8 /* APIManager.swift */,
 				C58FB33828A1CBFD00E90968 /* UserModel.swift */,
 				C58FB33A28A1FA5800E90968 /* TierModel.swift */,
 				C58FB33C28A1FA6100E90968 /* MatchModel.swift */,
@@ -189,6 +192,7 @@
 				C5995472289A32A700D0D617 /* AppDelegate.swift in Sources */,
 				C58FB33928A1CBFD00E90968 /* UserModel.swift in Sources */,
 				C5995489289A36EF00D0D617 /* CommissionController.swift in Sources */,
+				C574E8B228ABDCB200F547A8 /* APIManager.swift in Sources */,
 				C5995474289A32A700D0D617 /* SceneDelegate.swift in Sources */,
 				C59954F928A0CD8B00D0D617 /* AlamofireManager.swift in Sources */,
 				C574E8B028AB6F1400F547A8 /* ServiceManager.swift in Sources */,

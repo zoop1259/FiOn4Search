@@ -112,6 +112,11 @@ class SearchController: UIViewController {
         $0.textColor = .lightGray
     }
     
+    
+    let baseUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users?"
+//        let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname="
+    let nickString = "nickName="
+    
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,11 +156,22 @@ class SearchController: UIViewController {
          } fail: {
              print("패치 실패")
          }
+         
+         func AFPokemos(success: @escaping ((UserInfo) -> Void),
+                         fail: @escaping (() -> Void)) {
+             
+             ServiceManager.shared.AFService(urlString: "https://pokeapi.co/api/v2/pokemon/") { (response: UserInfo) in success(response)
+             } fail : {
+                 fail()
+             }
+         }
          */
-        
         
     }
         
+    
+    
+    
         
     //MARK: - configure
     func configure() {
@@ -305,8 +321,9 @@ class SearchController: UIViewController {
     func MaingetUserId() {
         var accessId = ""
         
-        let baseUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users"
-        let accessUrl = baseUrl + "?nickname=" + userNickName
+        let baseUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users?"
+//        let nameUrl = baseUrl + "?nickname=" + userNickName
+//        let accessUrl = baseUrl + "/\(urlList.accessId)/maxdivision"
         let matchUrl = baseUrl + "/\(accessId)/matches?matchtype=50&offset=0&limit=10"
        // let matchInfoUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/matches/" + matchId
 
@@ -345,25 +362,28 @@ class SearchController: UIViewController {
                     let tierJSON = try JSONSerialization.data(withJSONObject: tiers, options: .prettyPrinted)
                     let tierList = try JSONDecoder().decode([TierInfo].self, from: tierJSON)
                     
-                    print(tierList)
-                    
+//                    print(tierList)
+                                        
                     for i in tierList {
                         print(i.division)
-                        //아프리카TV규직
-//                        print("모든정보? : ",findTier(rankType: i.matchType, tier: i.division))
+                        
+                        var a = self.tierFind(tier: i.division)
+                        print(a)
+                        
+//                        아프리카TV규직
                         
 //                        if i.matchType == 50 {
 //                            let a = i.division
 //                            self.tierFind(tier: a)
-////                            let b = self.tierFind(tier: a)
-////                            print("1:1 : ", b)
+//                            let b = self.tierFind(tier: a)
+//                            print("1:1 : ", b)
 //                        } else {
 //                            let c = i.division
 //                            self.tierFind2(tier: c)
 ////                            let d = self.tierFind2(tier: c)
 ////                            print("2:2 :", d)
 //                        }
-                    }
+                   }
                     
         //여기서 매칭 정보 구하기.
                 } catch {
