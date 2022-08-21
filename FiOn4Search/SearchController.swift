@@ -78,6 +78,9 @@ class SearchController: UIViewController {
     }
     
     //된다 이렇게하면?
+    //addSubview = 수직 추가?
+    //addArrangedSubview = 수평 추가?
+    //그러나 이미 초기화를 했다면 subView는 사용되지 않는다.
     let tierHorizontalStackView = UIStackView().then {
         $0.axis = .horizontal
         let tierLabel = UILabel()
@@ -85,9 +88,20 @@ class SearchController: UIViewController {
         let tierTimeLabel = UILabel()
         tierTimeLabel.text = "하이"
         
-        $0.addArrangedSubview(tierLabel)
-        $0.addArrangedSubview(tierTimeLabel)
-
+        let verticalstack = UIStackView()
+        verticalstack.axis = .vertical
+        verticalstack.addArrangedSubview(tierLabel)
+        verticalstack.addArrangedSubview(tierTimeLabel)
+        
+        //let tierUIView = UIView()
+        let tierImage = UIImageView()
+        tierImage.backgroundColor = .red
+//
+        $0.addArrangedSubview(verticalstack)
+        $0.addArrangedSubview(tierImage)
+        
+        
+        
     }
 
 
