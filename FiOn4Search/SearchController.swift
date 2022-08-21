@@ -74,7 +74,44 @@ class SearchController: UIViewController {
     //1:1공식경기와 2:2공식경기의 티어를 나타낼 페이지컨트롤
     let tierPageControl = UIPageControl().then {
         $0.numberOfPages = 2
+        $0.backgroundColor = .blue
     }
+    
+    //된다 이렇게하면?
+    let tierHorizontalStackView = UIStackView().then {
+        $0.axis = .horizontal
+        let tierLabel = UILabel()
+        tierLabel.text = "안녕"
+        let tierTimeLabel = UILabel()
+        tierTimeLabel.text = "하이"
+        
+        $0.addArrangedSubview(tierLabel)
+        $0.addArrangedSubview(tierTimeLabel)
+
+    }
+
+
+    
+    let tierVerticalStackView = UIStackView().then {
+        $0.axis = .vertical
+    }
+
+    let tierDivLabel = UILabel().then {  //무슨티어인지
+        $0.text = "1번"
+        $0.textAlignment = .center
+        $0.textColor = .lightGray
+    }
+
+    let tierTimeLabel = UILabel().then { //최초티어달성시간
+        $0.text = "2번"
+        $0.textAlignment = .center
+        $0.textColor = .lightGray
+    }
+    
+    let tierImg = UIImage().then {
+        $0.withTintColor(.red)
+    }
+    
     
     let searchTextField = UITextField().then {
         $0.placeholder = "유저검색"
@@ -189,7 +226,22 @@ class SearchController: UIViewController {
         searchstackView.addArrangedSubview(self.searchTextField)
         searchstackView.addArrangedSubview(self.searchBtn)
         
+        view.addSubview(self.tierHorizontalStackView)
         
+        //tierPageControl.addSubview(self.tierHorizontalStackView)
+        
+        //UILabel
+        self.tierHorizontalStackView.snp.makeConstraints {
+            //nameLabel의 위치는 nameTextfield의 아래에 위치하기 때문에
+            $0.top.equalTo(self.searchstackView.snp.bottom).offset(10)
+            //좌우는 네임텍스트필드에 맞추기 위해
+            //$0.leading.equalTo(self.nameTextfield)
+            //$0.trailing.equalTo(self.nameTextfield)
+
+            //만약 좌우를 같게 설정한다면 아래처럼 줄여서 쓸 수 있다.
+            $0.leading.trailing.equalTo(self.searchstackView)
+        }
+
         //네비게이션바 타이틀 설정
         self.navigationItem.title = "유저 정보 검색"
         //테이블뷰의 도트 경계
@@ -214,7 +266,7 @@ class SearchController: UIViewController {
         //UILabel
         self.nameLabel.snp.makeConstraints {
             //nameLabel의 위치는 nameTextfield의 아래에 위치하기 때문에
-            $0.top.equalTo(self.searchstackView.snp.bottom).offset(24)
+            $0.top.equalTo(self.searchstackView.snp.bottom).offset(10)
             //좌우는 네임텍스트필드에 맞추기 위해
             //$0.leading.equalTo(self.nameTextfield)
             //$0.trailing.equalTo(self.nameTextfield)
@@ -225,7 +277,8 @@ class SearchController: UIViewController {
         
         self.tierPageControl.snp.makeConstraints {
             $0.top.equalTo(self.nameLabel.snp.bottom).offset(10)
-            $0.leading.trailing.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(10)
+            $0.trailing.equalToSuperview().offset(-10)
             //높이와 너비는 이런식으로!
             $0.height.equalTo(150)
             

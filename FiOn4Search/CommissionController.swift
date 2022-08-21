@@ -76,6 +76,7 @@ class CommissionController: UIViewController {
         $0.backgroundColor = .white
         //$0.alignment = .center
         $0.spacing = 10
+        
     }
 
     let discountamountTextField = UITextField().then {
