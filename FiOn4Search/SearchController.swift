@@ -13,6 +13,7 @@
  3. 현재 티어와, 최고 티어. //이걸 페이지컨트롤로 할지, 아니면 컬렉션뷰로 할지.
  4. 컬렉션뷰는 첫 프로젝트에서 사용해봤으니 페이징킷을 사용하여 한번 표현해보고 싶을뿐이다.
  5. 최근 전적.
+ 6. APIKey값 가리는 방법.
  */
 
 /*
@@ -368,8 +369,8 @@ class SearchController: UIViewController {
                     for i in tierList {
                         print(i.division)
                         
-                        var a = self.tierFind(tier: i.division)
-                        print(a)
+                        //var a = self.tierFind(tier: i.division)
+                        //print(a)
                         
 //                        아프리카TV규직
                         
@@ -439,7 +440,12 @@ class SearchController: UIViewController {
                     case .success(let tier):
                         print(tier)
                         for list in tier {
-
+                            
+                            //findTier(rankType: list.matchType ?? <#default value#>, tier: list.division)
+                            //print(findTier(rankType: list.matchType ?? 0, tier: list.division ?? 0))
+                            
+                            
+                            
                         }
                     case .failure(let error):
                         print(error)
