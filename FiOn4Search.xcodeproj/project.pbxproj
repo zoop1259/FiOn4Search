@@ -26,6 +26,7 @@
 		C59954EE28A09B2B00D0D617 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C59954ED28A09B2B00D0D617 /* Alamofire */; };
 		C59954F128A0A27000D0D617 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = C59954F028A0A27000D0D617 /* SwiftyJSON */; };
 		C59954F928A0CD8B00D0D617 /* AlamofireManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59954F828A0CD8B00D0D617 /* AlamofireManager.swift */; };
+		C5ACF98228B29AFE00901134 /* mytrashCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF98128B29AFE00901134 /* mytrashCode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		C599547F289A32AB00D0D617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C5995488289A36EF00D0D617 /* CommissionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommissionController.swift; sourceTree = "<group>"; };
 		C59954F828A0CD8B00D0D617 /* AlamofireManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireManager.swift; sourceTree = "<group>"; };
+		C5ACF98128B29AFE00901134 /* mytrashCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mytrashCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 				C58FB33E28A1FA7000E90968 /* MatchInfoModel.swift */,
 				C5995488289A36EF00D0D617 /* CommissionController.swift */,
 				C574E8AF28AB6F1400F547A8 /* ServiceManager.swift */,
+				C5ACF98128B29AFE00901134 /* mytrashCode.swift */,
 				C59954F828A0CD8B00D0D617 /* AlamofireManager.swift */,
 				C599547A289A32AB00D0D617 /* Assets.xcassets */,
 				C599547C289A32AB00D0D617 /* LaunchScreen.storyboard */,
@@ -192,6 +195,7 @@
 				C5995472289A32A700D0D617 /* AppDelegate.swift in Sources */,
 				C58FB33928A1CBFD00E90968 /* UserModel.swift in Sources */,
 				C5995489289A36EF00D0D617 /* CommissionController.swift in Sources */,
+				C5ACF98228B29AFE00901134 /* mytrashCode.swift in Sources */,
 				C574E8B228ABDCB200F547A8 /* APIManager.swift in Sources */,
 				C5995474289A32A700D0D617 /* SceneDelegate.swift in Sources */,
 				C59954F928A0CD8B00D0D617 /* AlamofireManager.swift in Sources */,

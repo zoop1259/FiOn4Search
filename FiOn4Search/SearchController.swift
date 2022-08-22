@@ -70,39 +70,52 @@ class SearchController: UIViewController {
     
     //네비게이션아이템은 네비게이션바안에 있기 떄문에 이곳에서 직접 설정은 불가능 하다.
     let navigationBar = UINavigationBar()
-
-    //1:1공식경기와 2:2공식경기의 티어를 나타낼 페이지컨트롤
-    let tierPageControl = UIPageControl().then {
-        $0.numberOfPages = 2
-        $0.backgroundColor = .blue
+    
+    //MARK: - Search init
+    let searchTextField = UITextField().then {
+        $0.placeholder = "유저검색"
+        $0.textColor = .black
+        $0.borderStyle = .bezel
+    }
+    // 검색 버튼
+    lazy var searchBtn = UIButton().then {
+        $0.tintColor = .black
+        $0.backgroundColor = .white
+        $0.setTitle("검색", for: .normal)
+        $0.setTitleColor(.black, for: .normal)
+        $0.layer.cornerRadius = 10
+        $0.layer.borderWidth = 0.5
+        $0.layer.borderColor = UIColor.black.cgColor
+        $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        //$0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+    }
+    //검색 스택뷰
+    let searchstackView = UIStackView().then {
+        $0.backgroundColor = .white
+        //$0.alignment = .center
+        $0.spacing = 10
     }
     
-    //된다 이렇게하면?
-    //addSubview = 수직 추가?
-    //addArrangedSubview = 수평 추가?
-    //그러나 이미 초기화를 했다면 subView는 사용되지 않는다.
-    let tierHorizontalStackView = UIStackView().then {
-        $0.axis = .horizontal
-        let tierLabel = UILabel()
-        tierLabel.text = "안녕"
-        let tierTimeLabel = UILabel()
-        tierTimeLabel.text = "하이"
-        
-        let verticalstack = UIStackView()
-        verticalstack.axis = .vertical
-        verticalstack.addArrangedSubview(tierLabel)
-        verticalstack.addArrangedSubview(tierTimeLabel)
-        
-        //let tierUIView = UIView()
-        let tierImage = UIImageView()
-        tierImage.backgroundColor = .red
-//
-        $0.addArrangedSubview(verticalstack)
-        $0.addArrangedSubview(tierImage)
-        
-        
-        
+    //MARK: - User Basic Info init
+    let nameLabel = UILabel().then {
+        $0.text = "유저닉네임"
+        $0.textAlignment = .center
+        $0.textColor = .lightGray
     }
+    
+    
+    //MARK: - Tier init
+    //1:1공식경기와 2:2공식경기의 티어를 나타낼 스크롤뷰
+    let tierScrollView = UIScrollView().then {
+        $0.isScrollEnabled = true
+        $0.isPagingEnabled = true
+        $0.backgroundColor = .green
+        //페이지 컨트롤로 1vs1,2vs2를 나타내야함
+        let page = UIPageControl()
+        page.numberOfPages = 2
+        page.backgroundColor = .yellow
+    }
+    
 
 
     
@@ -122,48 +135,17 @@ class SearchController: UIViewController {
         $0.textColor = .lightGray
     }
     
-    let tierImg = UIImage().then {
-        $0.withTintColor(.red)
+    let tierImg = UIImageView().then {
+//        $0.withTintColor(.red)
+        $0.backgroundColor = .yellow
     }
     
-    
-    let searchTextField = UITextField().then {
-        $0.placeholder = "유저검색"
-        $0.textColor = .black
-        $0.borderStyle = .bezel
-    }
-    
-    // 검색 버튼
-    lazy var searchBtn = UIButton().then {
-        $0.tintColor = .black
-        $0.backgroundColor = .white
-        $0.setTitle("검색", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.layer.cornerRadius = 10
-        $0.layer.borderWidth = 0.5
-        $0.layer.borderColor = UIColor.black.cgColor
-        $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        //$0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-    }
-    
-    let searchstackView = UIStackView().then {
-        $0.backgroundColor = .white
-        //$0.alignment = .center
-        $0.spacing = 10
-    }
     
     
     //전적을 나타낼 테이블뷰
     let scoreTableView = UITableView().then {
         $0.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
-    
-    let nameLabel = UILabel().then {
-        $0.text = "유저닉네임"
-        $0.textAlignment = .center
-        $0.textColor = .lightGray
-    }
-    
     
     let baseUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users?"
 //        let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname="
@@ -192,6 +174,7 @@ class SearchController: UIViewController {
                 //getUserId()
                 //self.MaingetUserId()
                 self.getRequest()
+                
             }).disposed(by: bag)
         
 //        nameLabel.rx.observe(String.self, "text")
@@ -223,8 +206,6 @@ class SearchController: UIViewController {
     }
         
     
-    
-    
         
     //MARK: - configure
     func configure() {
@@ -232,7 +213,7 @@ class SearchController: UIViewController {
         //addSubView는 매개변수로 추가할 뷰를 받는다.
         //class안에서 생성한 라이브러리기 때문에 self를 사용해주어야한다.
         view.addSubview(self.navigationBar)
-        view.addSubview(self.tierPageControl)
+        view.addSubview(self.tierScrollView)
         view.addSubview(self.scoreTableView)
         view.addSubview(self.nameLabel)
         
@@ -240,21 +221,25 @@ class SearchController: UIViewController {
         searchstackView.addArrangedSubview(self.searchTextField)
         searchstackView.addArrangedSubview(self.searchBtn)
         
-        view.addSubview(self.tierHorizontalStackView)
+        //view.addSubview(self.tierImg)
+        tierScrollView.addSubview(self.tierImg)
+        
+        //view.addSubview(self.tierHorizontalStackView)
+        //tierPageControl.didAddSubview(self.tierHorizontalStackView)
         
         //tierPageControl.addSubview(self.tierHorizontalStackView)
         
-        //UILabel
-        self.tierHorizontalStackView.snp.makeConstraints {
-            //nameLabel의 위치는 nameTextfield의 아래에 위치하기 때문에
-            $0.top.equalTo(self.searchstackView.snp.bottom).offset(10)
-            //좌우는 네임텍스트필드에 맞추기 위해
-            //$0.leading.equalTo(self.nameTextfield)
-            //$0.trailing.equalTo(self.nameTextfield)
-
-            //만약 좌우를 같게 설정한다면 아래처럼 줄여서 쓸 수 있다.
-            $0.leading.trailing.equalTo(self.searchstackView)
-        }
+        //스택뷰
+//        self.tierHorizontalStackView.snp.makeConstraints {
+//            //nameLabel의 위치는 nameTextfield의 아래에 위치하기 때문에
+//            $0.top.equalTo(self.searchstackView.snp.bottom).offset(10)
+//            //좌우는 네임텍스트필드에 맞추기 위해
+//            //$0.leading.equalTo(self.nameTextfield)
+//            //$0.trailing.equalTo(self.nameTextfield)
+//
+//            //만약 좌우를 같게 설정한다면 아래처럼 줄여서 쓸 수 있다.
+//            $0.leading.trailing.equalTo(self.searchstackView)
+//        }
 
         //네비게이션바 타이틀 설정
         self.navigationItem.title = "유저 정보 검색"
@@ -289,28 +274,31 @@ class SearchController: UIViewController {
             $0.leading.trailing.equalTo(self.searchstackView)
         }
         
-        self.tierPageControl.snp.makeConstraints {
+        self.tierScrollView.snp.makeConstraints {
             $0.top.equalTo(self.nameLabel.snp.bottom).offset(10)
             $0.leading.equalToSuperview().offset(10)
             $0.trailing.equalToSuperview().offset(-10)
             //높이와 너비는 이런식으로!
             $0.height.equalTo(150)
-            
+        }
+        self.tierImg.snp.makeConstraints {
+            //$0.top.equalTo(self.nameLabel.snp.bottom).offset(10)
+            //$0.leading.equalToSuperview().offset(10)
+            //$0.trailing.equalToSuperview().offset(-10)
+            //높이와 너비는 이런식으로!
+            $0.height.equalTo(130)
+            $0.width.equalTo(130)
         }
         
+        
+        
         self.scoreTableView.snp.makeConstraints {
-            $0.top.equalTo(self.tierPageControl.snp.bottom).offset(10)
-            $0.leading.trailing.equalTo(self.tierPageControl)
+            $0.top.equalTo(self.tierScrollView.snp.bottom).offset(10)
+            $0.leading.trailing.equalTo(self.tierScrollView)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(10)
         }
 
     }
-    
-    //escaping쓰고싶어..
-//    func sendNick(complition: @escaping() -> Void) {
-//        self.sendNickName = complition
-//    }
-    
     
     func bindTableViewData() {
         //세가지를 먼저 하고 싶다.
@@ -510,9 +498,6 @@ class SearchController: UIViewController {
                             
                             //findTier(rankType: list.matchType ?? <#default value#>, tier: list.division)
                             //print(findTier(rankType: list.matchType ?? 0, tier: list.division ?? 0))
-                            
-                            
-                            
                         }
                     case .failure(let error):
                         print(error)
@@ -549,6 +534,7 @@ class SearchController: UIViewController {
             }
         }
     }
+    
     
 }
 
