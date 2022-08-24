@@ -34,6 +34,7 @@ import RxCocoa
 import SwiftyJSON
 import Alamofire
 import CloudKit
+import Kingfisher
 
 //임시모델
 struct Product {
@@ -109,7 +110,7 @@ class SearchController: UIViewController {
     let tierScrollView = UIScrollView().then {
         $0.isScrollEnabled = true
         $0.isPagingEnabled = true
-        $0.backgroundColor = .green
+        //$0.backgroundColor = .green
     }
     
     let tierPageControl = UIPageControl().then {
@@ -135,11 +136,10 @@ class SearchController: UIViewController {
         $0.textColor = .lightGray
     }
     
-    let tierImg = UIImageView().then {
+    let tierImg = UIImageView().then {_ in
 //        $0.withTintColor(.red)
-        $0.backgroundColor = .yellow
+        //$0.backgroundColor = .yellow
     }
-    
     
     
     //전적을 나타낼 테이블뷰
@@ -295,8 +295,6 @@ class SearchController: UIViewController {
             $0.height.equalTo(130)
             $0.width.equalTo(130)
         }
-
-        
         
         self.scoreTableView.snp.makeConstraints {
             $0.top.equalTo(self.tierScrollView.snp.bottom).offset(10)
@@ -494,23 +492,48 @@ class SearchController: UIViewController {
             switch result {
             case .success(let dict):
                 print(dict)
+                self.nameLabel.text = "\(dict.level)"
+                self.nameLabel.textColor = .black
                 //티어찾기.
                 let tier = API.getTier(accessId: dict.accessId)
                 tier.arrrequest(dataType: [TierInfo].self) { tierresult in
                     switch tierresult {
                     case .success(let tier):
                         //print(tier)
+                        
                         for list in tier {
                             
-                            var oneone = 50
-                            var twotwo = 52
-                            //findTier(rankType: list.matchType ?? <#default value#>, tier: list.division)
-                            print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0))
-                            print("two",findTier(rankType: twotwo ?? 52, tier: list.division ?? 0))
-                            
-                            
-                            
-//                            print(findTier(rankType: list.matchType ?? 0, tier: list.division ?? 0))
+                            let oneone = 50
+                            let twotwo = 52
+
+                            self.tierTimeLabel.text = list.achievementDate
+//                            self.tierDivLabel =
+                            if list.matchType == 50 {
+                                print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0))
+                                let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0)
+                                
+                                let asd = oneoneData.tierImgUrl
+                                print("url",asd)
+                                let asdasd = oneoneData.tierName
+                                print("tier이름",asdasd)
+                                
+                                let oneoneUrl = URL(string:oneoneData.tierImgUrl)
+                                self.tierImg.backgroundColor = .white
+                                self.tierImg.kf.indicatorType = .activity
+                                self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+
+                                    //ui는 그려주려면 메인에서 돌아야하는데.. rxswift를 사용해서
+//                                DispatchQueue.main.async {
+//                                    self.imsitierImg.backgroundColor = .white
+//                                    self.imsitierImg.kf.indicatorType = .activity
+//                                    self.imsitierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+//                                   print("여기서 안나와?",oneoneUrl)
+//                                }
+                                
+                                //self.tierImg.image
+                            } else if list.matchType == 52 {
+                                print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0))
+                            }
                         }
                     case .failure(let error):
                         print(error)
@@ -521,7 +544,7 @@ class SearchController: UIViewController {
                 matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
                     switch matchIdresult {
                     case .success(let matchIdresult):
-                        print("matchId fin:",matchIdresult)
+                        //print("matchId fin:",matchIdresult)
                         
                         for match in matchIdresult  {
 
@@ -530,7 +553,8 @@ class SearchController: UIViewController {
                             matchInfo.arrrequest(dataType: Match.self) { matchresult in
                                 switch matchresult {
                                 case .success(let matchresult):
-                                    print(matchresult)
+                                    //print(matchresult)
+                                    print("성공")
                                 case .failure(let error):
                                     print(error)
                                 }
@@ -544,6 +568,8 @@ class SearchController: UIViewController {
                 }
             case .failure(let error):
                 print(error)
+                self.nameLabel.text = "구단주명이 존재하지 않습니다."
+                self.nameLabel.textColor = .red
             }
         }
     }

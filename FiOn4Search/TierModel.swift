@@ -40,16 +40,153 @@ typealias Tier  = [TierInfo]
 
 
 //func findTier(rankType: Int, tier: Int) -> (oneone: [String:String], twotwo: [String:String]){
-func findTier(rankType: Int, tier: Int) -> [String:String] {
-    let str = "공경 division값\(tier)"
+func findTier(rankType: Int, tier: Int) -> (tierName: String, tierImgUrl: String) {
+    let str = "1vs1공경 division값\(tier)"
     //key값으로 티어이름 저장.
-    var oneoneTier = ""
-    var twotwoTier = ""
-    var oneoneImgUrl = ""
-    var twotwoImgUrl = ""
     
     var tierDict = [String:String]()
+    var tierName = ""
+    var tierImgUrl = ""
     
+    if rankType == 50 {
+        switch tier {
+        case 800:
+            print("슈퍼챔피언스", str)
+            tierName = "슈퍼챔피언스"
+            //tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank0.png"
+        case 900:
+            print("챔피언스", str)
+            tierDict = ["챔피언스" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+        case 1000:
+            print("슈퍼챌린지", str)
+            tierDict = ["슈퍼챌린지" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+        case 1100:
+            print("챌린지1", str)
+            tierDict = ["챌린지1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+        case 1200:
+            print("챌린지2", str)
+            tierDict = ["챌린지2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+        case 1300:
+            print("챌린지3", str)
+            tierDict = ["챌린지3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+        case 2000:
+            print("월드클래스1", str)
+            tierDict = ["월드클래스1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+        case 2100:
+            print("월드클래스2", str)
+            tierDict = ["월드클래스2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+        case 2200:
+            print("월드클래스3", str)
+            tierDict = ["월드클래스3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+        case 2300:
+            print("프로1", str)
+            tierDict = ["프로1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+        case 2400:
+            print("프로2", str)
+            tierDict = ["프로2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+        case 2500:
+            print("프로3", str)
+            tierDict = ["프로3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+        case 2600:
+            print("세미프로1", str)
+            tierDict = ["세미프로1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+        case 2700:
+            print("세미프로2", str)
+            tierDict = ["세미프로2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+        case 2800:
+            print("세미프로3", str)
+            tierDict = ["세미프로3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+        case 2900:
+            print("유망주1", str)
+            tierDict = ["유망주1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+        case 3000:
+            print("유망주2", str)
+            tierDict = ["유망주2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+        case 3100:
+            print("유망주3", str)
+            tierDict = ["유망주3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+        default:
+            print("언랭크 ", str)
+            tierDict = ["언랭크" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/ico_rank_default.png"]
+        }
+        //return tierDict
+    }
+    return (tierName: tierName, tierImgUrl: tierImgUrl)
+}
+    
+func findTier22(rankType: Int, tier: Int) -> [String:String] {
+    let str = "2vs2공경 division값\(tier)"
+    //key값으로 티어이름 저장.
+    
+    var tierDict22 = [String:String]()
+
+    if rankType == 52 {
+        switch tier {
+        case 800:
+            print("슈퍼챔피언스", str)
+            tierDict22 = ["슈퍼챔피언스" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank0.png"]
+        case 900:
+            print("챔피언스", str)
+            tierDict22 = ["챔피언스" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank1.png"]
+        case 1000:
+            print("슈퍼챌린지", str)
+            tierDict22 = ["슈퍼챌린지" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank2.png"]
+        case 1100:
+            print("챌린지1", str)
+            tierDict22 = ["챌린지1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank3.png"]
+        case 1200:
+            print("챌린지2", str)
+            tierDict22 = ["챌린지2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank4.png"]
+        case 1300:
+            print("챌린지3", str)
+            tierDict22 = ["챌린지3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank5.png"]
+        case 2000:
+            print("월드클래스1", str)
+            tierDict22 = ["월드클래스1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank6.png"]
+        case 2100:
+            print("월드클래스2", str)
+            tierDict22 = ["월드클래스2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank7.png"]
+        case 2200:
+            print("월드클래스3", str)
+            tierDict22 = ["월드클래스3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank8.png"]
+        case 2300:
+            print("프로1", str)
+            tierDict22 = ["프로1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank9.png"]
+        case 2400:
+            print("프로2", str)
+            tierDict22 = ["프로2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank10.png"]
+        case 2500:
+            print("프로3", str)
+            tierDict22 = ["프로3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank11.png"]
+        case 2600:
+            print("세미프로1", str)
+            tierDict22 = ["세미프로1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank12.png"]
+        case 2700:
+            print("세미프로2", str)
+            tierDict22 = ["세미프로2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank13.png"]
+        case 2800:
+            print("세미프로3", str)
+            tierDict22 = ["세미프로3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank14.png"]
+        case 2900:
+            print("유망주1", str)
+            tierDict22 = ["유망주1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank15.png"]
+        case 3000:
+            print("유망주2", str)
+            tierDict22 = ["유망주2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank16.png"]
+        case 3100:
+            print("유망주3", str)
+            tierDict22 = ["유망주3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank17.png"]
+        default:
+            print("언랭크 ", str)
+            tierDict22 = ["언랭크" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/2vs2/ico_rank_default.png"]
+        }
+        //return tierDict22
+    }
+    return tierDict22
+}
+
+/*
     switch rankType {
     case 50:
         //    if rankType == 50 {
@@ -179,7 +316,7 @@ func findTier(rankType: Int, tier: Int) -> [String:String] {
     }
     return tierDict
     }
- 
+ */
             
             
 
