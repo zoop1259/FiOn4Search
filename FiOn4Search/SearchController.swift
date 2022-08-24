@@ -110,13 +110,13 @@ class SearchController: UIViewController {
         $0.isScrollEnabled = true
         $0.isPagingEnabled = true
         $0.backgroundColor = .green
-        //페이지 컨트롤로 1vs1,2vs2를 나타내야함
-        let page = UIPageControl()
-        page.numberOfPages = 2
-        page.backgroundColor = .yellow
     }
     
-
+    let tierPageControl = UIPageControl().then {
+        //페이지 컨트롤로 1vs1,2vs2를 나타내야함
+        $0.numberOfPages = 2
+        $0.backgroundColor = .black
+    }
 
     
     let tierVerticalStackView = UIStackView().then {
@@ -223,7 +223,7 @@ class SearchController: UIViewController {
         
         //view.addSubview(self.tierImg)
         tierScrollView.addSubview(self.tierImg)
-        
+        tierScrollView.addSubview(self.tierPageControl)
         //view.addSubview(self.tierHorizontalStackView)
         //tierPageControl.didAddSubview(self.tierHorizontalStackView)
         
@@ -281,15 +281,21 @@ class SearchController: UIViewController {
             //높이와 너비는 이런식으로!
             $0.height.equalTo(150)
         }
+        self.tierPageControl.snp.makeConstraints {
+            $0.top.equalTo(self.tierScrollView.snp.top).offset(125)
+            $0.centerX.equalToSuperview()
+        }
+
         self.tierImg.snp.makeConstraints {
-            //$0.top.equalTo(self.nameLabel.snp.bottom).offset(10)
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview()
             //$0.leading.equalToSuperview().offset(10)
             //$0.trailing.equalToSuperview().offset(-10)
             //높이와 너비는 이런식으로!
             $0.height.equalTo(130)
             $0.width.equalTo(130)
         }
-        
+
         
         
         self.scoreTableView.snp.makeConstraints {
@@ -493,11 +499,18 @@ class SearchController: UIViewController {
                 tier.arrrequest(dataType: [TierInfo].self) { tierresult in
                     switch tierresult {
                     case .success(let tier):
-                        print(tier)
+                        //print(tier)
                         for list in tier {
                             
+                            var oneone = 50
+                            var twotwo = 52
                             //findTier(rankType: list.matchType ?? <#default value#>, tier: list.division)
-                            //print(findTier(rankType: list.matchType ?? 0, tier: list.division ?? 0))
+                            print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0))
+                            print("two",findTier(rankType: twotwo ?? 52, tier: list.division ?? 0))
+                            
+                            
+                            
+//                            print(findTier(rankType: list.matchType ?? 0, tier: list.division ?? 0))
                         }
                     case .failure(let error):
                         print(error)
