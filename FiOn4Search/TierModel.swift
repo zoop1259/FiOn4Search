@@ -42,9 +42,7 @@ typealias Tier  = [TierInfo]
 //func findTier(rankType: Int, tier: Int) -> (oneone: [String:String], twotwo: [String:String]){
 func findTier(rankType: Int, tier: Int) -> (tierName: String, tierImgUrl: String) {
     let str = "1vs1공경 division값\(tier)"
-    //key값으로 티어이름 저장.
-    
-    var tierDict = [String:String]()
+    //각각의 값을 저장하여 사용.
     var tierName = ""
     var tierImgUrl = ""
     
@@ -53,64 +51,80 @@ func findTier(rankType: Int, tier: Int) -> (tierName: String, tierImgUrl: String
         case 800:
             print("슈퍼챔피언스", str)
             tierName = "슈퍼챔피언스"
-            //tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"
             tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank0.png"
         case 900:
             print("챔피언스", str)
-            tierDict = ["챔피언스" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+            tierName = "챔피언스"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank1.png"
         case 1000:
             print("슈퍼챌린지", str)
-            tierDict = ["슈퍼챌린지" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+            tierName = "슈퍼챌린지"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank2.png"
         case 1100:
             print("챌린지1", str)
-            tierDict = ["챌린지1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+            tierName = "챌린지1"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank3.png"
         case 1200:
             print("챌린지2", str)
-            tierDict = ["챌린지2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+            tierName = "챌린지2"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank4.png"
         case 1300:
             print("챌린지3", str)
-            tierDict = ["챌린지3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+            tierName = "챌린지3"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank5.png"
         case 2000:
             print("월드클래스1", str)
-            tierDict = ["월드클래스1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+            tierName = "월드클래스1"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank6.png"
         case 2100:
             print("월드클래스2", str)
-            tierDict = ["월드클래스2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+            tierName = "월드클래스2"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank7.png"
         case 2200:
             print("월드클래스3", str)
-            tierDict = ["월드클래스3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+            tierName = "월드클래스3"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank8.png"
         case 2300:
             print("프로1", str)
-            tierDict = ["프로1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_ran.png"]
+            tierName = "프로1"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank9.png"
         case 2400:
             print("프로2", str)
-            tierDict = ["프로2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+            tierName = "프로2"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank10.png"
         case 2500:
             print("프로3", str)
-            tierDict = ["프로3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+            tierName = "프로3"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank11.png"
         case 2600:
             print("세미프로1", str)
-            tierDict = ["세미프로1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+            tierName = "세미프로1"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank12.png"
         case 2700:
             print("세미프로2", str)
-            tierDict = ["세미프로2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+            tierName = "세미프로2"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank13.png"
         case 2800:
             print("세미프로3", str)
-            tierDict = ["세미프로3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+            tierName = "세미프로3"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank14.png"
         case 2900:
             print("유망주1", str)
-            tierDict = ["유망주1" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+            tierName = "유망주1"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank15.png"
         case 3000:
             print("유망주2", str)
-            tierDict = ["유망주2" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+            tierName = "유망주2"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank16.png"
         case 3100:
             print("유망주3", str)
-            tierDict = ["유망주3" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank.png"]
+            tierName = "유망주3"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank17.png"
         default:
             print("언랭크 ", str)
-            tierDict = ["언랭크" :"https://ssl.nex.com/s2/game/fo4/obt/rank/large/ico_rank_default.png"]
+            tierName = "언랭크"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/ico_rank_default.png"
         }
-        //return tierDict
     }
     return (tierName: tierName, tierImgUrl: tierImgUrl)
 }
