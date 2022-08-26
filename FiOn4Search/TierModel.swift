@@ -40,11 +40,13 @@ typealias Tier  = [TierInfo]
 
 
 //func findTier(rankType: Int, tier: Int) -> (oneone: [String:String], twotwo: [String:String]){
-func findTier(rankType: Int, tier: Int) -> (tierName: String, tierImgUrl: String) {
+func findTier(rankType: Int, tier: Int, achievementDate: String) -> (tierName: String, tierImgUrl: String, achievementDate: String) {
     let str = "1vs1공경 division값\(tier)"
     //각각의 값을 저장하여 사용.
     var tierName = ""
     var tierImgUrl = ""
+    let achievementDate = achievementDate
+    
     
     if rankType == 50 {
         switch tier {
@@ -126,78 +128,98 @@ func findTier(rankType: Int, tier: Int) -> (tierName: String, tierImgUrl: String
             tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/ico_rank_default.png"
         }
     }
-    return (tierName: tierName, tierImgUrl: tierImgUrl)
+    return (tierName: tierName, tierImgUrl: tierImgUrl, achievementDate: achievementDate)
 }
     
-func findTier22(rankType: Int, tier: Int) -> [String:String] {
+func findTier22(rankType: Int, tier: Int, achievementDate22:String) -> (tierName22: String, tierImgUrl22: String, achievementDate22: String) {
     let str = "2vs2공경 division값\(tier)"
-    //key값으로 티어이름 저장.
+    //각각의 값을 저장하여 사용.
+    var tierName22 = ""
+    var tierImgUrl22 = ""
+    let achievementDate22 = achievementDate22
     
-    var tierDict22 = [String:String]()
-
     if rankType == 52 {
         switch tier {
         case 800:
             print("슈퍼챔피언스", str)
-            tierDict22 = ["슈퍼챔피언스" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank0.png"]
+            tierName22 = "슈퍼챔피언스"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank0.png"
         case 900:
             print("챔피언스", str)
-            tierDict22 = ["챔피언스" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank1.png"]
+            tierName22 = "챔피언스"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank1.png"
         case 1000:
             print("슈퍼챌린지", str)
-            tierDict22 = ["슈퍼챌린지" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank2.png"]
+            tierName22 = "슈퍼챌린지"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank2.png"
         case 1100:
             print("챌린지1", str)
-            tierDict22 = ["챌린지1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank3.png"]
+            tierName22 = "챌린지1"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank3.png"
         case 1200:
             print("챌린지2", str)
-            tierDict22 = ["챌린지2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank4.png"]
+            tierName22 = "챌린지2"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank4.png"
         case 1300:
             print("챌린지3", str)
-            tierDict22 = ["챌린지3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank5.png"]
+            tierName22 = "챌린지3"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank5.png"
         case 2000:
             print("월드클래스1", str)
-            tierDict22 = ["월드클래스1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank6.png"]
+            tierName22 = "월드클래스1"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank6.png"
         case 2100:
             print("월드클래스2", str)
-            tierDict22 = ["월드클래스2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank7.png"]
+            tierName22 = "월드클래스2"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank7.png"
         case 2200:
             print("월드클래스3", str)
-            tierDict22 = ["월드클래스3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank8.png"]
+            tierName22 = "월드클래스3"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank8.png"
         case 2300:
             print("프로1", str)
-            tierDict22 = ["프로1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank9.png"]
+            tierName22 = "프로1"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank9.png"
         case 2400:
             print("프로2", str)
-            tierDict22 = ["프로2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank10.png"]
+            tierName22 = "프로2"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank10.png"
         case 2500:
             print("프로3", str)
-            tierDict22 = ["프로3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank11.png"]
+            tierName22 = "프로3"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank11.png"
         case 2600:
             print("세미프로1", str)
-            tierDict22 = ["세미프로1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank12.png"]
+            tierName22 = "세미프로1"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank12.png"
         case 2700:
             print("세미프로2", str)
-            tierDict22 = ["세미프로2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank13.png"]
+            tierName22 = "세미프로2"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank13.png"
         case 2800:
             print("세미프로3", str)
-            tierDict22 = ["세미프로3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank14.png"]
+            tierName22 = "세미프로3"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank14.png"
         case 2900:
             print("유망주1", str)
-            tierDict22 = ["유망주1" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank15.png"]
+            tierName22 = "유망주1"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank15.png"
         case 3000:
             print("유망주2", str)
-            tierDict22 = ["유망주2" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank16.png"]
+            tierName22 = "유망주2"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank16.png"
         case 3100:
             print("유망주3", str)
-            tierDict22 = ["유망주3" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank17.png"]
+            tierName22 = "유망주3"
+            tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank17.png"
         default:
             print("언랭크 ", str)
-            tierDict22 = ["언랭크" :  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/2vs2/ico_rank_default.png"]
+            tierName22 = "언랭크"
+            tierImgUrl22 =  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/2vs2/ico_rank_default.png"
         }
-        //return tierDict22
+        
     }
-    return tierDict22
+    return (tierName22: tierName22, tierImgUrl22: tierImgUrl22, achievementDate22: achievementDate22)
 }
 
 /*

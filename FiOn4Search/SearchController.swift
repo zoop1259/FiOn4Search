@@ -35,6 +35,7 @@ import SwiftyJSON
 import Alamofire
 import CloudKit
 import Kingfisher
+import os
 
 //임시모델
 struct Product {
@@ -99,17 +100,27 @@ class SearchController: UIViewController {
     
     //MARK: - User Basic Info init
     let nameLabel = UILabel().then {
-        $0.text = "유저닉네임"
+        $0.text = "감독이름"
         $0.textAlignment = .center
         $0.textColor = .lightGray
     }
+    let levelLabel = UILabel().then {
+        $0.text = "감독레벨"
+        $0.textAlignment = .center
+        $0.textColor = .lightGray
+    }
+    let namestackView = UIStackView().then {
+        $0.backgroundColor = .white
+        $0.spacing = 10
+        $0.alignment = .fill //y축
+        $0.distribution = .fillEqually //x축
+    }
+    
     
     
     //MARK: - Tier init
     //1:1공식경기와 2:2공식경기의 티어를 나타낼 스크롤뷰
-    let tierScrollView = UIScrollView().then {
-        $0.isScrollEnabled = true
-        $0.isPagingEnabled = true
+    let tierScrollView = UIScrollView().then {_ in
         //$0.backgroundColor = .green
     }
     
@@ -117,6 +128,7 @@ class SearchController: UIViewController {
         //페이지 컨트롤로 1vs1,2vs2를 나타내야함
         $0.numberOfPages = 2
         $0.backgroundColor = .black
+        $0.currentPage = 0
     }
 
     
@@ -139,6 +151,10 @@ class SearchController: UIViewController {
     let tierImg = UIImageView().then {_ in
 //        $0.withTintColor(.red)
         //$0.backgroundColor = .yellow
+    }
+    
+    let tierStackView = UIStackView().then {
+        $0.spacing = 10
     }
     
     
@@ -176,6 +192,8 @@ class SearchController: UIViewController {
                 self.getRequest()
                 
             }).disposed(by: bag)
+        
+        
         
 //        nameLabel.rx.observe(String.self, "text")
 //            .subscribe(onNext: { text in
@@ -215,31 +233,28 @@ class SearchController: UIViewController {
         view.addSubview(self.navigationBar)
         view.addSubview(self.tierScrollView)
         view.addSubview(self.scoreTableView)
-        view.addSubview(self.nameLabel)
+        
         
         view.addSubview(self.searchstackView)
         searchstackView.addArrangedSubview(self.searchTextField)
         searchstackView.addArrangedSubview(self.searchBtn)
         
-        //view.addSubview(self.tierImg)
-        tierScrollView.addSubview(self.tierImg)
+        view.addSubview(self.namestackView)
+        namestackView.addArrangedSubview(self.nameLabel)
+        namestackView.addArrangedSubview(self.levelLabel)
+        
+        //스크롤뷰에 추가
+        tierScrollView.delegate = self
+        tierScrollView.isScrollEnabled = true
+        tierScrollView.isPagingEnabled = true
         tierScrollView.addSubview(self.tierPageControl)
-        //view.addSubview(self.tierHorizontalStackView)
-        //tierPageControl.didAddSubview(self.tierHorizontalStackView)
-        
-        //tierPageControl.addSubview(self.tierHorizontalStackView)
-        
-        //스택뷰
-//        self.tierHorizontalStackView.snp.makeConstraints {
-//            //nameLabel의 위치는 nameTextfield의 아래에 위치하기 때문에
-//            $0.top.equalTo(self.searchstackView.snp.bottom).offset(10)
-//            //좌우는 네임텍스트필드에 맞추기 위해
-//            //$0.leading.equalTo(self.nameTextfield)
-//            //$0.trailing.equalTo(self.nameTextfield)
-//
-//            //만약 좌우를 같게 설정한다면 아래처럼 줄여서 쓸 수 있다.
-//            $0.leading.trailing.equalTo(self.searchstackView)
-//        }
+        tierScrollView.addSubview(tierStackView)
+        //티어이름과 티어달성시간 버티컬로 추가
+        tierVerticalStackView.addArrangedSubview(self.tierDivLabel)
+        tierVerticalStackView.addArrangedSubview(self.tierTimeLabel)
+        //티어 이미지와 버티컬로 추가한 라벨들 추가
+        tierStackView.addArrangedSubview(self.tierImg)
+        tierStackView.addArrangedSubview(self.tierVerticalStackView)
 
         //네비게이션바 타이틀 설정
         self.navigationItem.title = "유저 정보 검색"
@@ -263,7 +278,7 @@ class SearchController: UIViewController {
         }
 
         //UILabel
-        self.nameLabel.snp.makeConstraints {
+        self.namestackView.snp.makeConstraints {
             //nameLabel의 위치는 nameTextfield의 아래에 위치하기 때문에
             $0.top.equalTo(self.searchstackView.snp.bottom).offset(10)
             //좌우는 네임텍스트필드에 맞추기 위해
@@ -275,7 +290,7 @@ class SearchController: UIViewController {
         }
         
         self.tierScrollView.snp.makeConstraints {
-            $0.top.equalTo(self.nameLabel.snp.bottom).offset(10)
+            $0.top.equalTo(self.namestackView.snp.bottom).offset(10)
             $0.leading.equalToSuperview().offset(10)
             $0.trailing.equalToSuperview().offset(-10)
             //높이와 너비는 이런식으로!
@@ -285,15 +300,10 @@ class SearchController: UIViewController {
             $0.top.equalTo(self.tierScrollView.snp.top).offset(125)
             $0.centerX.equalToSuperview()
         }
-
-        self.tierImg.snp.makeConstraints {
+        
+        self.tierStackView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.centerY.equalToSuperview()
-            //$0.leading.equalToSuperview().offset(10)
-            //$0.trailing.equalToSuperview().offset(-10)
-            //높이와 너비는 이런식으로!
-            $0.height.equalTo(130)
-            $0.width.equalTo(130)
         }
         
         self.scoreTableView.snp.makeConstraints {
@@ -345,38 +355,6 @@ class SearchController: UIViewController {
             self.searchTextField.text = String(count[..<index])
         }
     }
-    
-    //MARK: - Tier
-    //escaping을 통해 값을 받아와야함.
-    //(success: @escaping ((UserInfo) -> Void),
-//    func tierFind(tier: Int, complition: @escaping ((Int) -> Void)) {
-//        switch tier {
-//        case 800:
-//            print("슈챔이다", search.mytier)
-//        default:
-//            print("언랭크", search.mytier)
-//        }
-//    }
-    func tierFind(tier: Int) {
-        let str = "1:1 공경 division값\(tier)"
-        switch tier {
-        case 800:
-            print("슈챔이다", str)
-        default:
-            print("언랭크 ", str)
-        }
-    }
-    
-    func tierFind2(tier: Int) {
-        let str = "2:2 공경 division값\(tier)"
-        switch tier {
-        case 800:
-            print("슈챔이다", str)
-        default:
-            print("언랭크 ", str)
-        }
-    }
-    
     
     //MARK: - Fetch
     func MaingetUserId() {
@@ -484,6 +462,8 @@ class SearchController: UIViewController {
 //        }
 //    }
     
+    
+//    아프리카tv규직
     func getRequest() {
         //엑세스아이디찾기
         let accessid = API.getAccessId(name: self.userNickName)
@@ -492,49 +472,95 @@ class SearchController: UIViewController {
             switch result {
             case .success(let dict):
                 print(dict)
-                self.nameLabel.text = "\(dict.level)"
+                self.nameLabel.text = "\(self.userNickName)"
                 self.nameLabel.textColor = .black
+                self.levelLabel.text = "감독레벨 : \(dict.level)"
+                self.levelLabel.textColor = .black
                 //티어찾기.
                 let tier = API.getTier(accessId: dict.accessId)
                 tier.arrrequest(dataType: [TierInfo].self) { tierresult in
                     switch tierresult {
                     case .success(let tier):
-                        //print(tier)
+                        print(tier)
+                        var tierNameArr = [String]()
+                        var tierTimeArr = [String]()
+                        var tierImgUrlArr = [String]()
                         
                         for list in tier {
                             
                             let oneone = 50
                             let twotwo = 52
 
-                            self.tierTimeLabel.text = list.achievementDate
-//                            self.tierDivLabel =
-                            if list.matchType == 50 {
-                                print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0))
-                                let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0)
+//                            if list.matchType == 50 {
+//                                print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
+//                                let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
+//
+//                                tierNameArr.append(oneoneData.tierName)
+//                                tierTimeArr.append(oneoneData.achievementDate)
+//                                tierImgUrlArr.append(oneoneData.tierImgUrl)
+//
+//                                let asd = oneoneData.tierImgUrl
+//                                print("url",asd)
+//                                let asdasd = oneoneData.tierName
+//                                print("tier이름",asdasd)
+//
+//                                let oneoneUrl = URL(string:oneoneData.tierImgUrl)
+//                                self.tierImg.backgroundColor = .white
+//                                self.tierImg.kf.indicatorType = .activity
+//                                self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+//
+//                            } else if list.matchType == 52 {
+//                                print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
+//                                let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
+//
+//                                tierNameArr.append(twotwoData.tierName22)
+//                                tierTimeArr.append(twotwoData.achievementDate22)
+//                                tierImgUrlArr.append(twotwoData.tierImgUrl22)
+//
+//                            }
+                            if self.tierPageControl.currentPage == 0 {
                                 
-                                let asd = oneoneData.tierImgUrl
-                                print("url",asd)
-                                let asdasd = oneoneData.tierName
-                                print("tier이름",asdasd)
-                                
-                                let oneoneUrl = URL(string:oneoneData.tierImgUrl)
-                                self.tierImg.backgroundColor = .white
-                                self.tierImg.kf.indicatorType = .activity
-                                self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+                                print("현재페이지 :",self.tierPageControl.currentPage)
+                                if list.matchType == 50 {
+                                    print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
+                                    let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
+                                    self.tierTimeLabel.text = oneoneData.achievementDate
+                                    self.tierDivLabel.text = oneoneData.tierName
 
-                                    //ui는 그려주려면 메인에서 돌아야하는데.. rxswift를 사용해서
-//                                DispatchQueue.main.async {
-//                                    self.imsitierImg.backgroundColor = .white
-//                                    self.imsitierImg.kf.indicatorType = .activity
-//                                    self.imsitierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
-//                                   print("여기서 안나와?",oneoneUrl)
-//                                }
-                                
-                                //self.tierImg.image
-                            } else if list.matchType == 52 {
-                                print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0))
+
+                                    let asd = oneoneData.tierImgUrl
+                                    print("url",asd)
+                                    let asdasd = oneoneData.tierName
+                                    print("tier이름",asdasd)
+
+                                    let oneoneUrl = URL(string:oneoneData.tierImgUrl)
+                                    self.tierImg.backgroundColor = .white
+                                    self.tierImg.kf.indicatorType = .activity
+                                    self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+
+                                }
+                            } else if self.tierPageControl.currentPage == 1 {
+                                if list.matchType == 52 {
+                                    print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
+                                    let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
+                                    self.tierTimeLabel.text = twotwoData.achievementDate22
+                                    self.tierDivLabel.text = twotwoData.tierName22
+
+
+                                    let asd = twotwoData.tierImgUrl22
+                                    print("url",asd)
+                                    let asdasd = twotwoData.tierName22
+                                    print("tier이름",asdasd)
+
+                                    let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
+                                    self.tierImg.backgroundColor = .white
+                                    self.tierImg.kf.indicatorType = .activity
+                                    self.tierImg.kf.setImage(with: twotwoUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+
+                                }
                             }
                         }
+                        
                     case .failure(let error):
                         print(error)
                     }
@@ -574,7 +600,22 @@ class SearchController: UIViewController {
         }
     }
     
+    func selectedPage(currentPage: Int) {
+        tierPageControl.currentPage = currentPage
+    }
     
 }
 
 
+extension SearchController: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let pageNumber = scrollView.contentOffset.x / scrollView.frame.width
+        tierPageControl.currentPage = Int(pageNumber)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let size = tierScrollView.contentOffset.x / tierScrollView.frame.size.width
+        selectedPage(currentPage: Int(round(size)))
+        os_log("x스크롤 시작점 -> \(self.tierScrollView.bounds.origin.x)\n 사진의 y스크롤 시작점 -> \(self.tierScrollView.bounds.origin.y)")
+    }
+}
