@@ -152,12 +152,41 @@ class SearchController: UIViewController {
 //        $0.withTintColor(.red)
         //$0.backgroundColor = .yellow
     }
+    //2:2
+
     
+    let tierVerticalStackView22 = UIStackView().then {
+        $0.axis = .vertical
+    }
+
+    let tierDivLabel22 = UILabel().then {  //무슨티어인지
+        $0.text = "1번"
+        $0.textAlignment = .center
+        $0.textColor = .lightGray
+    }
+
+    let tierTimeLabel22 = UILabel().then { //최초티어달성시간
+        $0.text = "2번"
+        $0.textAlignment = .center
+        $0.textColor = .lightGray
+    }
+    
+    let tierImg22 = UIImageView().then {_ in
+//        $0.withTintColor(.red)
+        //$0.backgroundColor = .yellow
+    }
+    let tierStrackView11 = UIStackView().then {
+        $0.spacing = 10
+    }
+    let tierStrackView22 = UIStackView().then {
+        $0.spacing = 10
+    }
+    //모든걸 모은 스택뷰
     let tierStackView = UIStackView().then {
         $0.spacing = 10
     }
     
-    
+
     //전적을 나타낼 테이블뷰
     let scoreTableView = UITableView().then {
         $0.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -490,7 +519,8 @@ class SearchController: UIViewController {
                             
                             let oneone = 50
                             let twotwo = 52
-
+                            //스크롤뷰에 값을 각각 집어넣는방법
+                            
 //                            if list.matchType == 50 {
 //                                print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
 //                                let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
@@ -518,47 +548,91 @@ class SearchController: UIViewController {
 //                                tierImgUrlArr.append(twotwoData.tierImgUrl22)
 //
 //                            }
-                            if self.tierPageControl.currentPage == 0 {
-                                
-                                print("현재페이지 :",self.tierPageControl.currentPage)
-                                if list.matchType == 50 {
-                                    print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
-                                    let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
-                                    self.tierTimeLabel.text = oneoneData.achievementDate
-                                    self.tierDivLabel.text = oneoneData.tierName
-
-
-                                    let asd = oneoneData.tierImgUrl
-                                    print("url",asd)
-                                    let asdasd = oneoneData.tierName
-                                    print("tier이름",asdasd)
-
-                                    let oneoneUrl = URL(string:oneoneData.tierImgUrl)
-                                    self.tierImg.backgroundColor = .white
-                                    self.tierImg.kf.indicatorType = .activity
-                                    self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
-
-                                }
-                            } else if self.tierPageControl.currentPage == 1 {
-                                if list.matchType == 52 {
-                                    print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
-                                    let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
-                                    self.tierTimeLabel.text = twotwoData.achievementDate22
-                                    self.tierDivLabel.text = twotwoData.tierName22
-
-
-                                    let asd = twotwoData.tierImgUrl22
-                                    print("url",asd)
-                                    let asdasd = twotwoData.tierName22
-                                    print("tier이름",asdasd)
-
-                                    let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
-                                    self.tierImg.backgroundColor = .white
-                                    self.tierImg.kf.indicatorType = .activity
-                                    self.tierImg.kf.setImage(with: twotwoUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
-
-                                }
-                            }
+//                            switch self.tierPageControl.numberOfPages {
+//                            case 0:
+//                                print("현재페이지 :",self.tierPageControl.currentPage)
+//                                if list.matchType == 50 {
+//                                    print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
+//                                    let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
+//                                    self.tierTimeLabel.text = oneoneData.achievementDate
+//                                    self.tierDivLabel.text = oneoneData.tierName
+//
+//
+//                                    let asd = oneoneData.tierImgUrl
+//                                    print("url",asd)
+//                                    let asdasd = oneoneData.tierName
+//                                    print("tier이름",asdasd)
+//
+//                                    let oneoneUrl = URL(string:oneoneData.tierImgUrl)
+//                                    self.tierImg.backgroundColor = .white
+//                                    self.tierImg.kf.indicatorType = .activity
+//                                    self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+//
+//                                }
+//                            case 2:
+//                                if list.matchType == 52 {
+//                                    print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
+//                                    let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
+//                                    self.tierTimeLabel.text = twotwoData.achievementDate22
+//                                    self.tierDivLabel.text = twotwoData.tierName22
+//
+//
+//                                    let asd = twotwoData.tierImgUrl22
+//                                    print("url",asd)
+//                                    let asdasd = twotwoData.tierName22
+//                                    print("tier이름",asdasd)
+//
+//                                    let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
+//                                    self.tierImg.backgroundColor = .white
+//                                    self.tierImg.kf.indicatorType = .activity
+//                                    self.tierImg.kf.setImage(with: twotwoUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+//
+//                                }
+//                            default :
+//                                break
+//                            }
+                            
+//                            if self.tierPageControl.currentPage == 0 {
+//
+//                                print("현재페이지 :",self.tierPageControl.currentPage)
+//                                if list.matchType == 50 {
+//                                    print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
+//                                    let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
+//                                    self.tierTimeLabel.text = oneoneData.achievementDate
+//                                    self.tierDivLabel.text = oneoneData.tierName
+//
+//
+//                                    let asd = oneoneData.tierImgUrl
+//                                    print("url",asd)
+//                                    let asdasd = oneoneData.tierName
+//                                    print("tier이름",asdasd)
+//
+//                                    let oneoneUrl = URL(string:oneoneData.tierImgUrl)
+//                                    self.tierImg.backgroundColor = .white
+//                                    self.tierImg.kf.indicatorType = .activity
+//                                    self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+//
+//                                }
+//                            } else if self.tierPageControl.currentPage == 1 {
+//                                if list.matchType == 52 {
+//                                    print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
+//                                    let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
+//                                    self.tierTimeLabel.text = twotwoData.achievementDate22
+//                                    self.tierDivLabel.text = twotwoData.tierName22
+//
+//
+//                                    let asd = twotwoData.tierImgUrl22
+//                                    print("url",asd)
+//                                    let asdasd = twotwoData.tierName22
+//                                    print("tier이름",asdasd)
+//
+//                                    let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
+//                                    self.tierImg.backgroundColor = .white
+//                                    self.tierImg.kf.indicatorType = .activity
+//                                    self.tierImg.kf.setImage(with: twotwoUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+//
+//                                }
+//                            }
                         }
                         
                     case .failure(let error):
