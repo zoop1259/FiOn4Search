@@ -80,7 +80,112 @@ import Foundation
   
  */
  
+ //MARK: - Fetch
+ func MaingetUserId() {
+     var accessId = ""
+     
+     let baseUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users?"
+//        let nameUrl = baseUrl + "?nickname=" + userNickName
+//        let accessUrl = baseUrl + "/\(urlList.accessId)/maxdivision"
+     let matchUrl = baseUrl + "/\(accessId)/matches?matchtype=50&offset=0&limit=10"
+    // let matchInfoUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/matches/" + matchId
+
+     let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname="
+
+     print("닉네임 : ", userNickName)
+     let url = urlString + userNickName
+     
+     //그런데 이렇게 해도 된다. 이게 더 이쁜듯...
+     let headers: HTTPHeaders = [.authorization("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE0MDkzMDI3MDAiLCJhdXRoX2lkIjoiMiIsImV4cCI6MTY3NDg5NjIxMCwiaWF0IjoxNjU5MzQ0MjEwLCJuYmYiOjE2NTkzNDQyMTAsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.nwgL3AMU216uu88opO2R4br3uMRE1_86V9w0Uh7TbN0")]
+  
+     //AccessId 찾기.
+     AF.request(url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get ,headers: headers)
+         .responseJSON { response in
+             switch response.result {
+             case .success(let res):
+                 //print("res: ", res)
+                 do {
+                     let dataJSON = try JSONSerialization.data(withJSONObject: res, options: .prettyPrinted)
+                     let urlList = try JSONDecoder().decode(UserInfo.self, from: dataJSON)
+                     //print("액세스 아이디: ",urlList.accessId)
+                     accessId = urlList.accessId
+                     self.nameLabel.text = "구단주 닉네임 : \(self.userNickName)  구단주 레벨 : \(urlList.level)"
+                     self.nameLabel.textColor = .black
+                     
+     //티어 찾기.
+     let tierUrl = baseUrl + "/\(urlList.accessId)/maxdivision"
+     AF.request(tierUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get, headers: headers)
+         .responseJSON { tier in
+         print("tierUrl", tierUrl)
+         switch tier.result {
+         case .success(let tiers):
+             
+             print("tiers:", tiers)
+             do {
+                 let tierJSON = try JSONSerialization.data(withJSONObject: tiers, options: .prettyPrinted)
+                 let tierList = try JSONDecoder().decode([TierInfo].self, from: tierJSON)
+                 
+//                    print(tierList)
+                                     
+                 for i in tierList {
+                     print(i.division)
+                     
+                     //var a = self.tierFind(tier: i.division)
+                     //print(a)
+                     
+//                        아프리카TV규직
+                     
+//                        if i.matchType == 50 {
+//                            let a = i.division
+//                            self.tierFind(tier: a)
+//                            let b = self.tierFind(tier: a)
+//                            print("1:1 : ", b)
+//                        } else {
+//                            let c = i.division
+//                            self.tierFind2(tier: c)
+////                            let d = self.tierFind2(tier: c)
+////                            print("2:2 :", d)
+//                        }
+                }
+                 
+     //여기서 매칭 정보 구하기.
+             } catch {
+                 //나중에 페이저뷰를 가리고 라벨 띄우게.
+                 print(error)
+             }
+         case .failure(let error):
+             print(error)
+         }
+     }
+                     
+                 } catch {
+                     self.nameLabel.textColor = .red
+                     self.nameLabel.text = "아이디가 없습니다."
+                 }
+                 
+             case .failure(let error):
+                 print(error)
+             }
+             //여기까진 데이터가 남는군.
+             print("과연 밖에서도 데이터가 연결될까? :", accessId)
+         }
+     //여기선 데이터 증발
+ }
  
+ 
+//    func getRequest() {
+//        let api = API.getAccessId(name: self.userNickName)
+//        api.request { result in
+//            print(result)
+//            switch result {
+//            case .success(let dict):
+//                print(dict as Any)
+//            case .failure(let e):
+//                print(e)
+//            }
+//        }
+//    }
+
  
  
  

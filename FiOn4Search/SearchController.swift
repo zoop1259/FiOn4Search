@@ -120,15 +120,14 @@ class SearchController: UIViewController {
     
     //MARK: - Tier init
     //1:1공식경기와 2:2공식경기의 티어를 나타낼 스크롤뷰
-    let tierScrollView = UIScrollView().then {_ in
-        //$0.backgroundColor = .green
+    let tierScrollView = UIScrollView().then {//_ in
+        $0.backgroundColor = .green
     }
     
     let tierPageControl = UIPageControl().then {
         //페이지 컨트롤로 1vs1,2vs2를 나타내야함
         $0.numberOfPages = 2
         $0.backgroundColor = .black
-        $0.currentPage = 0
     }
 
     
@@ -148,42 +147,45 @@ class SearchController: UIViewController {
         $0.textColor = .lightGray
     }
     
-    let tierImg = UIImageView().then {_ in
+    let tierImg = UIImageView().then {//_ in
 //        $0.withTintColor(.red)
-        //$0.backgroundColor = .yellow
+        
+        $0.backgroundColor = .white
     }
     //2:2
-
-    
-    let tierVerticalStackView22 = UIStackView().then {
-        $0.axis = .vertical
-    }
-
-    let tierDivLabel22 = UILabel().then {  //무슨티어인지
-        $0.text = "1번"
-        $0.textAlignment = .center
-        $0.textColor = .lightGray
-    }
-
-    let tierTimeLabel22 = UILabel().then { //최초티어달성시간
-        $0.text = "2번"
-        $0.textAlignment = .center
-        $0.textColor = .lightGray
-    }
-    
-    let tierImg22 = UIImageView().then {_ in
-//        $0.withTintColor(.red)
-        //$0.backgroundColor = .yellow
-    }
-    let tierStrackView11 = UIStackView().then {
+//    let tierVerticalStackView22 = UIStackView().then {
+//        $0.axis = .vertical
+//    }
+//
+//    let tierDivLabel22 = UILabel().then {  //무슨티어인지
+//        $0.text = "1번"
+//        $0.textAlignment = .center
+//        $0.textColor = .lightGray
+//    }
+//
+//    let tierTimeLabel22 = UILabel().then { //최초티어달성시간
+//        $0.text = "2번"
+//        $0.textAlignment = .center
+//        $0.textColor = .lightGray
+//    }
+//
+//    let tierImg22 = UIImageView().then {//_ in
+////        $0.withTintColor(.red)
+//        $0.backgroundColor = .red
+//    }
+    let tierStackView11 = UIStackView().then {
         $0.spacing = 10
+        //$0.distribution = .fillEqually
+        $0.alignment = .center
     }
-    let tierStrackView22 = UIStackView().then {
-        $0.spacing = 10
-    }
+//    let tierStackView22 = UIStackView().then {
+//        $0.spacing = 10
+//    }
+    
     //모든걸 모은 스택뷰
-    let tierStackView = UIStackView().then {
-        $0.spacing = 10
+    let tierStackView = UIStackView().then {//_ in
+        //$0.spacing = 10
+        $0.axis = .horizontal
     }
     
 
@@ -281,10 +283,19 @@ class SearchController: UIViewController {
         //티어이름과 티어달성시간 버티컬로 추가
         tierVerticalStackView.addArrangedSubview(self.tierDivLabel)
         tierVerticalStackView.addArrangedSubview(self.tierTimeLabel)
+//        tierVerticalStackView22.addArrangedSubview(self.tierDivLabel22)
+//        tierVerticalStackView22.addArrangedSubview(self.tierTimeLabel22)
         //티어 이미지와 버티컬로 추가한 라벨들 추가
-        tierStackView.addArrangedSubview(self.tierImg)
-        tierStackView.addArrangedSubview(self.tierVerticalStackView)
+        tierStackView11.addArrangedSubview(self.tierImg)
+        tierStackView11.addArrangedSubview(self.tierVerticalStackView)
+//        tierStackView22.addArrangedSubview(self.tierImg22)
+//        tierStackView22.addArrangedSubview(self.tierVerticalStackView22)
+        
+        tierStackView.addArrangedSubview(self.tierStackView11)
+//        tierStackView.addArrangedSubview(self.tierStackView22)
 
+        
+        
         //네비게이션바 타이틀 설정
         self.navigationItem.title = "유저 정보 검색"
         //테이블뷰의 도트 경계
@@ -322,6 +333,8 @@ class SearchController: UIViewController {
             $0.top.equalTo(self.namestackView.snp.bottom).offset(10)
             $0.leading.equalToSuperview().offset(10)
             $0.trailing.equalToSuperview().offset(-10)
+//            $0.centerX.equalToSuperview()
+//            $0.centerY.equalToSuperview()
             //높이와 너비는 이런식으로!
             $0.height.equalTo(150)
         }
@@ -333,6 +346,8 @@ class SearchController: UIViewController {
         self.tierStackView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.centerY.equalToSuperview()
+        
+//            $0.top.bottom.leading.trailing.equalToSuperview()
         }
         
         self.scoreTableView.snp.makeConstraints {
@@ -385,111 +400,6 @@ class SearchController: UIViewController {
         }
     }
     
-    //MARK: - Fetch
-    func MaingetUserId() {
-        var accessId = ""
-        
-        let baseUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users?"
-//        let nameUrl = baseUrl + "?nickname=" + userNickName
-//        let accessUrl = baseUrl + "/\(urlList.accessId)/maxdivision"
-        let matchUrl = baseUrl + "/\(accessId)/matches?matchtype=50&offset=0&limit=10"
-       // let matchInfoUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/matches/" + matchId
-
-        let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname="
-
-        print("닉네임 : ", userNickName)
-        let url = urlString + userNickName
-        
-        //그런데 이렇게 해도 된다. 이게 더 이쁜듯...
-        let headers: HTTPHeaders = [.authorization("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE0MDkzMDI3MDAiLCJhdXRoX2lkIjoiMiIsImV4cCI6MTY3NDg5NjIxMCwiaWF0IjoxNjU5MzQ0MjEwLCJuYmYiOjE2NTkzNDQyMTAsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.nwgL3AMU216uu88opO2R4br3uMRE1_86V9w0Uh7TbN0")]
-     
-        //AccessId 찾기.
-        AF.request(url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get ,headers: headers)
-            .responseJSON { response in
-                switch response.result {
-                case .success(let res):
-                    //print("res: ", res)
-                    do {
-                        let dataJSON = try JSONSerialization.data(withJSONObject: res, options: .prettyPrinted)
-                        let urlList = try JSONDecoder().decode(UserInfo.self, from: dataJSON)
-                        //print("액세스 아이디: ",urlList.accessId)
-                        accessId = urlList.accessId
-                        self.nameLabel.text = "구단주 닉네임 : \(self.userNickName)  구단주 레벨 : \(urlList.level)"
-                        self.nameLabel.textColor = .black
-                        
-        //티어 찾기.
-        let tierUrl = baseUrl + "/\(urlList.accessId)/maxdivision"
-        AF.request(tierUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" , method: .get, headers: headers)
-            .responseJSON { tier in
-            print("tierUrl", tierUrl)
-            switch tier.result {
-            case .success(let tiers):
-                
-                print("tiers:", tiers)
-                do {
-                    let tierJSON = try JSONSerialization.data(withJSONObject: tiers, options: .prettyPrinted)
-                    let tierList = try JSONDecoder().decode([TierInfo].self, from: tierJSON)
-                    
-//                    print(tierList)
-                                        
-                    for i in tierList {
-                        print(i.division)
-                        
-                        //var a = self.tierFind(tier: i.division)
-                        //print(a)
-                        
-//                        아프리카TV규직
-                        
-//                        if i.matchType == 50 {
-//                            let a = i.division
-//                            self.tierFind(tier: a)
-//                            let b = self.tierFind(tier: a)
-//                            print("1:1 : ", b)
-//                        } else {
-//                            let c = i.division
-//                            self.tierFind2(tier: c)
-////                            let d = self.tierFind2(tier: c)
-////                            print("2:2 :", d)
-//                        }
-                   }
-                    
-        //여기서 매칭 정보 구하기.
-                } catch {
-                    //나중에 페이저뷰를 가리고 라벨 띄우게.
-                    print(error)
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-                        
-                    } catch {
-                        self.nameLabel.textColor = .red
-                        self.nameLabel.text = "아이디가 없습니다."
-                    }
-                    
-                case .failure(let error):
-                    print(error)
-                }
-                //여기까진 데이터가 남는군.
-                print("과연 밖에서도 데이터가 연결될까? :", accessId)
-            }
-        //여기선 데이터 증발
-    }
-    
-    
-//    func getRequest() {
-//        let api = API.getAccessId(name: self.userNickName)
-//        api.request { result in
-//            print(result)
-//            switch result {
-//            case .success(let dict):
-//                print(dict as Any)
-//            case .failure(let e):
-//                print(e)
-//            }
-//        }
-//    }
     
     
 //    아프리카tv규직
@@ -505,93 +415,61 @@ class SearchController: UIViewController {
                 self.nameLabel.textColor = .black
                 self.levelLabel.text = "감독레벨 : \(dict.level)"
                 self.levelLabel.textColor = .black
-                //티어찾기.
-                let tier = API.getTier(accessId: dict.accessId)
-                tier.arrrequest(dataType: [TierInfo].self) { tierresult in
-                    switch tierresult {
-                    case .success(let tier):
-                        print(tier)
-                        var tierNameArr = [String]()
-                        var tierTimeArr = [String]()
-                        var tierImgUrlArr = [String]()
+            //티어찾기.
+            let tier = API.getTier(accessId: dict.accessId)
+            tier.arrrequest(dataType: [TierInfo].self) { tierresult in
+            switch tierresult {
+            case .success(let tier):
+                print(tier)
+                var tierNameArr = [String]()
+                var tierTimeArr = [String]()
+                var tierImgUrlArr = [String]()
+                
+                for list in tier {
+                    
+                    let oneone = 50
+                    let twotwo = 52
+                    //스크롤뷰에 값을 각각 집어넣는방법
+                    
+                    if list.matchType == 50 {
+                        print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
+                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
+
+                        tierNameArr.append(oneoneData.tierName)
+                        tierTimeArr.append(oneoneData.achievementDate)
+                        tierImgUrlArr.append(oneoneData.tierImgUrl)
+
+                        let asd = oneoneData.tierImgUrl
+                        print("url",asd)
+                        let asdasd = oneoneData.tierName
+                        print("tier이름",asdasd)
+                        self.tierTimeLabel.text = oneoneData.achievementDate
+                        self.tierDivLabel.text = oneoneData.tierName
                         
-                        for list in tier {
-                            
-                            let oneone = 50
-                            let twotwo = 52
-                            //스크롤뷰에 값을 각각 집어넣는방법
-                            
-//                            if list.matchType == 50 {
-//                                print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
-//                                let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
-//
-//                                tierNameArr.append(oneoneData.tierName)
-//                                tierTimeArr.append(oneoneData.achievementDate)
-//                                tierImgUrlArr.append(oneoneData.tierImgUrl)
-//
-//                                let asd = oneoneData.tierImgUrl
-//                                print("url",asd)
-//                                let asdasd = oneoneData.tierName
-//                                print("tier이름",asdasd)
-//
-//                                let oneoneUrl = URL(string:oneoneData.tierImgUrl)
-//                                self.tierImg.backgroundColor = .white
-//                                self.tierImg.kf.indicatorType = .activity
-//                                self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
-//
-//                            } else if list.matchType == 52 {
-//                                print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
-//                                let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
-//
-//                                tierNameArr.append(twotwoData.tierName22)
-//                                tierTimeArr.append(twotwoData.achievementDate22)
-//                                tierImgUrlArr.append(twotwoData.tierImgUrl22)
-//
-//                            }
-//                            switch self.tierPageControl.numberOfPages {
-//                            case 0:
-//                                print("현재페이지 :",self.tierPageControl.currentPage)
-//                                if list.matchType == 50 {
-//                                    print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
-//                                    let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
-//                                    self.tierTimeLabel.text = oneoneData.achievementDate
-//                                    self.tierDivLabel.text = oneoneData.tierName
-//
-//
-//                                    let asd = oneoneData.tierImgUrl
-//                                    print("url",asd)
-//                                    let asdasd = oneoneData.tierName
-//                                    print("tier이름",asdasd)
-//
-//                                    let oneoneUrl = URL(string:oneoneData.tierImgUrl)
-//                                    self.tierImg.backgroundColor = .white
-//                                    self.tierImg.kf.indicatorType = .activity
-//                                    self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
-//
-//                                }
-//                            case 2:
-//                                if list.matchType == 52 {
-//                                    print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
-//                                    let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
-//                                    self.tierTimeLabel.text = twotwoData.achievementDate22
-//                                    self.tierDivLabel.text = twotwoData.tierName22
-//
-//
-//                                    let asd = twotwoData.tierImgUrl22
-//                                    print("url",asd)
-//                                    let asdasd = twotwoData.tierName22
-//                                    print("tier이름",asdasd)
-//
-//                                    let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
-//                                    self.tierImg.backgroundColor = .white
-//                                    self.tierImg.kf.indicatorType = .activity
-//                                    self.tierImg.kf.setImage(with: twotwoUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
-//
-//                                }
-//                            default :
-//                                break
-//                            }
-                            
+                        let oneoneUrl = URL(string:oneoneData.tierImgUrl)
+                        self.tierImg.backgroundColor = .white
+                        self.tierImg.kf.indicatorType = .activity
+                        self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(1.0))], progressBlock: nil)
+
+                    } else if list.matchType == 52 {
+                        print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
+                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
+
+                        tierNameArr.append(twotwoData.tierName22)
+                        tierTimeArr.append(twotwoData.achievementDate22)
+                        tierImgUrlArr.append(twotwoData.tierImgUrl22)
+
+                        let asd = twotwoData.tierImgUrl22
+                        print("url",asd)
+                        let asdasd = twotwoData.tierName22
+                        print("tier이름",asdasd)
+
+                        let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
+//                                self.tierImg22.backgroundColor = .white
+//                                self.tierImg22.kf.indicatorType = .activity
+//                                self.tierImg22.kf.setImage(with: twotwoUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+                    }
+                    
 //                            if self.tierPageControl.currentPage == 0 {
 //
 //                                print("현재페이지 :",self.tierPageControl.currentPage)
@@ -617,8 +495,8 @@ class SearchController: UIViewController {
 //                                if list.matchType == 52 {
 //                                    print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
 //                                    let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
-//                                    self.tierTimeLabel.text = twotwoData.achievementDate22
-//                                    self.tierDivLabel.text = twotwoData.tierName22
+//                                    self.tierTimeLabel22.text = twotwoData.achievementDate22
+//                                    self.tierDivLabel22.text = twotwoData.tierName22
 //
 //
 //                                    let asd = twotwoData.tierImgUrl22
@@ -627,44 +505,60 @@ class SearchController: UIViewController {
 //                                    print("tier이름",asdasd)
 //
 //                                    let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
-//                                    self.tierImg.backgroundColor = .white
-//                                    self.tierImg.kf.indicatorType = .activity
-//                                    self.tierImg.kf.setImage(with: twotwoUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
+//                                    self.tierImg22.backgroundColor = .white
+//                                    self.tierImg22.kf.indicatorType = .activity
+//                                    self.tierImg22.kf.setImage(with: twotwoUrl, placeholder: nil, options: [.transition(.fade(0.7))], progressBlock: nil)
 //
 //                                }
 //                            }
-                        }
-                        
-                    case .failure(let error):
-                        print(error)
-                    }
                 }
-                //매치 목록 id 구하기.
-                let matchId = API.getMatchId(accessId: dict.accessId, limit: 10)
-                matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
-                    switch matchIdresult {
-                    case .success(let matchIdresult):
-                        //print("matchId fin:",matchIdresult)
-                        
-                        for match in matchIdresult  {
+                
+            case .failure(let error):
+                print(error)
+            }
+                }
+        //매치 목록 id 구하기.
+        let matchId = API.getMatchId(accessId: dict.accessId, limit: 10)
+        matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
+            switch matchIdresult {
+            case .success(let matchIdresult):
+                //print("matchId fin:",matchIdresult)
+                
+                for match in matchIdresult  {
 
-                            //매치 정보 구하기.
-                            let matchInfo = API.getMatchInfo(matchId: match)
-                            matchInfo.arrrequest(dataType: Match.self) { matchresult in
-                                switch matchresult {
-                                case .success(let matchresult):
-                                    //print(matchresult)
-                                    print("성공")
-                                case .failure(let error):
-                                    print(error)
-                                }
+                    //매치 정보 구하기.
+                    let matchInfo = API.getMatchInfo(matchId: match)
+                    matchInfo.arrrequest(dataType: Match.self) { matchresult in
+                        switch matchresult {
+                        case .success(let matchresult):
+                            //print(matchresult)
+                            print("성공")
+                            //0. Match //공통
+                            //1. Match에서 matchDate
+                            let matchDate = matchresult.matchDate // 매칭날짜
 
+                            //2. Match에서 matchInfo에서 nickname
+                            let matchInfoma = matchresult.matchInfo
+                            for infoma in matchInfoma {
+                                let nickName = infoma.nickname // 닉네임
+                            //3. Match에서 matchInfo에서 matchDetail에서 matchResult
+                                let matchDetail = infoma.matchDetail
+                                let matchResult = matchDetail.matchResult //승패
+                            //4. Match에서 matchInfo에서 shoot에서 goalTotal //몇대몇
+                                let shoots = infoma.shoot
+                                let goal = shoots.goalTotal //골.
+                                
                             }
-
+                        case .failure(let error):
+                            print(error)
                         }
-                    case .failure(let error):
-                        print("matchId error : ",error)
+
                     }
+
+                }
+            case .failure(let error):
+                print("matchId error : ",error)
+            }
                 }
             case .failure(let error):
                 print(error)
