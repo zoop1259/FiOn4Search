@@ -186,8 +186,46 @@ import Foundation
 //        }
 //    }
 
+ //match데이터 모델 만들기 전
  
- 
+ //음... 바보같다. 이렇게하면 당연히 의미가 없지.
+//                                for i in 1...index+1 {
+//                                    //print(index, info.nickname)
+//
+//                                    if i%2 == 1 {
+//                                        print(i)
+//                                        a.append(info.nickname)
+//                                    } else if i%2 == 0 {
+//                                        print(i)
+//                                        b.append(info.nickname)
+//                                    }
+//                                }
+ for infoma in matchInfoma {
+     
+//                                for i in 0..<matchInfoma.count {
+//                                    if i%2 == 0 {
+//                                        print()
+//                                    }
+//                                }
+     
+     let nickName = infoma.nickname // 닉네임
+     
+ //3. Match에서 matchInfo에서 matchDetail에서 matchResult
+     let matchDetail = infoma.matchDetail
+     let matchResult = matchDetail.matchResult //승패
+     //c.append(matchDetail.matchResult)
+ //4. Match에서 matchInfo에서 shoot에서 goalTotal //몇대몇
+     let shoots = infoma.shoot
+     let goal = shoots.goalTotal //골.
+     //d.append(shoots.goalTotal)
+     
+     
+//                                self.myMatchModel.append(MyMatch(matchDate: matchDate, nickname: nickName, matchResult: matchResult, goalTotal: goal))
+     //self.myMatchModel.append(MyMatch(matchDate: matchDate, myMatchDetail: MyMatchDetail(nickname: nickName, matchResult: matchResult, goalTotal: goal)))
+
+     
+//                                self.myMatchModel.append(MyMatch(matchDate: matchresult.matchDate, myMatchDetail: [MyMatchDetail.init(nickname: infoma.nickname, matchResult: matchDetail.matchResult, goalTotal: shoots.goalTotal)]))
+//                                self.myMatchModel.sort(by: {$0.matchDate > $1.matchDate })
  
  
  

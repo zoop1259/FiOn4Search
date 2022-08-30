@@ -521,11 +521,7 @@ class SearchController: UIViewController {
         //매치 목록 id 구하기.
         let matchId = API.getMatchId(accessId: dict.accessId, limit: 5)
         matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
-            var a = [String]()
-            var b = [String]()
-            var c = [String]()
-            var d = [Int]()
-            
+            //모델을 위한 임시 변수
             var vmatchResult = ""
             var vgoalTotal = 0
             var vnickName = ""
@@ -552,15 +548,16 @@ class SearchController: UIViewController {
                             let matchDate = matchresult.matchDate // 매칭날짜
                             //a.append(matchresult.matchDate)
                             
-                            //2. Match에서 matchInfo에서 nickname
                             let matchInfoma = matchresult.matchInfo
                             //닉네임으로 sort해도..
+                            
+                            //2. Match에서 matchInfo에서 nickname
+                            //3. Match에서 matchInfo에서 matchDetail에서 matchResult
+                            //4. Match에서 matchInfo에서 shoot에서 goalTotal //몇대몇
                             
                             for (index, info) in matchInfoma.enumerated() {
                                 //print(index, info.nickname)
                                 if index%2 == 0 {
-                                    //print("0",info.nickname)
-                                    a.append(info.nickname)
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
                                             vmatchResult = "몰수승"
@@ -575,10 +572,7 @@ class SearchController: UIViewController {
                                     vgoalTotal = info.shoot.goalTotal //골수
                                     vnickName = info.nickname
                                     
-                                    
                                 } else {
-                                   // print("1",info.nickname)
-                                    b.append(info.nickname)
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
                                             smatchResult = "몰수승"
@@ -594,55 +588,13 @@ class SearchController: UIViewController {
                                     snickName = info.nickname
                                     
                                 }
-                                
-                                //음... 바보같다. 이렇게하면 당연히 의미가 없지.
-//                                for i in 1...index+1 {
-//                                    //print(index, info.nickname)
-//
-//                                    if i%2 == 1 {
-//                                        print(i)
-//                                        a.append(info.nickname)
-//                                    } else if i%2 == 0 {
-//                                        print(i)
-//                                        b.append(info.nickname)
-//                                    }
-//                                }
-                                
+                                                            
                             }
-                            //print("a",a)
-                            //print("b",b)
+
                             self.myMatchModel.append(MyMatch(matchDate: matchDate, myMatchDetail: MyMatchDetail(nickname: vnickName, matchResult: vmatchResult, goalTotal: vgoalTotal, vsnickname: snickName, vsmatchResult: smatchResult, vsgoalTotal: sgoalTotal)))
                             print(self.myMatchModel)
 //                            print(self.myMatchModel.count)
                             
-                            for infoma in matchInfoma {
-                                
-//                                for i in 0..<matchInfoma.count {
-//                                    if i%2 == 0 {
-//                                        print()
-//                                    }
-//                                }
-                                
-                                let nickName = infoma.nickname // 닉네임
-                                
-                            //3. Match에서 matchInfo에서 matchDetail에서 matchResult
-                                let matchDetail = infoma.matchDetail
-                                let matchResult = matchDetail.matchResult //승패
-                                //c.append(matchDetail.matchResult)
-                            //4. Match에서 matchInfo에서 shoot에서 goalTotal //몇대몇
-                                let shoots = infoma.shoot
-                                let goal = shoots.goalTotal //골.
-                                //d.append(shoots.goalTotal)
-                                
-                                
-//                                self.myMatchModel.append(MyMatch(matchDate: matchDate, nickname: nickName, matchResult: matchResult, goalTotal: goal))
-                                //self.myMatchModel.append(MyMatch(matchDate: matchDate, myMatchDetail: MyMatchDetail(nickname: nickName, matchResult: matchResult, goalTotal: goal)))
- 
-                                
-//                                self.myMatchModel.append(MyMatch(matchDate: matchresult.matchDate, myMatchDetail: [MyMatchDetail.init(nickname: infoma.nickname, matchResult: matchDetail.matchResult, goalTotal: shoots.goalTotal)]))
-//                                self.myMatchModel.sort(by: {$0.matchDate > $1.matchDate })
-                    
-                            }
                         case .failure(let error):
                             print("2",error)
                         }
