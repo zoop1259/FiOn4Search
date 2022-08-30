@@ -22,6 +22,9 @@ struct MyMatchDetail: Codable {
     var nickname: String
     var matchResult: String
     var goalTotal: Int
+    var vsnickname: String
+    var vsmatchResult: String
+    var vsgoalTotal: Int
 }
 
 /*

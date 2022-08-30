@@ -525,6 +525,15 @@ class SearchController: UIViewController {
             var b = [String]()
             var c = [String]()
             var d = [Int]()
+            
+            var vmatchResult = ""
+            var vgoalTotal = 0
+            var vnickName = ""
+            var smatchResult = ""
+            var sgoalTotal = 0
+            var snickName = ""
+            
+            
             switch matchIdresult {
             case .success(let matchIdresult):
 //                print("matchId fin:",matchIdresult)
@@ -552,11 +561,41 @@ class SearchController: UIViewController {
                                 if index%2 == 0 {
                                     //print("0",info.nickname)
                                     a.append(info.nickname)
+                                    if info.shoot.goalTotal == 0 {
+                                        if info.matchDetail.matchResult == "승" {
+                                            vmatchResult = "PK승"
+                                            print("PK승")
+                                        } else if info.matchDetail.matchResult == "패" {
+                                            print("PK패")
+                                            vmatchResult = "PK패"
+                                        }
+                                    } else {
+                                        vmatchResult = info.matchDetail.matchResult //승패
+                                    }
+                                    vgoalTotal = info.shoot.goalTotal //골수
+                                    vnickName = info.nickname
+                                    
+                                    
                                 } else {
                                    // print("1",info.nickname)
                                     b.append(info.nickname)
+                                    if info.shoot.goalTotal == 0 {
+                                        if info.matchDetail.matchResult == "승" {
+                                            smatchResult = "PK승"
+                                            print("PK승")
+                                        } else if info.matchDetail.matchResult == "패" {
+                                            print("PK패")
+                                            smatchResult = "PK패"
+                                        }
+                                    } else {
+                                        smatchResult = info.matchDetail.matchResult //승패
+                                    }
+                                    sgoalTotal = info.shoot.goalTotal //골수
+                                    snickName = info.nickname
+                                    
                                 }
                                 
+                                //음... 바보같다. 이렇게하면 당연히 의미가 없지.
 //                                for i in 1...index+1 {
 //                                    //print(index, info.nickname)
 //
@@ -570,9 +609,11 @@ class SearchController: UIViewController {
 //                                }
                                 
                             }
-                            print("a",a)
-                            print("b",b)
-                                  
+                            //print("a",a)
+                            //print("b",b)
+                            self.myMatchModel.append(MyMatch(matchDate: matchDate, myMatchDetail: MyMatchDetail(nickname: vnickName, matchResult: vmatchResult, goalTotal: vgoalTotal, vsnickname: snickName, vsmatchResult: smatchResult, vsgoalTotal: sgoalTotal)))
+                            print(self.myMatchModel)
+//                            print(self.myMatchModel.count)
                             
                             for infoma in matchInfoma {
                                 
