@@ -66,6 +66,7 @@ class SearchController: UIViewController {
     //$0.text = "Data based on NEXON DEVELOPERS"
     private var viewModel = ProductViewModel()
     private var bag = DisposeBag()
+    private var myMatchModel = [MyMatch]()
     var userNickName = ""
     //스토리보드로 라이브러리를 추가하는게 아니라 코드로 라이브러리를 추가해줘야하기 때문에.
     //let 이름 = 라이브러리이름 후에 () 로 개체로 만든다.
@@ -518,43 +519,58 @@ class SearchController: UIViewController {
             }
                 }
         //매치 목록 id 구하기.
-        let matchId = API.getMatchId(accessId: dict.accessId, limit: 10)
+        let matchId = API.getMatchId(accessId: dict.accessId, limit: 3)
         matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
             switch matchIdresult {
             case .success(let matchIdresult):
                 //print("matchId fin:",matchIdresult)
-                
+                print("만들어야될 카운트",matchIdresult.count)
                 for match in matchIdresult  {
-
+                    
                     //매치 정보 구하기.
                     let matchInfo = API.getMatchInfo(matchId: match)
                     matchInfo.arrrequest(dataType: Match.self) { matchresult in
                         switch matchresult {
                         case .success(let matchresult):
                             //print(matchresult)
-                            print("성공")
+                            //print("성공")
                             //0. Match //공통
                             //1. Match에서 matchDate
                             let matchDate = matchresult.matchDate // 매칭날짜
-
                             //2. Match에서 matchInfo에서 nickname
                             let matchInfoma = matchresult.matchInfo
+                            
                             for infoma in matchInfoma {
+                                
                                 let nickName = infoma.nickname // 닉네임
+                                
                             //3. Match에서 matchInfo에서 matchDetail에서 matchResult
                                 let matchDetail = infoma.matchDetail
                                 let matchResult = matchDetail.matchResult //승패
                             //4. Match에서 matchInfo에서 shoot에서 goalTotal //몇대몇
                                 let shoots = infoma.shoot
                                 let goal = shoots.goalTotal //골.
+//                                self.myMatchModel.append(MyMatch(matchDate: matchDate, nickname: nickName, matchResult: matchResult, goalTotal: goal))
+                                //self.myMatchModel.append(MyMatch(matchDate: matchDate, myMatchDetail: MyMatchDetail(nickname: nickName, matchResult: matchResult, goalTotal: goal)))
                                 
+                                
+                                
+//                                self.myMatchModel.append(MyMatch(matchDate: matchresult.matchDate, myMatchDetail: [MyMatchDetail.init(nickname: infoma.nickname, matchResult: matchDetail.matchResult, goalTotal: shoots.goalTotal)]))
+//                                self.myMatchModel.sort(by: {$0.matchDate > $1.matchDate })
+                                
+                                
+                                
+                                //print(self.myMatchModel)
                             }
                         case .failure(let error):
                             print(error)
                         }
+                        print("모델: ",self.myMatchModel)
 
+//                        print("내가만든 모델의 카운트",self.myMatchModel.count)
                     }
 
+                    
                 }
             case .failure(let error):
                 print("matchId error : ",error)

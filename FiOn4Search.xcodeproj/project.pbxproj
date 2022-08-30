@@ -28,6 +28,7 @@
 		C59954F928A0CD8B00D0D617 /* AlamofireManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59954F828A0CD8B00D0D617 /* AlamofireManager.swift */; };
 		C5ACF98228B29AFE00901134 /* mytrashCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF98128B29AFE00901134 /* mytrashCode.swift */; };
 		C5ACF9AB28B6980600901134 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C5ACF9AA28B6980600901134 /* Kingfisher */; };
+		C5ACF9AD28BDFB5000901134 /* MyMatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9AC28BDFB5000901134 /* MyMatchModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		C5995488289A36EF00D0D617 /* CommissionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommissionController.swift; sourceTree = "<group>"; };
 		C59954F828A0CD8B00D0D617 /* AlamofireManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireManager.swift; sourceTree = "<group>"; };
 		C5ACF98128B29AFE00901134 /* mytrashCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mytrashCode.swift; sourceTree = "<group>"; };
+		C5ACF9AC28BDFB5000901134 /* MyMatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMatchModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 				C58FB33A28A1FA5800E90968 /* TierModel.swift */,
 				C58FB33C28A1FA6100E90968 /* MatchModel.swift */,
 				C58FB33E28A1FA7000E90968 /* MatchInfoModel.swift */,
+				C5ACF9AC28BDFB5000901134 /* MyMatchModel.swift */,
 				C5995488289A36EF00D0D617 /* CommissionController.swift */,
 				C574E8AF28AB6F1400F547A8 /* ServiceManager.swift */,
 				C5ACF98128B29AFE00901134 /* mytrashCode.swift */,
@@ -196,6 +199,7 @@
 				C58FB33F28A1FA7000E90968 /* MatchInfoModel.swift in Sources */,
 				C58FB33D28A1FA6100E90968 /* MatchModel.swift in Sources */,
 				C58FB33B28A1FA5800E90968 /* TierModel.swift in Sources */,
+				C5ACF9AD28BDFB5000901134 /* MyMatchModel.swift in Sources */,
 				C5995472289A32A700D0D617 /* AppDelegate.swift in Sources */,
 				C58FB33928A1CBFD00E90968 /* UserModel.swift in Sources */,
 				C5995489289A36EF00D0D617 /* CommissionController.swift in Sources */,
