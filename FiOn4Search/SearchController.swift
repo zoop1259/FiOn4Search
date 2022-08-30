@@ -563,11 +563,11 @@ class SearchController: UIViewController {
                                     a.append(info.nickname)
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
-                                            vmatchResult = "PK승"
+                                            vmatchResult = "몰수승"
                                             print("PK승")
                                         } else if info.matchDetail.matchResult == "패" {
                                             print("PK패")
-                                            vmatchResult = "PK패"
+                                            vmatchResult = "몰수패"
                                         }
                                     } else {
                                         vmatchResult = info.matchDetail.matchResult //승패
@@ -581,11 +581,11 @@ class SearchController: UIViewController {
                                     b.append(info.nickname)
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
-                                            smatchResult = "PK승"
+                                            smatchResult = "몰수승"
                                             print("PK승")
                                         } else if info.matchDetail.matchResult == "패" {
                                             print("PK패")
-                                            smatchResult = "PK패"
+                                            smatchResult = "몰수패"
                                         }
                                     } else {
                                         smatchResult = info.matchDetail.matchResult //승패
