@@ -408,10 +408,10 @@ class SearchController: UIViewController {
         //엑세스아이디찾기
         let accessid = API.getAccessId(name: self.userNickName)
         accessid.arrrequest(dataType: UserInfo.self) { result in
-            print(result)
+//            print(result)
             switch result {
             case .success(let dict):
-                print(dict)
+//                print(dict)
                 self.nameLabel.text = "\(self.userNickName)"
                 self.nameLabel.textColor = .black
                 self.levelLabel.text = "감독레벨 : \(dict.level)"
@@ -421,7 +421,7 @@ class SearchController: UIViewController {
             tier.arrrequest(dataType: [TierInfo].self) { tierresult in
             switch tierresult {
             case .success(let tier):
-                print(tier)
+//                print(tier)
                 var tierNameArr = [String]()
                 var tierTimeArr = [String]()
                 var tierImgUrlArr = [String]()
@@ -433,7 +433,7 @@ class SearchController: UIViewController {
                     //스크롤뷰에 값을 각각 집어넣는방법
                     
                     if list.matchType == 50 {
-                        print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
+//                        print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
                         let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
 
                         tierNameArr.append(oneoneData.tierName)
@@ -441,9 +441,9 @@ class SearchController: UIViewController {
                         tierImgUrlArr.append(oneoneData.tierImgUrl)
 
                         let asd = oneoneData.tierImgUrl
-                        print("url",asd)
+//                        print("url",asd)
                         let asdasd = oneoneData.tierName
-                        print("tier이름",asdasd)
+//                        print("tier이름",asdasd)
                         self.tierTimeLabel.text = oneoneData.achievementDate
                         self.tierDivLabel.text = oneoneData.tierName
                         
@@ -453,7 +453,7 @@ class SearchController: UIViewController {
                         self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(1.0))], progressBlock: nil)
 
                     } else if list.matchType == 52 {
-                        print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
+//                        print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
                         let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
 
                         tierNameArr.append(twotwoData.tierName22)
@@ -461,9 +461,9 @@ class SearchController: UIViewController {
                         tierImgUrlArr.append(twotwoData.tierImgUrl22)
 
                         let asd = twotwoData.tierImgUrl22
-                        print("url",asd)
+//                        print("url",asd)
                         let asdasd = twotwoData.tierName22
-                        print("tier이름",asdasd)
+//                        print("tier이름",asdasd)
 
                         let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
 //                                self.tierImg22.backgroundColor = .white
@@ -515,15 +515,19 @@ class SearchController: UIViewController {
                 }
                 
             case .failure(let error):
-                print(error)
+                print("1",error)
             }
                 }
         //매치 목록 id 구하기.
         let matchId = API.getMatchId(accessId: dict.accessId, limit: 3)
         matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
+            var a = [String]()
+            var b = [String]()
+            var c = [String]()
+            var d = [Int]()
             switch matchIdresult {
             case .success(let matchIdresult):
-                //print("matchId fin:",matchIdresult)
+//                print("matchId fin:",matchIdresult)
                 print("만들어야될 카운트",matchIdresult.count)
                 for match in matchIdresult  {
                     
@@ -537,47 +541,60 @@ class SearchController: UIViewController {
                             //0. Match //공통
                             //1. Match에서 matchDate
                             let matchDate = matchresult.matchDate // 매칭날짜
+                            a.append(matchresult.matchDate)
+                            
                             //2. Match에서 matchInfo에서 nickname
                             let matchInfoma = matchresult.matchInfo
                             
+                            for (index, info) in matchInfoma.enumerated() {
+                                for i in 0..<index {
+                                    if i%2 == 0 {
+                                        print(info.nickname)
+                                    }
+                                }
+                            }
+                            
                             for infoma in matchInfoma {
+                                
+//                                for i in 0..<matchInfoma.count {
+//                                    if i%2 == 0 {
+//                                        print()
+//                                    }
+//                                }
                                 
                                 let nickName = infoma.nickname // 닉네임
                                 
                             //3. Match에서 matchInfo에서 matchDetail에서 matchResult
                                 let matchDetail = infoma.matchDetail
                                 let matchResult = matchDetail.matchResult //승패
+                                //c.append(matchDetail.matchResult)
                             //4. Match에서 matchInfo에서 shoot에서 goalTotal //몇대몇
                                 let shoots = infoma.shoot
                                 let goal = shoots.goalTotal //골.
+                                //d.append(shoots.goalTotal)
+                                
+                                
 //                                self.myMatchModel.append(MyMatch(matchDate: matchDate, nickname: nickName, matchResult: matchResult, goalTotal: goal))
                                 //self.myMatchModel.append(MyMatch(matchDate: matchDate, myMatchDetail: MyMatchDetail(nickname: nickName, matchResult: matchResult, goalTotal: goal)))
-                                
-                                
+ 
                                 
 //                                self.myMatchModel.append(MyMatch(matchDate: matchresult.matchDate, myMatchDetail: [MyMatchDetail.init(nickname: infoma.nickname, matchResult: matchDetail.matchResult, goalTotal: shoots.goalTotal)]))
 //                                self.myMatchModel.sort(by: {$0.matchDate > $1.matchDate })
-                                
-                                
-                                
-                                //print(self.myMatchModel)
+                    
                             }
                         case .failure(let error):
-                            print(error)
+                            print("2",error)
                         }
-                        print("모델: ",self.myMatchModel)
-
-//                        print("내가만든 모델의 카운트",self.myMatchModel.count)
                     }
-
-                    
                 }
             case .failure(let error):
                 print("matchId error : ",error)
             }
+            
+            
                 }
             case .failure(let error):
-                print(error)
+                print("3",error)
                 self.nameLabel.text = "구단주명이 존재하지 않습니다."
                 self.nameLabel.textColor = .red
             }
