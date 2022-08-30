@@ -519,7 +519,7 @@ class SearchController: UIViewController {
             }
                 }
         //매치 목록 id 구하기.
-        let matchId = API.getMatchId(accessId: dict.accessId, limit: 3)
+        let matchId = API.getMatchId(accessId: dict.accessId, limit: 5)
         matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
             var a = [String]()
             var b = [String]()
@@ -541,18 +541,38 @@ class SearchController: UIViewController {
                             //0. Match //공통
                             //1. Match에서 matchDate
                             let matchDate = matchresult.matchDate // 매칭날짜
-                            a.append(matchresult.matchDate)
+                            //a.append(matchresult.matchDate)
                             
                             //2. Match에서 matchInfo에서 nickname
                             let matchInfoma = matchresult.matchInfo
+                            //닉네임으로 sort해도..
                             
                             for (index, info) in matchInfoma.enumerated() {
-                                for i in 0..<index {
-                                    if i%2 == 0 {
-                                        print(info.nickname)
-                                    }
+                                //print(index, info.nickname)
+                                if index%2 == 0 {
+                                    //print("0",info.nickname)
+                                    a.append(info.nickname)
+                                } else {
+                                   // print("1",info.nickname)
+                                    b.append(info.nickname)
                                 }
+                                
+//                                for i in 1...index+1 {
+//                                    //print(index, info.nickname)
+//
+//                                    if i%2 == 1 {
+//                                        print(i)
+//                                        a.append(info.nickname)
+//                                    } else if i%2 == 0 {
+//                                        print(i)
+//                                        b.append(info.nickname)
+//                                    }
+//                                }
+                                
                             }
+                            print("a",a)
+                            print("b",b)
+                                  
                             
                             for infoma in matchInfoma {
                                 
