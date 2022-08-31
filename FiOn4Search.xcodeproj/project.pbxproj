@@ -29,6 +29,7 @@
 		C5ACF98228B29AFE00901134 /* mytrashCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF98128B29AFE00901134 /* mytrashCode.swift */; };
 		C5ACF9AB28B6980600901134 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C5ACF9AA28B6980600901134 /* Kingfisher */; };
 		C5ACF9AD28BDFB5000901134 /* MyMatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9AC28BDFB5000901134 /* MyMatchModel.swift */; };
+		C5ACF9B128BEF26200901134 /* MatchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9B028BEF26200901134 /* MatchTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		C59954F828A0CD8B00D0D617 /* AlamofireManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireManager.swift; sourceTree = "<group>"; };
 		C5ACF98128B29AFE00901134 /* mytrashCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mytrashCode.swift; sourceTree = "<group>"; };
 		C5ACF9AC28BDFB5000901134 /* MyMatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMatchModel.swift; sourceTree = "<group>"; };
+		C5ACF9B028BEF26200901134 /* MatchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				C5995471289A32A700D0D617 /* AppDelegate.swift */,
 				C5995473289A32A700D0D617 /* SceneDelegate.swift */,
 				C5995475289A32A700D0D617 /* SearchController.swift */,
+				C5ACF9B028BEF26200901134 /* MatchTableViewCell.swift */,
 				C574E8B128ABDCB200F547A8 /* APIManager.swift */,
 				C58FB33828A1CBFD00E90968 /* UserModel.swift */,
 				C58FB33A28A1FA5800E90968 /* TierModel.swift */,
@@ -202,6 +205,7 @@
 				C5ACF9AD28BDFB5000901134 /* MyMatchModel.swift in Sources */,
 				C5995472289A32A700D0D617 /* AppDelegate.swift in Sources */,
 				C58FB33928A1CBFD00E90968 /* UserModel.swift in Sources */,
+				C5ACF9B128BEF26200901134 /* MatchTableViewCell.swift in Sources */,
 				C5995489289A36EF00D0D617 /* CommissionController.swift in Sources */,
 				C5ACF98228B29AFE00901134 /* mytrashCode.swift in Sources */,
 				C574E8B228ABDCB200F547A8 /* APIManager.swift in Sources */,

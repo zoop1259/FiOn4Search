@@ -192,7 +192,7 @@ class SearchController: UIViewController {
 
     //전적을 나타낼 테이블뷰
     let scoreTableView = UITableView().then {
-        $0.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        $0.register(MatchTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     let baseUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users?"
@@ -203,9 +203,10 @@ class SearchController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+
         
         configure()
-        bindTableViewData()
+        //bindTableViewData()
         //tierFind()
 
         searchTextField.rx.text.orEmpty
@@ -222,7 +223,6 @@ class SearchController: UIViewController {
                 //getUserId()
                 //self.MaingetUserId()
                 self.getRequest()
-                
             }).disposed(by: bag)
         
         
@@ -265,7 +265,8 @@ class SearchController: UIViewController {
         view.addSubview(self.navigationBar)
         view.addSubview(self.tierScrollView)
         view.addSubview(self.scoreTableView)
-        
+        scoreTableView.delegate = self
+        scoreTableView.dataSource = self
         
         view.addSubview(self.searchstackView)
         searchstackView.addArrangedSubview(self.searchTextField)
@@ -359,6 +360,7 @@ class SearchController: UIViewController {
 
     }
     
+    //MARK: - 임시 Fetch
     func bindTableViewData() {
         //세가지를 먼저 하고 싶다.
         //1. bind items to table
@@ -366,6 +368,8 @@ class SearchController: UIViewController {
             to: scoreTableView.rx.items(cellIdentifier: "cell",
                                    cellType: UITableViewCell.self)
         ) { row, model, cell in
+            
+            //cell.textLabel?.text = self.myMatchModel[row].matchDate ?? model.title
             cell.textLabel?.text = model.title
             cell.imageView?.image = UIImage(systemName: model.imageName)
         }.disposed(by: bag)
@@ -595,6 +599,9 @@ class SearchController: UIViewController {
                             print(self.myMatchModel)
 //                            print(self.myMatchModel.count)
                             
+                            self.scoreTableView.reloadData()
+                            
+                            
                         case .failure(let error):
                             print("2",error)
                         }
@@ -617,6 +624,32 @@ class SearchController: UIViewController {
     func selectedPage(currentPage: Int) {
         tierPageControl.currentPage = currentPage
     }
+    
+}
+
+extension SearchController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return myMatchModel.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MatchTableViewCell
+        
+        cell.matchDateLabel.text = myMatchModel[indexPath.row].matchDate
+        
+        cell.homeResultLabel.text = myMatchModel[indexPath.row].myMatchDetail.matchResult
+        cell.homeNameLabel.text = myMatchModel[indexPath.row].myMatchDetail.nickname
+        cell.homeGoalLabel.text = String(myMatchModel[indexPath.row].myMatchDetail.goalTotal)
+        
+        cell.awayResultLabel.text = myMatchModel[indexPath.row].myMatchDetail.vsmatchResult
+        cell.awayNameLabel.text = myMatchModel[indexPath.row].myMatchDetail.vsnickname
+        
+        cell.awayGoalLabel.text = String(myMatchModel[indexPath.row].myMatchDetail.vsgoalTotal)
+        
+        
+        return cell
+    }
+    
     
 }
 
