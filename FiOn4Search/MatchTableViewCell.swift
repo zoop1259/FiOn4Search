@@ -12,7 +12,9 @@ import SnapKit
 class MatchTableViewCell: UITableViewCell {
 
     //매칭시간
-    let matchDateLabel = UILabel()
+    let matchDateLabel = UILabel().then {
+        $0.textAlignment = .center
+    }
     
     //홈 이름 결과 골수
     let homeNameLabel = UILabel().then {
@@ -101,7 +103,7 @@ class MatchTableViewCell: UITableViewCell {
         }
         homeGoalLabel.snp.makeConstraints {
             $0.top.equalTo(self.matchDateLabel.snp.bottom)
-            $0.leading.equalTo(self.homeNameLabel).offset(5)
+            $0.leading.equalTo(self.homeNameLabel.snp.trailing).offset(5)
         }
         
         awayResultLabel.snp.makeConstraints {
@@ -110,11 +112,11 @@ class MatchTableViewCell: UITableViewCell {
         }
         awayNameLabel.snp.makeConstraints {
             $0.top.equalTo(self.matchDateLabel.snp.bottom)
-            $0.trailing.equalTo(self.awayResultLabel).offset(-5)
+            $0.trailing.equalTo(self.awayResultLabel.snp.leading).offset(-5)
         }
         awayGoalLabel.snp.makeConstraints {
             $0.top.equalTo(self.matchDateLabel.snp.bottom)
-            $0.trailing.equalTo(self.awayNameLabel).offset(-5)
+            $0.trailing.equalTo(self.awayNameLabel.snp.leading).offset(-5)
         }
         
         

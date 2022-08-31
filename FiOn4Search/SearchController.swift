@@ -523,7 +523,7 @@ class SearchController: UIViewController {
             }
                 }
         //매치 목록 id 구하기.
-        let matchId = API.getMatchId(accessId: dict.accessId, limit: 5)
+        let matchId = API.getMatchId(accessId: dict.accessId, limit: 10)
         matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
             //모델을 위한 임시 변수
             var vmatchResult = ""
@@ -532,8 +532,7 @@ class SearchController: UIViewController {
             var smatchResult = ""
             var sgoalTotal = 0
             var snickName = ""
-            
-            
+
             switch matchIdresult {
             case .success(let matchIdresult):
 //                print("matchId fin:",matchIdresult)
@@ -549,6 +548,19 @@ class SearchController: UIViewController {
                             //print("성공")
                             //0. Match //공통
                             //1. Match에서 matchDate
+                            //2022-07-01T20:39:47 <<포맷해야한다.
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                            let convertDate = dateFormatter.date(from: matchresult.matchDate) // Date 타입으로 변환
+                            print(convertDate)
+                            let myDateFormatter = DateFormatter()
+                            myDateFormatter.dateFormat = "yyyy.MM.dd a hh시 mm분" // 2020.08.13 오후 04시 30분
+                            myDateFormatter.locale = Locale(identifier:"ko_KR") // PM, AM을 언어에 맞게 setting (ex: PM -> 오후)
+                            let convertStr = myDateFormatter.string(from: convertDate!)
+                            print(convertStr)
+                            //let convertNowStr = myDateFormatter.string(from: nowDate) // 현재 시간의 Date를 format에 맞춰 string으로 반환
+                            
+                            
                             let matchDate = matchresult.matchDate // 매칭날짜
                             //a.append(matchresult.matchDate)
                             
@@ -595,8 +607,8 @@ class SearchController: UIViewController {
                                                             
                             }
 
-                            self.myMatchModel.append(MyMatch(matchDate: matchDate, myMatchDetail: MyMatchDetail(nickname: vnickName, matchResult: vmatchResult, goalTotal: vgoalTotal, vsnickname: snickName, vsmatchResult: smatchResult, vsgoalTotal: sgoalTotal)))
-                            print(self.myMatchModel)
+                            self.myMatchModel.append(MyMatch(matchDate: convertStr, myMatchDetail: MyMatchDetail(nickname: vnickName, matchResult: vmatchResult, goalTotal: vgoalTotal, vsnickname: snickName, vsmatchResult: smatchResult, vsgoalTotal: sgoalTotal)))
+                            //print(self.myMatchModel)
 //                            print(self.myMatchModel.count)
                             
                             self.scoreTableView.reloadData()
