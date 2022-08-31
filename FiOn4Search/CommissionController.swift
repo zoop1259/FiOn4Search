@@ -263,7 +263,7 @@ class CommissionController: UIViewController {
         }
         
         if let count = Int(count) {
-            if count >= 50 {
+            if count > 50 {
                 self.couponTextField.text = String("50")
             }
         }
@@ -302,6 +302,7 @@ class CommissionController: UIViewController {
         var coupon:Double = 0
         var segValue:Double = 0
         var commission:Double = 0
+        var basicValue = 0
         //,를 줄이기 위해.
         let filtered = self.cashTextField.text?.description.replacingOccurrences(of: ",", with: "")
         let segfiltered = self.discountSegControl.selectedSegmentIndex
@@ -321,6 +322,7 @@ class CommissionController: UIViewController {
                 //print(filtercash)
                 let baseprice = Int(filtercash * 0.6)
                 let baseCommission = Double(filtercash * 0.4)
+                basicValue = Int(baseCommission)
                 culc = baseprice
                 commission = baseCommission
             }
@@ -348,6 +350,7 @@ class CommissionController: UIViewController {
             self.receiveTextField.text = nil
         } else if Int(coupon + segValue) == 1 {
             self.receiveTextField.text = self.cashTextField.text
+            self.discountamountTextField.text = String(basicValue)
         } else {
             self.discountamountTextField.text = self.changeValue(String(discount))
             self.receiveTextField.text = self.changeValue(String(cash))

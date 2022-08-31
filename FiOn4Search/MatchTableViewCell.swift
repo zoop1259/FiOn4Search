@@ -97,7 +97,7 @@ class MatchTableViewCell: UITableViewCell {
         }
         homeNameLabel.snp.makeConstraints {
             $0.top.equalTo(self.matchDateLabel.snp.bottom)
-            $0.leading.equalTo(self.homeResultLabel).offset(5)
+            $0.leading.equalTo(self.homeResultLabel.snp.trailing).offset(5)
         }
         homeGoalLabel.snp.makeConstraints {
             $0.top.equalTo(self.matchDateLabel.snp.bottom)
