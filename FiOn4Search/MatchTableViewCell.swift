@@ -118,20 +118,11 @@ class MatchTableViewCell: UITableViewCell {
             $0.top.equalTo(self.matchDateLabel.snp.bottom)
             $0.trailing.equalTo(self.awayNameLabel.snp.leading).offset(-5)
         }
-        
-        
     }
-    
-//    override func awakeFromNib() {
-//        super.awakeFromNib()
-//        // Initialization code
-//        layout()
-//        configure()
-//    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        print("\(homeNameLabel) : \(homeResultLabel)")
+        print("\(homeNameLabel.text) : \(homeResultLabel.text)")
         // Configure the view for the selected state
     }
 

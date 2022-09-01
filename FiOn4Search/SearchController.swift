@@ -4,7 +4,6 @@
 //
 //  Created by 강대민 on 2022/08/03.
 //
-//사용자들이 원하는 스쿼드 메이커??
 
 /*
  서치 화면
@@ -37,34 +36,10 @@ import CloudKit
 import Kingfisher
 import os
 
-//임시모델
-struct Product {
-    let imageName: String
-    let title: String
-    let hi: String
-}
-struct ProductViewModel {
-    //인스턴스를 생성하기 위해 괄호를 추가.
-    var items = PublishSubject<[Product]>()
-    
-    func fetchItems() {
-        let products = [
-            Product(imageName: "house", title: "Home", hi: "hihi"),
-            Product(imageName: "gear", title: "Settings", hi: "hihi"),
-            Product(imageName: "person.circle", title: "Profile", hi: "hihi" ),
-            Product(imageName: "airplane", title: "Flights", hi: "hihi"),
-            Product(imageName: "bell", title: "Activity", hi: "hihi")
-        ]
-        items.onNext(products)
-        items.onCompleted()
-    }
-}
-
-class SearchController: UIViewController {
+class SearchController: UIViewController, UIScrollViewDelegate {
     public static let shared = SearchController()
  
     //$0.text = "Data based on NEXON DEVELOPERS"
-    private var viewModel = ProductViewModel()
     private var bag = DisposeBag()
     private var myMatchModel = [MyMatch]()
     var userNickName = ""
@@ -188,74 +163,32 @@ class SearchController: UIViewController {
         //$0.spacing = 10
         $0.axis = .horizontal
     }
-    
 
     //전적을 나타낼 테이블뷰
     let scoreTableView = UITableView().then {
         $0.register(MatchTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
-    let baseUrl = "https://api.nexon.co.kr/fifaonline4/v1.0/users?"
-//        let urlString = "https://api.nexon.co.kr/fifaonline4/v1.0/users?nickname="
-    let nickString = "nickName="
-    
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-
         
         configure()
-        //bindTableViewData()
-        //tierFind()
-
+        
         searchTextField.rx.text.orEmpty
             .subscribe(onNext: { count in
                 //입력이 될때마다 culc호출
                 self.userNameCount(count)
                 print(count)
                 self.userNickName = count
-                
             }).disposed(by: bag)
         
         searchBtn.rx.tap
             .subscribe(onNext: {_ in
-                //getUserId()
-                //self.MaingetUserId()
                 self.getRequest()
             }).disposed(by: bag)
-        
-        
-        
-//        nameLabel.rx.observe(String.self, "text")
-//            .subscribe(onNext: { text in
-//                print("nameLabel 변경됨")
-//                self.nameLabel.textColor = .black
-//            }).disposed(by: bag)
-        
-        /*
-         ApiManager.shared.AFPokemos { (response) in
-             
-             if let pokemons = response.results, pokemons.count > 0 {
-                 print("af이름 : \(pokemons[0].name ?? "")")
-             }
-         } fail: {
-             print("패치 실패")
-         }
-         
-         func AFPokemos(success: @escaping ((UserInfo) -> Void),
-                         fail: @escaping (() -> Void)) {
-             
-             ServiceManager.shared.AFService(urlString: "https://pokeapi.co/api/v2/pokemon/") { (response: UserInfo) in success(response)
-             } fail : {
-                 fail()
-             }
-         }
-         */
-        
     }
-        
-    
         
     //MARK: - configure
     func configure() {
@@ -278,6 +211,7 @@ class SearchController: UIViewController {
         
         //스크롤뷰에 추가
         tierScrollView.delegate = self
+        
         tierScrollView.isScrollEnabled = true
         tierScrollView.isPagingEnabled = true
         tierScrollView.addSubview(self.tierPageControl)
@@ -359,42 +293,6 @@ class SearchController: UIViewController {
         }
 
     }
-    
-    //MARK: - 임시 Fetch
-    func bindTableViewData() {
-        //세가지를 먼저 하고 싶다.
-        //1. bind items to table
-        viewModel.items.bind(
-            to: scoreTableView.rx.items(cellIdentifier: "cell",
-                                   cellType: UITableViewCell.self)
-        ) { row, model, cell in
-            
-            //cell.textLabel?.text = self.myMatchModel[row].matchDate ?? model.title
-            cell.textLabel?.text = model.title
-            cell.imageView?.image = UIImage(systemName: model.imageName)
-        }.disposed(by: bag)
-        //2. bind a model selected handler
-        scoreTableView.rx.modelSelected(Product.self).bind { product in
-            print(product.title)
-        }.disposed(by: bag)
-
-        //3. fetch items
-        viewModel.fetchItems()
-    }
-    
-//    func bindTableViewData() {
-//        let cellType = Observable.of(viewModel.self)
-//            cellType
-//                .bind(to: scoreTableView.rx.items(cellIdentifier: "cell", cellType: UITableViewCell.self)) { (row, element, cell) in
-//                cell.backgroundColor = UIColor.clear
-//                cell.titleLabel.text = element["Name"]
-//                cell.licenseLabel.text = element["License"]
-//                cell.urlLabel.text = element["URL"]
-//            }.disposed(by: bag)
-//    }
-    
-
-    
     
     //MARK: - 입력제한
     func userNameCount(_ count: String) {
@@ -552,7 +450,6 @@ class SearchController: UIViewController {
                             let dateFormatter = DateFormatter()
                             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
                             let convertDate = dateFormatter.date(from: matchresult.matchDate) // Date 타입으로 변환
-                            print(convertDate)
                             let myDateFormatter = DateFormatter()
                             myDateFormatter.dateFormat = "yyyy.MM.dd a hh시 mm분" // 2020.08.13 오후 04시 30분
                             myDateFormatter.locale = Locale(identifier:"ko_KR") // PM, AM을 언어에 맞게 setting (ex: PM -> 오후)
@@ -561,9 +458,7 @@ class SearchController: UIViewController {
                             //let convertNowStr = myDateFormatter.string(from: nowDate) // 현재 시간의 Date를 format에 맞춰 string으로 반환
                             
                             
-                            let matchDate = matchresult.matchDate // 매칭날짜
-                            //a.append(matchresult.matchDate)
-                            
+                            //let matchDate = matchresult.matchDate // 매칭날짜
                             let matchInfoma = matchresult.matchInfo
                             //닉네임으로 sort해도..
                             
@@ -611,6 +506,8 @@ class SearchController: UIViewController {
                             //print(self.myMatchModel)
 //                            print(self.myMatchModel.count)
                             
+                            self.myMatchModel.sort(by: {$0.matchDate > $1.matchDate})
+                            
                             self.scoreTableView.reloadData()
                             
                             
@@ -632,13 +529,11 @@ class SearchController: UIViewController {
             }
         }
     }
-    
-    func selectedPage(currentPage: Int) {
-        tierPageControl.currentPage = currentPage
-    }
-    
+        
 }
 
+
+//MARK: - Tableview Extension
 extension SearchController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return myMatchModel.count
@@ -655,26 +550,8 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
         
         cell.awayResultLabel.text = myMatchModel[indexPath.row].myMatchDetail.vsmatchResult
         cell.awayNameLabel.text = myMatchModel[indexPath.row].myMatchDetail.vsnickname
-        
         cell.awayGoalLabel.text = String(myMatchModel[indexPath.row].myMatchDetail.vsgoalTotal)
         
-        
         return cell
-    }
-    
-    
-}
-
-
-extension SearchController: UIScrollViewDelegate {
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let pageNumber = scrollView.contentOffset.x / scrollView.frame.width
-        tierPageControl.currentPage = Int(pageNumber)
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let size = tierScrollView.contentOffset.x / tierScrollView.frame.size.width
-        selectedPage(currentPage: Int(round(size)))
-        os_log("x스크롤 시작점 -> \(self.tierScrollView.bounds.origin.x)\n 사진의 y스크롤 시작점 -> \(self.tierScrollView.bounds.origin.y)")
     }
 }

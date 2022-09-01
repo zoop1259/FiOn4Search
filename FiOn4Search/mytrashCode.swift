@@ -230,3 +230,65 @@ import Foundation
  
  
  */
+
+/*
+ rx용 tableview 프렉티스였는데
+ 
+ //임시모델
+ struct Product {
+     let imageName: String
+     let title: String
+     let hi: String
+ }
+ struct ProductViewModel {
+     //인스턴스를 생성하기 위해 괄호를 추가.
+     var items = PublishSubject<[Product]>()
+     
+     func fetchItems() {
+         let products = [
+             Product(imageName: "house", title: "Home", hi: "hihi"),
+             Product(imageName: "gear", title: "Settings", hi: "hihi"),
+             Product(imageName: "person.circle", title: "Profile", hi: "hihi" ),
+             Product(imageName: "airplane", title: "Flights", hi: "hihi"),
+             Product(imageName: "bell", title: "Activity", hi: "hihi")
+         ]
+         items.onNext(products)
+         items.onCompleted()
+     }
+ }
+ 
+ //MARK: - 임시 Fetch
+//    func bindTableViewData() {
+//        //세가지를 먼저 하고 싶다.
+//        //1. bind items to table
+//        viewModel.items.bind(
+//            to: scoreTableView.rx.items(cellIdentifier: "cell",
+//                                   cellType: UITableViewCell.self)
+//        ) { row, model, cell in
+//
+//            //cell.textLabel?.text = self.myMatchModel[row].matchDate ?? model.title
+//            cell.textLabel?.text = model.title
+//            cell.imageView?.image = UIImage(systemName: model.imageName)
+//        }.disposed(by: bag)
+//        //2. bind a model selected handler
+//        scoreTableView.rx.modelSelected(Product.self).bind { product in
+//            print(product.title)
+//        }.disposed(by: bag)
+//
+//        //3. fetch items
+//        viewModel.fetchItems()
+//    }
+ 
+//    func bindTableViewData() {
+//        let cellType = Observable.of(viewModel.self)
+//            cellType
+//                .bind(to: scoreTableView.rx.items(cellIdentifier: "cell", cellType: UITableViewCell.self)) { (row, element, cell) in
+//                cell.backgroundColor = UIColor.clear
+//                cell.titleLabel.text = element["Name"]
+//                cell.licenseLabel.text = element["License"]
+//                cell.urlLabel.text = element["URL"]
+//            }.disposed(by: bag)
+//    }
+ 
+ 
+ */
