@@ -6,7 +6,12 @@
 //
 
 import UIKit
+import Then
 
 class TierCollectionViewCell: UICollectionViewCell {
+    
+    let tierImg = UIImageView().then {_ in
+        
+    }
     
 }

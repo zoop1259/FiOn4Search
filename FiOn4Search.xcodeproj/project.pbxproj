@@ -29,6 +29,7 @@
 		C5ACF9AD28BDFB5000901134 /* MyMatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9AC28BDFB5000901134 /* MyMatchModel.swift */; };
 		C5ACF9B128BEF26200901134 /* MatchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9B028BEF26200901134 /* MatchTableViewCell.swift */; };
 		C5ACF9B328BF928500901134 /* TierCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9B228BF928500901134 /* TierCollectionViewCell.swift */; };
+		C5ACF9B528C24D4400901134 /* MyTierModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9B428C24D4300901134 /* MyTierModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		C5ACF9AC28BDFB5000901134 /* MyMatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMatchModel.swift; sourceTree = "<group>"; };
 		C5ACF9B028BEF26200901134 /* MatchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchTableViewCell.swift; sourceTree = "<group>"; };
 		C5ACF9B228BF928500901134 /* TierCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierCollectionViewCell.swift; sourceTree = "<group>"; };
+		C5ACF9B428C24D4300901134 /* MyTierModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTierModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 				C574E8B128ABDCB200F547A8 /* APIManager.swift */,
 				C58FB33828A1CBFD00E90968 /* UserModel.swift */,
 				C58FB33A28A1FA5800E90968 /* TierModel.swift */,
+				C5ACF9B428C24D4300901134 /* MyTierModel.swift */,
 				C58FB33C28A1FA6100E90968 /* MatchModel.swift */,
 				C58FB33E28A1FA7000E90968 /* MatchInfoModel.swift */,
 				C5ACF9AC28BDFB5000901134 /* MyMatchModel.swift */,
@@ -200,6 +203,7 @@
 				C58FB33D28A1FA6100E90968 /* MatchModel.swift in Sources */,
 				C58FB33B28A1FA5800E90968 /* TierModel.swift in Sources */,
 				C5ACF9AD28BDFB5000901134 /* MyMatchModel.swift in Sources */,
+				C5ACF9B528C24D4400901134 /* MyTierModel.swift in Sources */,
 				C5ACF9B328BF928500901134 /* TierCollectionViewCell.swift in Sources */,
 				C5995472289A32A700D0D617 /* AppDelegate.swift in Sources */,
 				C58FB33928A1CBFD00E90968 /* UserModel.swift in Sources */,
