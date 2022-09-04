@@ -530,6 +530,24 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         }
     }
         
+    
+    //////((Result<NSDictionary?,CustomError>)->()))
+    func getRequesttest(result: @escaping (Result<NSString?, Error>)->()) {
+        //엑세스아이디찾기
+        let accessid = API.getAccessId(name: self.userNickName)
+        accessid.arrrequest(dataType: UserInfo.self) { result in
+//            print(result)
+            switch result {
+            case .success(let dict):
+                print("출력해라")
+            case .failure(let error):
+                print("실패받아라")
+            }
+        }
+    }
+    
+    
+    
 }
 
 

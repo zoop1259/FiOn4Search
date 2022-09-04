@@ -10,8 +10,18 @@ import Then
 
 class TierCollectionViewCell: UICollectionViewCell {
     
-    let tierImg = UIImageView().then {_ in
+    let tierImgView = UIImageView().then {_ in
+        
+    }
+    
+    let tierNameLabel = UILabel().then { _ in
+        
+    }
+    
+    let tierTimeLabel = UILabel().then { _ in
         
     }
     
 }
+
+
