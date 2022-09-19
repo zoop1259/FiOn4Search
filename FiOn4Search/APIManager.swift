@@ -108,8 +108,8 @@ extension API {
         }
         AF.request(url, method: method, parameters: parameter, headers: headers)
             .responseJSON { response in
-                print(url) //여기서 찾아낸 url에러!
-                print(response.result)
+                //print(url) //여기서 찾아낸 url에러!
+                //print(response.result)
                 // 통신 결과 처리
                 switch response.result {
                 case .success(let dict):
@@ -178,7 +178,7 @@ extension API {
         }
         AF.request(url, method: method, parameters: parameter, headers: headers)
             .responseJSON { response in
-                print(url) //여기서 찾아낸 url에러!
+//                print(url) //여기서 찾아낸 url에러!
                 //print(response.result)
                 // 통신 결과 처리
                 switch response.result {

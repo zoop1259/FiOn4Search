@@ -122,7 +122,7 @@ class MatchTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        print("\(homeNameLabel.text) : \(homeResultLabel.text)")
+        //print("\(homeNameLabel.text) : \(homeResultLabel.text)") //경기결과 옵셔널값
         // Configure the view for the selected state
     }
 

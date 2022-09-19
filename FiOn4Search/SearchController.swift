@@ -165,7 +165,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     }
 
     //전적을 나타낼 테이블뷰
-    let scoreTableView = UITableView().then {
+    var scoreTableView = UITableView().then {
         $0.register(MatchTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
@@ -186,7 +186,12 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         
         searchBtn.rx.tap
             .subscribe(onNext: {_ in
+                self.myMatchModel.removeAll() //리로드전에 값 비우기.
                 self.getRequest()
+                self.getRequesttest() { re in
+                    print("re re : \(re)")
+                }
+                
             }).disposed(by: bag)
     }
         
@@ -434,7 +439,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             switch matchIdresult {
             case .success(let matchIdresult):
 //                print("matchId fin:",matchIdresult)
-                print("만들어야될 카운트",matchIdresult.count)
+                //print("만들어야될 카운트",matchIdresult.count)
                 for match in matchIdresult  {
                     
                     //매치 정보 구하기.
@@ -454,7 +459,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                             myDateFormatter.dateFormat = "yyyy.MM.dd a hh시 mm분" // 2020.08.13 오후 04시 30분
                             myDateFormatter.locale = Locale(identifier:"ko_KR") // PM, AM을 언어에 맞게 setting (ex: PM -> 오후)
                             let convertStr = myDateFormatter.string(from: convertDate!)
-                            print(convertStr)
+                            //print(convertStr)
                             //let convertNowStr = myDateFormatter.string(from: nowDate) // 현재 시간의 Date를 format에 맞춰 string으로 반환
                             
                             
@@ -472,9 +477,9 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
                                             vmatchResult = "몰수승"
-                                            print("PK승")
+                                            //print("PK승")
                                         } else if info.matchDetail.matchResult == "패" {
-                                            print("PK패")
+                                            //print("PK패")
                                             vmatchResult = "몰수패"
                                         }
                                     } else {
@@ -487,9 +492,9 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
                                             smatchResult = "몰수승"
-                                            print("PK승")
+                                            //print("PK승")
                                         } else if info.matchDetail.matchResult == "패" {
-                                            print("PK패")
+                                            //print("PK패")
                                             smatchResult = "몰수패"
                                         }
                                     } else {
@@ -509,7 +514,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                             self.myMatchModel.sort(by: {$0.matchDate > $1.matchDate})
                             
                             self.scoreTableView.reloadData()
-                            
+                            //self.scoreTableView.contentOffset = .zero //리로드시 값 비우기.
                             
                         case .failure(let error):
                             print("2",error)
@@ -530,23 +535,38 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         }
     }
         
+    //var accc : String = ""
+    //var accc : (String) -> ()?
     
     //////((Result<NSDictionary?,CustomError>)->()))
-    func getRequesttest(result: @escaping (Result<NSString?, Error>)->()) {
+    func getRequesttest(results: @escaping (String) ->()) {
+//    func getRequesttest(completion: @escaping ((String) -> Void)) {
         //엑세스아이디찾기
         let accessid = API.getAccessId(name: self.userNickName)
         accessid.arrrequest(dataType: UserInfo.self) { result in
 //            print(result)
             switch result {
             case .success(let dict):
-                print("출력해라")
+                print("출력해라 \(dict)")
+                
+                //results = dict.accessId
+                results(dict.accessId)
+                
+                //self.accc = results
+                
             case .failure(let error):
                 print("실패받아라")
             }
+            
+            
         }
     }
     
-    
+    func gettt(results: @escaping (String) ->()) {
+        print(getRequesttest(results: { str in
+            print(str)
+        }))
+    }
     
 }
 

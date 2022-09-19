@@ -350,12 +350,12 @@ class CommissionController: UIViewController {
             self.receiveTextField.text = nil
         } else if Int(coupon + segValue) == 1 {
             self.receiveTextField.text = self.cashTextField.text
-            self.discountamountTextField.text = String(basicValue)
+            self.discountamountTextField.text = self.changeValue(String(basicValue))
         } else {
             self.discountamountTextField.text = self.changeValue(String(discount))
             self.receiveTextField.text = self.changeValue(String(cash))
         }
-        
+         
         
     }
     
