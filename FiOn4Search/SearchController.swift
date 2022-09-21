@@ -10,9 +10,8 @@
  1. 선수 아이디로 검색
  2. 처음 줄 닉네임, 레벨? 정도.
  3. 현재 티어와, 최고 티어. //이걸 페이지컨트롤로 할지, 아니면 컬렉션뷰로 할지.
- 4. 컬렉션뷰는 첫 프로젝트에서 사용해봤으니 페이징킷을 사용하여 한번 표현해보고 싶을뿐이다.
- 5. 최근 전적.
- 6. APIKey값 가리는 방법.
+ 4. 최근 전적.
+ 5. APIKey값 가리는 방법.
  */
 
 /*
@@ -42,6 +41,9 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     //$0.text = "Data based on NEXON DEVELOPERS"
     private var bag = DisposeBag()
     private var myMatchModel = [MyMatch]()
+    private var soloTier = [SoloTier]()
+    private var duoTier = [DuoTier]()
+    
     var userNickName = ""
     //스토리보드로 라이브러리를 추가하는게 아니라 코드로 라이브러리를 추가해줘야하기 때문에.
     //let 이름 = 라이브러리이름 후에 () 로 개체로 만든다.
@@ -169,6 +171,24 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         $0.register(MatchTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
+//    var tierCollectionView = UICollectionView(frame: .zero, collectionViewLayout: .init()).then {
+//        $0.register(TierCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+//        //$0.frame = CGRect(x: 0, y: 0, width: 150, height: 150)
+//        //$0.backgroundColor = .red
+//    }
+    
+    var tierCollectionView : UICollectionView = {
+        var layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 5
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 5.0, bottom: 0, right: 5.0)
+        
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .red
+        return cv
+    }()
+    
+    
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -185,19 +205,24 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 
                 //rx데이터넘겨주기
                 self.fetch()
-                print("안되지?",self.search.searchText)
+                //self.search.obsearch()
+                
             }).disposed(by: bag)
         
         searchBtn.rx.tap
             .subscribe(onNext: {_ in
                 self.myMatchModel.removeAll() //리로드전에 값 비우기.
                 self.getRequest()
-                self.getRequesttest() { re in
-                    print("re re : \(re)")
-                }
-                self.gettt { str in
-                    print("str: \(str)")
-                }
+                
+                //mvvm을 위한 연습용 함수 호출
+//                self.getRequesttest() { re in
+//                    print("re re : \(re)")
+//                }
+//                self.gettt { str in
+//                    print("str: \(str)")
+//                }
+                
+                self.search.obsearch()
             }).disposed(by: bag)
     }
         
@@ -209,7 +234,6 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             .bind(to: search.searchText)
             .disposed(by: bag)
     }
-    
     
     //MARK: - configure
     func configure() {
@@ -252,11 +276,18 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 //        tierStackView.addArrangedSubview(self.tierStackView22)
 
         
+        //티어
+        view.addSubview(self.tierCollectionView)
+        tierCollectionView.delegate = self
+        tierCollectionView.dataSource = self
+        tierCollectionView.register(TierCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        
         
         //네비게이션바 타이틀 설정
         self.navigationItem.title = "유저 정보 검색"
         //테이블뷰의 도트 경계
         self.scoreTableView.frame = view.bounds
+        self.tierCollectionView.frame = view.bounds
         
         //각 라이브러리의 위치를 정해주자.
         //UITextfield
@@ -307,6 +338,16 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 //            $0.top.bottom.leading.trailing.equalToSuperview()
         }
         
+        self.tierCollectionView.snp.makeConstraints {
+            $0.top.equalTo(self.namestackView.snp.bottom).offset(10)
+            $0.leading.equalToSuperview().offset(10)
+            $0.trailing.equalToSuperview().offset(-10)
+//            $0.centerX.equalToSuperview()
+//            $0.centerY.equalToSuperview()
+            //높이와 너비는 이런식으로!
+            $0.height.equalTo(150)
+        }
+        
         self.scoreTableView.snp.makeConstraints {
             $0.top.equalTo(self.tierScrollView.snp.bottom).offset(10)
             $0.leading.trailing.equalTo(self.tierScrollView)
@@ -325,7 +366,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     }
     
     
-    
+    //MARK: - FETCH
 //    아프리카tv규직
     func getRequest() {
         //엑세스아이디찾기
@@ -359,7 +400,12 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                     if list.matchType == 50 {
 //                        print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
                         let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
-
+                        
+                        
+                        //티어 fetch
+                        self.soloTier.append(SoloTier(soloTierName: oneoneData.tierName, soloTierUrl: oneoneData.tierImgUrl, soloTierTime: oneoneData.achievementDate))
+                        print("카운트",self.soloTier.count)
+                        
                         tierNameArr.append(oneoneData.tierName)
                         tierTimeArr.append(oneoneData.achievementDate)
                         tierImgUrlArr.append(oneoneData.tierImgUrl)
@@ -383,7 +429,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         tierNameArr.append(twotwoData.tierName22)
                         tierTimeArr.append(twotwoData.achievementDate22)
                         tierImgUrlArr.append(twotwoData.tierImgUrl22)
-
+                        
                         let asd = twotwoData.tierImgUrl22
 //                        print("url",asd)
                         let asdasd = twotwoData.tierName22
@@ -552,53 +598,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         }
     }
         
-    //var accc : String = ""
-    //var accc : (String) -> ()?
-    //var accc : () -> Void = {}
-    
-    //////((Result<NSDictionary?,CustomError>)->()))
-    func getRequesttest(results: @escaping (String) ->()) {
-//    func getRequesttest(completion: @escaping ((String) -> Void)) {
-        //엑세스아이디찾기
-        let accessid = API.getAccessId(name: self.userNickName)
-        accessid.arrrequest(dataType: UserInfo.self) { result in
-//            print(result)
-            switch result {
-            case .success(let dict):
-                print("출력해라 \(dict)")
-                
-                //results = dict.accessId
-                results(dict.accessId)
-                //self.accc = results
-                
-            case .failure(let error):
-                print("실패받아라", error)
-            }
 
-        }
-    }
-    
-    func gettt(results: @escaping ([TierInfo]) ->()) {
-        getRequesttest(results: { str in
-            print("함수내부",str)
-            let tier = API.getTier(accessId: str)
-            tier.arrrequest(dataType: [TierInfo].self) { tierresult in
-                switch tierresult {
-                case .success(let tierInfo):
-                    results(tierInfo)
-                    print("이렇게 티어를 받아보자",tierInfo)
-                    
-                    
-                case .failure(let error):
-                    print("티어 실패받아라", error)
-                }
-            }
-        })
-    }
-    
-    
-    
-    
 }
 
 
@@ -621,14 +621,27 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
         cell.awayNameLabel.text = myMatchModel[indexPath.row].myMatchDetail.vsnickname
         cell.awayGoalLabel.text = String(myMatchModel[indexPath.row].myMatchDetail.vsgoalTotal)
         
-//        gettt { results in
-//            for res in results {
-//
-//            }
-//        }
-        
-
         
         return cell
     }
+}
+
+//MARK: - CollectionView Extension
+extension SearchController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return 1
+        return soloTier.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = tierCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! TierCollectionViewCell
+        
+        cell.tierNameLabel.text = soloTier[indexPath.row].soloTierName
+        cell.tierTimeLabel.text = soloTier[indexPath.row].soloTierTime
+        cell.tierImgView.image = UIImage(systemName: "swift")
+        
+        return cell
+    }
+    
+    
 }
