@@ -182,6 +182,10 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 self.userNameCount(count)
                 print(count)
                 self.userNickName = count
+                
+                //rx데이터넘겨주기
+                self.fetch()
+                print("안되지?",self.search.searchText)
             }).disposed(by: bag)
         
         searchBtn.rx.tap
@@ -191,10 +195,22 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 self.getRequesttest() { re in
                     print("re re : \(re)")
                 }
-                
+                self.gettt { str in
+                    print("str: \(str)")
+                }
             }).disposed(by: bag)
     }
         
+    //rx를 통해 데이터 넘겨주기.
+    var search = Search()
+//    lazy var search : Search = { Search() }()
+    func fetch() {
+        searchTextField.rx.text.orEmpty
+            .bind(to: search.searchText)
+            .disposed(by: bag)
+    }
+    
+    
     //MARK: - configure
     func configure() {
         //요소가 보이는 부분은 view다.
@@ -329,6 +345,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             switch tierresult {
             case .success(let tier):
 //                print(tier)
+                print("여기서는 옵셔널값인가?", tier)
                 var tierNameArr = [String]()
                 var tierTimeArr = [String]()
                 var tierImgUrlArr = [String]()
@@ -537,6 +554,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         
     //var accc : String = ""
     //var accc : (String) -> ()?
+    //var accc : () -> Void = {}
     
     //////((Result<NSDictionary?,CustomError>)->()))
     func getRequesttest(results: @escaping (String) ->()) {
@@ -551,22 +569,35 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 
                 //results = dict.accessId
                 results(dict.accessId)
-                
                 //self.accc = results
                 
             case .failure(let error):
-                print("실패받아라")
+                print("실패받아라", error)
             }
-            
-            
+
         }
     }
     
-    func gettt(results: @escaping (String) ->()) {
-        print(getRequesttest(results: { str in
-            print(str)
-        }))
+    func gettt(results: @escaping ([TierInfo]) ->()) {
+        getRequesttest(results: { str in
+            print("함수내부",str)
+            let tier = API.getTier(accessId: str)
+            tier.arrrequest(dataType: [TierInfo].self) { tierresult in
+                switch tierresult {
+                case .success(let tierInfo):
+                    results(tierInfo)
+                    print("이렇게 티어를 받아보자",tierInfo)
+                    
+                    
+                case .failure(let error):
+                    print("티어 실패받아라", error)
+                }
+            }
+        })
     }
+    
+    
+    
     
 }
 
@@ -589,6 +620,14 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
         cell.awayResultLabel.text = myMatchModel[indexPath.row].myMatchDetail.vsmatchResult
         cell.awayNameLabel.text = myMatchModel[indexPath.row].myMatchDetail.vsnickname
         cell.awayGoalLabel.text = String(myMatchModel[indexPath.row].myMatchDetail.vsgoalTotal)
+        
+//        gettt { results in
+//            for res in results {
+//
+//            }
+//        }
+        
+
         
         return cell
     }
