@@ -59,7 +59,7 @@ class TierCollectionViewCell: UICollectionViewCell {
         
         tierNameLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            //$0.centerX.equalTo(tierImgView.snp.trailing).offset(5)
+            $0.centerX.equalTo(tierImgView.snp.trailing).offset(5)
         }
         
         tierTimeLabel.snp.makeConstraints {
