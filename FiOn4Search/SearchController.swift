@@ -43,6 +43,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     private var myMatchModel = [MyMatch]()
     private var soloTier = [SoloTier]()
     private var duoTier = [DuoTier]()
+    private var tierData = [TierData]()
     
     var userNickName = ""
     //스토리보드로 라이브러리를 추가하는게 아니라 코드로 라이브러리를 추가해줘야하기 때문에.
@@ -401,6 +402,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 //                        print(findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? ""))
                         let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
                         
+                        //모든티어 더해보기
+                        self.tierData.append(TierData(tierName: oneoneData.tierName, tierUrl: oneoneData.tierImgUrl, tierTime: oneoneData.achievementDate))
                         
                         //티어 fetch
                         self.soloTier.append(SoloTier(soloTierName: oneoneData.tierName, soloTierUrl: oneoneData.tierImgUrl, soloTierTime: oneoneData.achievementDate))
@@ -435,6 +438,10 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         let asdasd = twotwoData.tierName22
 //                        print("tier이름",asdasd)
 
+                        //모든티어 데이터 더해보기
+                        self.tierData.append(TierData(tierName: twotwoData.tierName22, tierUrl: twotwoData.tierImgUrl22, tierTime: twotwoData.achievementDate22))
+                        
+                        print(self.tierData)
                         let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
 //                                self.tierImg22.backgroundColor = .white
 //                                self.tierImg22.kf.indicatorType = .activity

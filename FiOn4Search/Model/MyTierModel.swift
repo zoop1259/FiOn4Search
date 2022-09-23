@@ -18,3 +18,9 @@ struct DuoTier : Codable {
     let duoTierUrl : String
     let duoTierTime : String
 }
+
+struct TierData: Codable {
+    let tierName: String
+    let tierUrl: String
+    let tierTime: String
+}
