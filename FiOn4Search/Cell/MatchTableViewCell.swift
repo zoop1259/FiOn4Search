@@ -10,7 +10,7 @@ import Then
 import SnapKit
 
 class MatchTableViewCell: UITableViewCell {
-
+    
     //매칭시간
     let matchDateLabel = UILabel().then {
         $0.textAlignment = .center

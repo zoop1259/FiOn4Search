@@ -23,4 +23,5 @@ struct TierData: Codable {
     let tierName: String
     let tierUrl: String
     let tierTime: String
+    let tierFilter: Int
 }

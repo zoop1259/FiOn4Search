@@ -403,7 +403,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
                         
                         //모든티어 더해보기
-                        self.tierData.append(TierData(tierName: oneoneData.tierName, tierUrl: oneoneData.tierImgUrl, tierTime: oneoneData.achievementDate))
+                        self.tierData.append(TierData(tierName: oneoneData.tierName, tierUrl: oneoneData.tierImgUrl, tierTime: oneoneData.achievementDate, tierFilter: 1))
                         
                         //티어 fetch
                         self.soloTier.append(SoloTier(soloTierName: oneoneData.tierName, soloTierUrl: oneoneData.tierImgUrl, soloTierTime: oneoneData.achievementDate))
@@ -439,7 +439,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 //                        print("tier이름",asdasd)
 
                         //모든티어 데이터 더해보기
-                        self.tierData.append(TierData(tierName: twotwoData.tierName22, tierUrl: twotwoData.tierImgUrl22, tierTime: twotwoData.achievementDate22))
+                        self.tierData.append(TierData(tierName: twotwoData.tierName22, tierUrl: twotwoData.tierImgUrl22, tierTime: twotwoData.achievementDate22, tierFilter: 2))
                         
                         print(self.tierData)
                         let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
