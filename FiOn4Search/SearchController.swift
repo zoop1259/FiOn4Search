@@ -41,8 +41,6 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     //$0.text = "Data based on NEXON DEVELOPERS"
     private var bag = DisposeBag()
     private var myMatchModel = [MyMatch]()
-    private var soloTier = [SoloTier]()
-    private var duoTier = [DuoTier]()
     private var tierData = [TierData]()
     
     var userNickName = ""
@@ -403,11 +401,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
                         
                         //모든티어 더해보기
-                        self.tierData.append(TierData(tierName: oneoneData.tierName, tierUrl: oneoneData.tierImgUrl, tierTime: oneoneData.achievementDate, tierFilter: 1))
-                        
                         //티어 fetch
-                        self.soloTier.append(SoloTier(soloTierName: oneoneData.tierName, soloTierUrl: oneoneData.tierImgUrl, soloTierTime: oneoneData.achievementDate))
-                        print("카운트",self.soloTier.count)
+                        self.tierData.append(TierData(tierName: oneoneData.tierName, tierUrl: oneoneData.tierImgUrl, tierTime: oneoneData.achievementDate, tierFilter: 1))
                         
                         tierNameArr.append(oneoneData.tierName)
                         tierTimeArr.append(oneoneData.achievementDate)
@@ -637,15 +632,21 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
 extension SearchController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 //        return 1
-        return soloTier.count
+        return tierData.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = tierCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! TierCollectionViewCell
         
-        cell.tierNameLabel.text = soloTier[indexPath.row].soloTierName
-        cell.tierTimeLabel.text = soloTier[indexPath.row].soloTierTime
-        cell.tierImgView.image = UIImage(systemName: "swift")
+//        cell.tierNameLabel.text = soloTier[indexPath.row].soloTierName
+//        cell.tierTimeLabel.text = soloTier[indexPath.row].soloTierTime
+//        cell.tierImgView.image = UIImage(systemName: "swift")
+        
+        cell.tierNameLabel.text = tierData[indexPath.row].tierName
+        cell.tierTimeLabel.text = tierData[indexPath.row].tierTime
+        
+        
+        
         
         return cell
     }
