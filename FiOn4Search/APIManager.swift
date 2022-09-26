@@ -5,6 +5,9 @@
 //  Created by 강대민 on 2022/08/16.
 //
 
+//수정해야할 것.
+//1. 임시 apikey를 허가받아 새로운 정식 apikey를 얻고 수정해야한다.
+
 import Foundation
 import Alamofire
 

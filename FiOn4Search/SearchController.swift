@@ -183,7 +183,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         layout.sectionInset = UIEdgeInsets(top: 0, left: 5.0, bottom: 0, right: 5.0)
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .red
+//        cv.backgroundColor = .red
         return cv
     }()
     
@@ -578,6 +578,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                             
                             self.myMatchModel.sort(by: {$0.matchDate > $1.matchDate})
                             
+                            //각각 리로드데이터를 해줘야한다. 멍충아 ㅠㅠ
+                            self.tierCollectionView.reloadData()
                             self.scoreTableView.reloadData()
                             //self.scoreTableView.contentOffset = .zero //리로드시 값 비우기.
                             
