@@ -1,6 +1,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/swift,xcode,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=swift,xcode,macos
 
+# 특정 확장자를 가진 파일 전체 무시
+*.plist
+*.pdf
+*.zip
+
 ### macOS ###
 # General
 .DS_Store
@@ -39,6 +44,7 @@ Temporary Items
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
 SecretData.plist
+
 
 ## User settings
 xcuserdata/
