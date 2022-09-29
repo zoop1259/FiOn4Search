@@ -649,6 +649,15 @@ extension SearchController: UICollectionViewDelegate, UICollectionViewDataSource
         
         
         
+        let tierUrl = URL(string:tierData[indexPath.row].tierUrl)
+
+        cell.tierImgView.kf.indicatorType = .activity
+        cell.tierImgView.kf.setImage(with: tierUrl, placeholder: nil, options: [.transition(.fade(1.0))], completionHandler: nil)
+
+//        let oneoneUrl = URL(string:oneoneData.tierImgUrl)
+//        self.tierImg.backgroundColor = .white
+//        self.tierImg.kf.indicatorType = .activity
+//        self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(1.0))], progressBlock: nil)
         
         return cell
     }
