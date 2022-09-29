@@ -652,6 +652,6 @@ extension SearchController: UICollectionViewDelegate, UICollectionViewDataSource
         cell.tierImgView.kf.setImage(with: tierUrl, placeholder: nil, options: [.transition(.fade(1.0))], completionHandler: nil)
         return cell
     }
-    
+    //커밋에러 해결용 주석.
     
 }
