@@ -27,6 +27,9 @@ class Search {
         
         print("Search의 searchText : ",a)
     }
+    
+    
+    
 }
 
 /*

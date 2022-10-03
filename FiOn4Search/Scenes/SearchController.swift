@@ -217,6 +217,13 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 self.myMatchModel.removeAll() //리로드전에 값 비우기.
                 self.getRequest()
                 
+                self.imsireq { str in
+                    //self.imsitier(reStr: str)
+                    self.imstr = str
+                }
+                
+                self.imsitier(reStr: self.imstr)
+                
                 //mvvm을 위한 연습용 함수 호출
 //                self.getRequesttest() { re in
 //                    print("re re : \(re)")
@@ -600,6 +607,37 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     }
         
 
+    var imstr : String = ""
+    
+    func imsireq(completion: @escaping (String) -> Void ) {
+        //엑세스아이디찾기
+        let accessid = API.getAccessId(name: self.userNickName)
+        accessid.arrrequest(dataType: UserInfo.self) { result in
+//            print(result)
+            switch result {
+            case .success(let dict):
+                print("성공임")
+                completion(dict.accessId)
+                
+            case .failure:
+                print("에러임")
+            }
+        }
+    }
+    
+    func imsitier(reStr: String) {
+        let tier = API.getTier(accessId: reStr)
+        tier.arrrequest(dataType: [TierInfo].self) { tierresult in
+            switch tierresult {
+            case .success(let tier):
+                print("이거성공 : ",tier)
+            case .failure:
+                print("이거실패")
+            }
+        }
+    }
+    
+    
 }
 
 
