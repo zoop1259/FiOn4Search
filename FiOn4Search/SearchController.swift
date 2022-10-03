@@ -95,75 +95,75 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     
     
     
-    //MARK: - Tier init
-    //1:1공식경기와 2:2공식경기의 티어를 나타낼 스크롤뷰
-    let tierScrollView = UIScrollView().then {//_ in
-        $0.backgroundColor = .green
-    }
-    
-    let tierPageControl = UIPageControl().then {
-        //페이지 컨트롤로 1vs1,2vs2를 나타내야함
-        $0.numberOfPages = 2
-        $0.backgroundColor = .black
-    }
-
-    
-    let tierVerticalStackView = UIStackView().then {
-        $0.axis = .vertical
-    }
-
-    let tierDivLabel = UILabel().then {  //무슨티어인지
-        $0.text = "1번"
-        $0.textAlignment = .center
-        $0.textColor = .lightGray
-    }
-
-    let tierTimeLabel = UILabel().then { //최초티어달성시간
-        $0.text = "2번"
-        $0.textAlignment = .center
-        $0.textColor = .lightGray
-    }
-    
-    let tierImg = UIImageView().then {//_ in
-//        $0.withTintColor(.red)
-        
-        $0.backgroundColor = .white
-    }
-    //2:2
-//    let tierVerticalStackView22 = UIStackView().then {
+//    //MARK: - Tier init
+//    //1:1공식경기와 2:2공식경기의 티어를 나타낼 스크롤뷰
+//    let tierScrollView = UIScrollView().then {//_ in
+//        $0.backgroundColor = .green
+//    }
+//
+//    let tierPageControl = UIPageControl().then {
+//        //페이지 컨트롤로 1vs1,2vs2를 나타내야함
+//        $0.numberOfPages = 2
+//        $0.backgroundColor = .black
+//    }
+//
+//
+//    let tierVerticalStackView = UIStackView().then {
 //        $0.axis = .vertical
 //    }
 //
-//    let tierDivLabel22 = UILabel().then {  //무슨티어인지
+//    let tierDivLabel = UILabel().then {  //무슨티어인지
 //        $0.text = "1번"
 //        $0.textAlignment = .center
 //        $0.textColor = .lightGray
 //    }
 //
-//    let tierTimeLabel22 = UILabel().then { //최초티어달성시간
+//    let tierTimeLabel = UILabel().then { //최초티어달성시간
 //        $0.text = "2번"
 //        $0.textAlignment = .center
 //        $0.textColor = .lightGray
 //    }
 //
-//    let tierImg22 = UIImageView().then {//_ in
+//    let tierImg = UIImageView().then {//_ in
 ////        $0.withTintColor(.red)
-//        $0.backgroundColor = .red
+//
+//        $0.backgroundColor = .white
 //    }
-    let tierStackView11 = UIStackView().then {
-        $0.spacing = 10
-        //$0.distribution = .fillEqually
-        $0.alignment = .center
-    }
-//    let tierStackView22 = UIStackView().then {
+//    //2:2
+////    let tierVerticalStackView22 = UIStackView().then {
+////        $0.axis = .vertical
+////    }
+////
+////    let tierDivLabel22 = UILabel().then {  //무슨티어인지
+////        $0.text = "1번"
+////        $0.textAlignment = .center
+////        $0.textColor = .lightGray
+////    }
+////
+////    let tierTimeLabel22 = UILabel().then { //최초티어달성시간
+////        $0.text = "2번"
+////        $0.textAlignment = .center
+////        $0.textColor = .lightGray
+////    }
+////
+////    let tierImg22 = UIImageView().then {//_ in
+//////        $0.withTintColor(.red)
+////        $0.backgroundColor = .red
+////    }
+//    let tierStackView11 = UIStackView().then {
 //        $0.spacing = 10
+//        //$0.distribution = .fillEqually
+//        $0.alignment = .center
 //    }
-    
-    //모든걸 모은 스택뷰
-    let tierStackView = UIStackView().then {//_ in
-        //$0.spacing = 10
-        $0.axis = .horizontal
-    }
+////    let tierStackView22 = UIStackView().then {
+////        $0.spacing = 10
+////    }
+//
+//    //모든걸 모은 스택뷰
+//    let tierStackView = UIStackView().then {//_ in
+//        //$0.spacing = 10
+//        $0.axis = .horizontal
+//    }
 
     //전적을 나타낼 테이블뷰
     var scoreTableView = UITableView().then {
@@ -176,14 +176,18 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 //        //$0.backgroundColor = .red
 //    }
     
-    var tierCollectionView : UICollectionView = {
+    lazy var tierCollectionView : UICollectionView = {
         var layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 5
+        //layout.minimumLineSpacing = 5
         layout.scrollDirection = .horizontal
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 5.0, bottom: 0, right: 5.0)
+        layout.sectionInset = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+        layout.estimatedItemSize = CGSize(width: view.frame.width - 10.0, height: 150)
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-//        cv.backgroundColor = .red
+        cv.delegate = self
+        cv.dataSource = self
+        cv.register(TierCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        
         return cv
     }()
     
@@ -240,7 +244,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         //addSubView는 매개변수로 추가할 뷰를 받는다.
         //class안에서 생성한 라이브러리기 때문에 self를 사용해주어야한다.
         view.addSubview(self.navigationBar)
-        view.addSubview(self.tierScrollView)
+//        view.addSubview(self.tierScrollView)
         view.addSubview(self.scoreTableView)
         scoreTableView.delegate = self
         scoreTableView.dataSource = self
@@ -254,33 +258,27 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         namestackView.addArrangedSubview(self.levelLabel)
         
         //스크롤뷰에 추가
-        tierScrollView.delegate = self
-        
-        tierScrollView.isScrollEnabled = true
-        tierScrollView.isPagingEnabled = true
-        tierScrollView.addSubview(self.tierPageControl)
-        tierScrollView.addSubview(tierStackView)
+//        tierScrollView.delegate = self
+//        tierScrollView.isScrollEnabled = true
+//        tierScrollView.isPagingEnabled = true
+//        tierScrollView.addSubview(self.tierPageControl)
+//        tierScrollView.addSubview(tierStackView)
         //티어이름과 티어달성시간 버티컬로 추가
-        tierVerticalStackView.addArrangedSubview(self.tierDivLabel)
-        tierVerticalStackView.addArrangedSubview(self.tierTimeLabel)
+//        tierVerticalStackView.addArrangedSubview(self.tierDivLabel)
+//        tierVerticalStackView.addArrangedSubview(self.tierTimeLabel)
 //        tierVerticalStackView22.addArrangedSubview(self.tierDivLabel22)
 //        tierVerticalStackView22.addArrangedSubview(self.tierTimeLabel22)
         //티어 이미지와 버티컬로 추가한 라벨들 추가
-        tierStackView11.addArrangedSubview(self.tierImg)
-        tierStackView11.addArrangedSubview(self.tierVerticalStackView)
+//        tierStackView11.addArrangedSubview(self.tierImg)
+//        tierStackView11.addArrangedSubview(self.tierVerticalStackView)
 //        tierStackView22.addArrangedSubview(self.tierImg22)
 //        tierStackView22.addArrangedSubview(self.tierVerticalStackView22)
-        
-        tierStackView.addArrangedSubview(self.tierStackView11)
+//        tierStackView.addArrangedSubview(self.tierStackView11)
 //        tierStackView.addArrangedSubview(self.tierStackView22)
 
         
         //티어
         view.addSubview(self.tierCollectionView)
-        tierCollectionView.delegate = self
-        tierCollectionView.dataSource = self
-        tierCollectionView.register(TierCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        
         
         //네비게이션바 타이틀 설정
         self.navigationItem.title = "유저 정보 검색"
@@ -316,26 +314,25 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             $0.leading.trailing.equalTo(self.searchstackView)
         }
         
-        self.tierScrollView.snp.makeConstraints {
-            $0.top.equalTo(self.namestackView.snp.bottom).offset(10)
-            $0.leading.equalToSuperview().offset(10)
-            $0.trailing.equalToSuperview().offset(-10)
+//        self.tierScrollView.snp.makeConstraints {
+//            $0.top.equalTo(self.namestackView.snp.bottom).offset(10)
+//            $0.leading.equalToSuperview().offset(10)
+//            $0.trailing.equalToSuperview().offset(-10)
+////            $0.centerX.equalToSuperview()
+////            $0.centerY.equalToSuperview()
+//            //높이와 너비는 이런식으로!
+//            $0.height.equalTo(150)
+//        }
+//        self.tierPageControl.snp.makeConstraints {
+//            $0.top.equalTo(self.tierScrollView.snp.top).offset(125)
+//            $0.centerX.equalToSuperview()
+//        }
+//
+//        self.tierStackView.snp.makeConstraints {
 //            $0.centerX.equalToSuperview()
 //            $0.centerY.equalToSuperview()
-            //높이와 너비는 이런식으로!
-            $0.height.equalTo(150)
-        }
-        self.tierPageControl.snp.makeConstraints {
-            $0.top.equalTo(self.tierScrollView.snp.top).offset(125)
-            $0.centerX.equalToSuperview()
-        }
-        
-        self.tierStackView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.centerY.equalToSuperview()
-        
-//            $0.top.bottom.leading.trailing.equalToSuperview()
-        }
+////            $0.top.bottom.leading.trailing.equalToSuperview()
+//        }
         
         self.tierCollectionView.snp.makeConstraints {
             $0.top.equalTo(self.namestackView.snp.bottom).offset(10)
@@ -348,8 +345,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         }
         
         self.scoreTableView.snp.makeConstraints {
-            $0.top.equalTo(self.tierScrollView.snp.bottom).offset(10)
-            $0.leading.trailing.equalTo(self.tierScrollView)
+            $0.top.equalTo(self.tierCollectionView.snp.bottom).offset(10)
+            $0.leading.trailing.equalTo(self.tierCollectionView)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(10)
         }
 
@@ -412,13 +409,13 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 //                        print("url",asd)
                         let asdasd = oneoneData.tierName
 //                        print("tier이름",asdasd)
-                        self.tierTimeLabel.text = oneoneData.achievementDate
-                        self.tierDivLabel.text = oneoneData.tierName
+//                        self.tierTimeLabel.text = oneoneData.achievementDate
+//                        self.tierDivLabel.text = oneoneData.tierName
                         
                         let oneoneUrl = URL(string:oneoneData.tierImgUrl)
-                        self.tierImg.backgroundColor = .white
-                        self.tierImg.kf.indicatorType = .activity
-                        self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(1.0))], progressBlock: nil)
+//                        self.tierImg.backgroundColor = .white
+//                        self.tierImg.kf.indicatorType = .activity
+//                        self.tierImg.kf.setImage(with: oneoneUrl, placeholder: nil, options: [.transition(.fade(1.0))], progressBlock: nil)
 
                     } else if list.matchType == 52 {
 //                        print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
@@ -652,6 +649,5 @@ extension SearchController: UICollectionViewDelegate, UICollectionViewDataSource
         cell.tierImgView.kf.setImage(with: tierUrl, placeholder: nil, options: [.transition(.fade(1.0))], completionHandler: nil)
         return cell
     }
-    //커밋에러 해결용 주석.
     
 }

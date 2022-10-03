@@ -11,8 +11,8 @@ import SnapKit
 
 class TierCollectionViewCell: UICollectionViewCell {
     
-    let tierImgView = UIImageView().then {
-        $0.image = UIImage(systemName: "swift")
+    let tierImgView = UIImageView().then {_ in
+//        $0.image = UIImage(systemName: "swift")
     }
     
     let tierNameLabel = UILabel().then {
@@ -41,25 +41,25 @@ class TierCollectionViewCell: UICollectionViewCell {
         addSubview(tierNameLabel)
         addSubview(tierTimeLabel)
     }
-    
+    //넉쨔
     func configure() {
         tierImgView.snp.makeConstraints {
             //view의 탑에 위치시키기 위해 top 사용
             //위에서 좀 아래에 위치하기 위해 offset사용
             //네비게이션바 바로 밑에 설정.
-            $0.top.equalToSuperview().offset(5)
+            $0.top.equalToSuperview().inset(5)
             //leading은 시작하는 방향 24만큼 띄워져서 시작?
-            $0.leading.equalToSuperview().offset(5)
+            $0.leading.equalToSuperview().inset(5)
             //trailing은 끝나는 방향 -24만큼 띄워져서 끝남?
 //            $0.trailing.equalToSuperview().offset(-5)
-            $0.bottom.equalToSuperview().offset(-5)
-            $0.height.equalTo(150)
-            $0.width.equalTo(200)
+            $0.bottom.equalToSuperview().inset(-5)
+//            $0.height.equalTo(150)
+//            $0.width.equalTo(200)
         }
         
         tierNameLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.centerX.equalTo(tierImgView.snp.trailing).offset(5)
+            $0.centerX.equalTo(tierImgView.snp.trailing).offset(50)
         }
         
         tierTimeLabel.snp.makeConstraints {
