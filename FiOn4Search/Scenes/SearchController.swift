@@ -77,12 +77,12 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - User Basic Info init
     let nameLabel = UILabel().then {
-        $0.text = "감독이름"
+        $0.text = ""
         $0.textAlignment = .center
         $0.textColor = .lightGray
     }
     let levelLabel = UILabel().then {
-        $0.text = "감독레벨"
+        $0.text = ""
         $0.textAlignment = .center
         $0.textColor = .lightGray
     }
@@ -92,6 +92,12 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         $0.alignment = .fill //y축
         $0.distribution = .fillEqually //x축
     }
+    let emptyLabel = UILabel().then {
+        $0.text = ""
+        $0.textAlignment = .center
+        $0.textColor = .red
+    }
+    
 
     //전적을 나타낼 테이블뷰
     var scoreTableView = UITableView().then {
@@ -194,6 +200,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         view.addSubview(self.namestackView)
         namestackView.addArrangedSubview(self.nameLabel)
         namestackView.addArrangedSubview(self.levelLabel)
+        view.addSubview(self.emptyLabel)
         
         //티어
         view.addSubview(self.tierCollectionView)
@@ -231,6 +238,16 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             //만약 좌우를 같게 설정한다면 아래처럼 줄여서 쓸 수 있다.
             $0.leading.trailing.equalTo(self.searchstackView)
         }
+        self.emptyLabel.snp.makeConstraints {
+            //nameLabel의 위치는 nameTextfield의 아래에 위치하기 때문에
+            $0.top.equalTo(self.searchstackView.snp.bottom).offset(10)
+            //좌우는 네임텍스트필드에 맞추기 위해
+            //$0.leading.equalTo(self.nameTextfield)
+            //$0.trailing.equalTo(self.nameTextfield)
+
+            //만약 좌우를 같게 설정한다면 아래처럼 줄여서 쓸 수 있다.
+            $0.leading.trailing.equalTo(self.searchstackView)
+        }
         
         self.tierCollectionView.snp.makeConstraints {
             $0.top.equalTo(self.namestackView.snp.bottom).offset(10)
@@ -245,6 +262,9 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             $0.leading.trailing.equalTo(self.tierCollectionView)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(10)
         }
+        
+        self.scoreTableView.isHidden = true
+        self.tierCollectionView.isHidden = true
 
     }
     
@@ -267,6 +287,10 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 //            print(result)
             switch result {
             case .success(let dict):
+                
+                self.scoreTableView.isHidden = false
+                self.tierCollectionView.isHidden = false
+                
 //                print(dict)
                 self.nameLabel.text = "\(self.userNickName)"
                 self.nameLabel.textColor = .black
@@ -452,8 +476,12 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 }
             case .failure(let error):
                 print("3",error)
-                self.nameLabel.text = "구단주명이 존재하지 않습니다."
+                self.nameLabel.text = ""
+                self.levelLabel.text = ""
+                self.emptyLabel.text = "존재하지 않는 구단주명입니다."
                 self.nameLabel.textColor = .red
+                self.tierCollectionView.isHidden = true
+                self.scoreTableView.isHidden = true
             }
         }
     }
@@ -499,8 +527,8 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: self.scoreTableView.frame.width, height: 25))
-        //headerView.backgroundColor = .lightGray
         headerView.addSubview(label)
+        //label.leftAnchor.constraint(equalTo: headerView.leftAnchor).isActive = true
         
         return headerView
          
