@@ -171,6 +171,12 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 
             }).disposed(by: bag)
     }
+    
+    //MARK: - 임시 Fetch
+
+    
+    
+    
     var imsi: String = ""
     
     //rx를 통해 데이터 넘겨주기.
