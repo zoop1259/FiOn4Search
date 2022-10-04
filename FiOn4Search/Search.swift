@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 import Alamofire
 
+//나중에 mvvm을 위해 연습.
 class Search {
     
     let searchText = BehaviorRelay<String>(value: "")
@@ -28,7 +29,42 @@ class Search {
         print("Search의 searchText : ",a)
     }
     
+    var accessidStr : String = ""
     
+    func accessidReq(completion: @escaping (String) -> Void ) {
+        //엑세스아이디찾기
+        let accessid = API.getAccessId(name: searchText.value)
+        accessid.arrrequest(dataType: UserInfo.self) { result in
+//            print(result)
+            switch result {
+            case .success(let dict):
+                print("성공임")
+                //담아서 탈출시킨다. 라고 생각해보자.
+                self.accessidStr = dict.accessId
+                completion(self.accessidStr)
+                
+                
+            case .failure:
+                print("에러임")
+            }
+        }
+    }
+    
+    var tierRecieve : [TierInfo] = []
+    
+    func tierReq(str: String) {
+        //let tier = API.getTier(accessId: reqStr)
+        let tier = API.getTier(accessId: str)
+        tier.arrrequest(dataType: [TierInfo].self) { tierresult in
+            switch tierresult {
+            case .success(let tier):
+                print("이거성공 : ",tier)
+                
+            case .failure(let error):
+                print("이거실패", error)
+            }
+        }
+    }
     
 }
 

@@ -176,14 +176,15 @@ extension API {
     func arrrequest(complete: @escaping ((Result<Any?,CustomError>)->())) {
 //    func arrrequest(complete: @escaping ((Result<NSArray?,CustomError>)->())) {
         var url = domain
-        
-        let headers: HTTPHeaders = [.authorization("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE0MDkzMDI3MDAiLCJhdXRoX2lkIjoiMiIsImV4cCI6MTY3NDg5NjIxMCwiaWF0IjoxNjU5MzQ0MjEwLCJuYmYiOjE2NTkzNDQyMTAsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.nwgL3AMU216uu88opO2R4br3uMRE1_86V9w0Uh7TbN0")]
 
+        var apiKey : String {Bundle.main.Fifa_API_Key}
+        let isHeader: HTTPHeaders = [.authorization(apiKey)]
+        
         //addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed
         if let convertedPath = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) { //.urlPathAllowed 원래는 이거였다
             url += convertedPath
         }
-        AF.request(url, method: method, parameters: parameter, headers: headers)
+        AF.request(url, method: method, parameters: parameter, headers: isHeader)
             .responseJSON { response in
 //                print(url) //여기서 찾아낸 url에러!
                 //print(response.result)

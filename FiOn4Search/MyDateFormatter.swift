@@ -7,7 +7,7 @@
 
 import Foundation
 
-func changeDate(inputDate : String) {
+func changeDate(inputDate : String) -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
     let convertDate = dateFormatter.date(from: inputDate) // Date 타입으로 변환
@@ -17,4 +17,7 @@ func changeDate(inputDate : String) {
     let convertStr = myDateFormatter.string(from: convertDate!)
     //print(convertStr)
     //let convertNowStr = myDateFormatter.string(from: nowDate) // 현재 시간의 Date를 format에 맞춰 string으로 반환
+    
+    return convertStr
+    
 }
