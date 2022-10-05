@@ -315,6 +315,25 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 
                 print("공경 수 :", tier.count)
                 
+                var imsiTier = [TierData]()
+                var imsiarr = [String]()
+                
+                //언랭크 append용.
+                for un in tier {
+                    if un.matchType == 50 {
+                        imsiarr.append("있다.")
+                    } else {
+                        imsiarr.append("없다.")
+                    }
+                    
+                    if un.matchType == 52 {
+                        imsiarr.append("22있다.")
+                    } else {
+                        imsiarr.append("없다.")
+                    }
+                    
+                }
+                print(imsiarr)
                 for list in tier {
                     
                 
@@ -327,7 +346,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         let changeDate = changeDate(inputDate: list.achievementDate)
                         
 //                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
-                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: changeDate ?? "")
+                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 3200, achievementDate: changeDate ?? "")
                         
                         //모든티어 더해보기
                         //티어 fetch
@@ -352,7 +371,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         
 //                        print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
 //                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
-                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: changeDate(inputDate: list.achievementDate) ?? "")
+                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 3200, achievementDate22: changeDate(inputDate: list.achievementDate) ?? "")
                         
                         
                         tierNameArr.append(twotwoData.tierName22)

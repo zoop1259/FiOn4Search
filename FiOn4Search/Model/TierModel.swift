@@ -122,6 +122,11 @@ func findTier(rankType: Int, tier: Int, achievementDate: String) -> (tierName: S
             print("유망주3", str)
             tierName = "유망주3"
             tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/ico_rank17.png"
+        case 3200:
+            print("언랭크 ", str)
+            tierName = "언랭크"
+            tierImgUrl = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/ico_rank_default.png"
+
         default:
             print("언랭크 ", str)
             tierName = "언랭크"
@@ -212,6 +217,10 @@ func findTier22(rankType: Int, tier: Int, achievementDate22:String) -> (tierName
             print("유망주3", str)
             tierName22 = "유망주3"
             tierImgUrl22 = "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2009/2vs2/ico_rank17.png"
+        case 3200:
+            print("언랭크 ", str)
+            tierName22 = "언랭크"
+            tierImgUrl22 =  "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/2vs2/ico_rank_default.png"
         default:
             print("언랭크 ", str)
             tierName22 = "언랭크"
