@@ -317,30 +317,50 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 
                 var imsiTier = [TierData]()
                 var imsiarr = [String]()
-                
+            
+                //카운트를 만들고
                 //언랭크 append용.
                 for un in tier {
-                    if un.matchType == 50 {
-                        imsiarr.append("있다.")
-                    } else {
-                        imsiarr.append("없다.")
+                    var count = 0
+                    var duoCount = 0
+                    //날짜 포맷
+                    let changeDate = changeDate(inputDate: un.achievementDate)
+                    
+                    if count == 0 {
+                        if un.matchType == 50 {
+                            imsiarr.append("있다.")
+                            let soloData = findTier(rankType: 50, tier: un.division ?? 3200, achievementDate: changeDate ?? "언랭크")
+                            
+                            //모든티어 더해보기
+                            //티어 fetch
+                            imsiTier.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: soloData.achievementDate, tierFilter: 1))
+                            count += 1
+                        } else {
+                            imsiarr.append("없다.")
+                            count += 1
+                        }
                     }
                     
-                    if un.matchType == 52 {
-                        imsiarr.append("22있다.")
-                    } else {
-                        imsiarr.append("없다.")
+                    if duoCount == 0 {
+                        if un.matchType == 52 {
+                            imsiarr.append("22있다.")
+                            duoCount += 1
+                        } else {
+                            imsiarr.append("없다.")
+                            let duoData = findTier22(rankType: 52, tier: 3200, achievementDate22: "언랭크")
+                            imsiTier.append(TierData(tierName: "언랭크", tierUrl: duoData.tierImgUrl22, tierTime: "랭크전적이 없습니다.", tierFilter: 2))
+                            duoCount += 1
+                        }
                     }
-                    
                 }
-                print(imsiarr)
-                for list in tier {
-                    
                 
+                print("티어제작중",imsiTier)
+                
+                for list in tier {
                     
                     let oneone = 50
                     let twotwo = 52
-                    //스크롤뷰에 값을 각각 집어넣는방법
+                    
                     if list.matchType == 50 {
                         
                         let changeDate = changeDate(inputDate: list.achievementDate)
