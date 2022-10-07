@@ -39,10 +39,3 @@ struct MatchDetail: Codable {
 struct Shoot: Codable {
     let goalTotal: Int
 }
-
-//닉네임과 매치디테일 그리고 골수.
-//0. Match //공통
-//1. Match에서 matchDate //매칭날짜
-//2. Match에서 matchInfo에서 nickname //닉네임
-//3. Match에서 matchInfo에서 matchDetail에서 matchResult //승패
-//5. Match에서 matchInfo에서 shoot에서 goalTotal //몇대몇

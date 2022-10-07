@@ -9,8 +9,3 @@ import Foundation
 
 typealias MatchList = [String]
 
-/*
- struct MatchList : Codable {
-    let matchList : String
- }
- */

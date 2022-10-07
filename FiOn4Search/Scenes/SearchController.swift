@@ -5,24 +5,6 @@
 //  Created by 강대민 on 2022/08/03.
 //
 
-/*
- 서치 화면
- 1. 선수 아이디로 검색
- 2. 처음 줄 닉네임, 레벨? 정도.
- 3. 현재 티어와, 최고 티어. //이걸 페이지컨트롤로 할지, 아니면 컬렉션뷰로 할지.
- 4. 최근 전적.
- 5. APIKey값 가리는 방법.
- */
-
-/*
- 리팩토링시에 해야할것 (후에 적용할것, 생각나는대로 적는중). 라고하기엔 당장 시작하는것이 좋겠다.
- 1. escaping 확실히 배우기 notification을 사용하지 않기 위함. (노티도 결국 escaping을 사용)
- 2. escaping을 통해 textfield의 값을 전달하여 검색하는 api를 우선 생성
- 3. 기본적인 api구성후 중복을 방지하고 클린코드를 위해 복잡한escaping을 통해 API Manager 생성하기
- 4.
- */
-
-
 import UIKit
 
 import SnapKit 
@@ -283,6 +265,9 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    func resetData() {
+        
+    }
     
     //MARK: - FETCH
     func getRequest() {
@@ -293,7 +278,6 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 //            print(result)
             switch result {
             case .success(let dict):
-                
                 self.scoreTableView.isHidden = false
                 self.tierCollectionView.isHidden = false
                 self.emptyLabel.text = ""
@@ -301,6 +285,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 self.nameLabel.textColor = .black
                 self.levelLabel.text = "감독레벨 : \(dict.level)"
                 self.levelLabel.textColor = .black
+                
             //MARK: - Tier FETCH
             let tier = API.getTier(accessId: dict.accessId)
             tier.arrrequest(dataType: [TierInfo].self) { tierresult in
@@ -329,18 +314,13 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         if un.matchType == 52 {
                             let duoData = findTier22(rankType: 52, tier: un.division, achievementDate22: changeDate)
                             self.tierData.append(TierData(tierName: duoData.tierName22, tierUrl: duoData.tierImgUrl22, tierTime: duoData.achievementDate22, tierFilter: 2))
-                            print("여기서의 카운트1: ", duoCount)
                             duoCount += 1
                             continue
-                            print("여기서의 카운트2: ", duoCount)
                         } else if un.matchType != 52 && un.matchType != 50 && un.matchType != 214 {
                             let duoData = findTier22(rankType: 52, tier: 3200, achievementDate22: "언랭크")
                             self.tierData.append(TierData(tierName: "언랭크", tierUrl: duoData.tierImgUrl22, tierTime: "2:2 공경전적이 없습니다.", tierFilter: 2))
-                            print("여기서의 카운트3: ", duoCount)
                             duoCount += 1
                             continue
-                            print("여기서의 카운트4: ", duoCount)
-                            
                         }
                     }
                 }
@@ -399,12 +379,14 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                                 if index%2 == 0 {
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
-                                            vmatchResult = "몰수승"
+//                                            vmatchResult = "몰수승"
+                                            vmatchResult = "승"
                                             vgoalTotal = 3
                                             //print("PK승")
                                         } else if info.matchDetail.matchResult == "패" {
                                             //print("PK패")
-                                            vmatchResult = "몰수패"
+//                                            vmatchResult = "몰수패"
+                                            vmatchResult = "패"
                                             vgoalTotal = 0
                                         }
                                     } else {
@@ -416,12 +398,14 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                                 } else {
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
-                                            smatchResult = "몰수승"
+//                                            smatchResult = "몰수승"
+                                            smatchResult = "승"
                                             sgoalTotal = 3
                                             //print("PK승")
                                         } else if info.matchDetail.matchResult == "패" {
                                             //print("PK패")
-                                            smatchResult = "몰수패"
+//                                            smatchResult = "몰수패"
+                                            smatchResult = "패"
                                             sgoalTotal = 0
                                         }
                                     } else {
