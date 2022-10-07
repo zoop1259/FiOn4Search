@@ -292,3 +292,69 @@ import Foundation
  
  
  */
+
+//MARK: - TextFieldDelegate
+/* 텍스트필드의 ,(콤마)를 쓸떄 썻던 델리게이트.
+extension CommissionController: UITextFieldDelegate {
+    
+    //이 로직을 어떻게 rx로 구현할것인가.
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+ 
+     //이런식으로 각각정해줄수도 있다.
+    if textField == couponTextField {
+     if textField.text?.count ?? 0 > 2 {
+         return false
+     }
+     return true
+    }
+     
+        //현재 100경까지만. 나중에 선수값이 기하급수적으로 오르면 culc에서 int를 수정해야함.
+        if textField.text?.count ?? 0 >= 25 {
+            return false
+        }
+        /*
+        //단순히 숫자만 입력받기
+//        let allowedCharacters = CharacterSet.decimalDigits
+//        let characterSet = CharacterSet(charactersIn: string)
+//        return allowedCharacters.isSuperset(of: characterSet)
+
+        
+        // replacementString : 방금 입력된 문자 하나, 붙여넣기 시에는 붙여넣어진 문자열 전체
+        // return -> 텍스트가 바뀌어야 한다면 true, 아니라면 false
+        // 이 메소드 내에서 textField.text는 현재 입력된 string이 붙기 전의 string
+        
+        //,를 붙이기 위한 메서드
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal // 1,000,000
+        formatter.locale = Locale.current
+        formatter.maximumFractionDigits = 0 // 허용하는 소숫점 자리수
+        
+        // formatter.groupingSeparator // .decimal -> ,
+        
+        if let removeAllSeprator = textField.text?.replacingOccurrences(of: formatter.groupingSeparator, with: ""){
+            var beforeForemattedString = removeAllSeprator + string
+            if formatter.number(from: string) != nil {
+                if let formattedNumber = formatter.number(from: beforeForemattedString), let formattedString = formatter.string(from: formattedNumber){
+                    textField.text = formattedString
+                    return false
+                }
+            }else{ // 숫자가 아닐 때먽
+                if string == "" { // 백스페이스일때
+                    let lastIndex = beforeForemattedString.index(beforeForemattedString.endIndex, offsetBy: -1)
+                    beforeForemattedString = String(beforeForemattedString[..<lastIndex])
+                    if let formattedNumber = formatter.number(from: beforeForemattedString), let formattedString = formatter.string(from: formattedNumber){
+                        textField.text = formattedString
+                        return false
+                    }
+                }else{ // 문자일 때
+                    return false
+                }
+            }
+
+        }
+         */
+        return true
+    }
+         
+}
+*/

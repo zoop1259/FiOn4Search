@@ -138,23 +138,14 @@ class CommissionController: UIViewController {
         $0.setTitle("초기화", for: .normal)
         $0.setTitleColor(.black, for: .normal)
         $0.frame.size.height = 50
+        $0.layer.borderWidth = 0.5
+        $0.layer.borderColor = UIColor.black.cgColor
     }
     
     //목록을 위해 생성한 arr items를 넣어주려면 lazy var로 바꿔줘야한다.
     lazy var discountSegControl = UISegmentedControl(items: items).then {
         $0.backgroundColor = .gray
         $0.tintColor = .white
-    }
-    
-//    lazy var asdstackView = UIStackView(arrangedSubviews: [asdasd])
-    
-    let asdView = UIView().then {
-        $0.addSubview(UILabel().then {
-            $0.text = "안나왕...."
-        })
-        $0.addSubview(UITextField().then {
-            $0.placeholder = "안나왕..."
-        })
     }
     
     //텍스트필드 인트형?
@@ -168,7 +159,7 @@ class CommissionController: UIViewController {
         view.backgroundColor = .white
         
         configure()
-        //cashTextField.delegate = self
+        cashTextField.delegate = self
         
         //이벤트가 발생했을 때
 //        cashTextField.rx.controlEvent([.editingChanged])
@@ -197,28 +188,34 @@ class CommissionController: UIViewController {
         cashTextField.rx.text.orEmpty
             .distinctUntilChanged()
             .subscribe(onNext: { newValue in
-                print("cashTex가 변경됨 :", newValue)
-                //self.cashTextField.text = self.numberFormat(newValue)
+                print("cashText가 변경됨 :", newValue)
                 self.culc()
-                
                 let sort = newValue.filter("0123456789.".contains)
-                
                 if let intValue = Int(sort) {
                        self.cashTextField.text = self.format(number: intValue)
                 }
-
-                
             }).disposed(by: bag)
         
         couponTextField.rx.text.orEmpty
             .distinctUntilChanged()
+            .skip(1)
             .subscribe(onNext: {count in
                 print("couponTextField가 변경됨 :", count)
-                if let count = self.couponTextField.text {
-                    self.couponCount(count)
-                    self.culc()
-                }
+                self.couponCount(count)
+                self.culc()
+
+//                if let count = self.couponTextField.text {
+//                    self.couponCount(count)
+//                    self.culc()
+//                }
+                
+//                if count.count >= 3 {
+//                    self.couponTextField.text = String("50")
+//                }
+                
             }, onCompleted: {print("완료됨")}).disposed(by: bag)
+        
+        
         
        //textfield.text의 변경이 있을 때
 //        cashTextField.rx.observe(String.self, "text")
@@ -237,6 +234,7 @@ class CommissionController: UIViewController {
         
         //선택이 안됐을때도 호출이 되네..
         discountSegControl.rx.selectedSegmentIndex
+            .skip(1)
             .subscribe(onNext: {index in
                 print("segcontrol 인덱스 값이 변경됨 : ", index)
                 self.culc()
@@ -257,20 +255,16 @@ class CommissionController: UIViewController {
     //MARK: - 여기서부터 계산에 필요한 함수들
     func couponCount(_ count: String) {
         //100퍼 이상 할인은 없기 떄문에 2자리수로 제한.
-        if count.count >= 2 {
+        if count.count > 2 {
             let index = count.index(count.startIndex, offsetBy: 2)
             self.couponTextField.text = String(count[..<index])
         }
-        
+        //게다가 현재는 50퍼 할인이 끝이기 떄문에.
         if let count = Int(count) {
             if count > 50 {
                 self.couponTextField.text = String("50")
             }
         }
-        
-//        if Int(count) ?? 0 > 49 {
-//            self.couponTextField.text = String("50")
-//        }
     }
     
     func format(number: Int) -> String {
@@ -295,7 +289,7 @@ class CommissionController: UIViewController {
         }
         return returnValue
     }
-    
+    //MARK: - culc
     func culc() {
         var cash = 0
         var culc = 0
@@ -338,8 +332,6 @@ class CommissionController: UIViewController {
                 //수수료자체 할인인것. 예를들어 수수료가 4천만원인 상태에서 50퍼 쿠폰을쓰면 수수료 2천만 할인.
             }
         }
-        
-        
         
         let discount = Int(commission * (coupon + segValue))
         cash = culc + discount
@@ -408,7 +400,8 @@ class CommissionController: UIViewController {
         
         self.discountSegControl.snp.makeConstraints {
             $0.top.equalTo(self.couponstackView.snp.bottom).offset(10)
-            $0.leading.equalTo(self.couponstackView)
+            //$0.leading.equalTo(self.couponstackView)
+            $0.centerX.equalToSuperview()
         }
         
         self.cancelBtn.snp.makeConstraints {
@@ -436,55 +429,7 @@ extension CommissionController: UITextFieldDelegate {
         if textField.text?.count ?? 0 >= 25 {
             return false
         }
-        
-        //단순히 숫자만 입력받기
-//        let allowedCharacters = CharacterSet.decimalDigits
-//        let characterSet = CharacterSet(charactersIn: string)
-//        return allowedCharacters.isSuperset(of: characterSet)
-
-        
-        // replacementString : 방금 입력된 문자 하나, 붙여넣기 시에는 붙여넣어진 문자열 전체
-        // return -> 텍스트가 바뀌어야 한다면 true, 아니라면 false
-        // 이 메소드 내에서 textField.text는 현재 입력된 string이 붙기 전의 string
-        
-        //,를 붙이기 위한 메서드
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal // 1,000,000
-        formatter.locale = Locale.current
-        formatter.maximumFractionDigits = 0 // 허용하는 소숫점 자리수
-        
-        // formatter.groupingSeparator // .decimal -> ,
-        
-        if let removeAllSeprator = textField.text?.replacingOccurrences(of: formatter.groupingSeparator, with: ""){
-            var beforeForemattedString = removeAllSeprator + string
-            if formatter.number(from: string) != nil {
-                if let formattedNumber = formatter.number(from: beforeForemattedString), let formattedString = formatter.string(from: formattedNumber){
-                    textField.text = formattedString
-                    return false
-                }
-            }else{ // 숫자가 아닐 때먽
-                if string == "" { // 백스페이스일때
-                    let lastIndex = beforeForemattedString.index(beforeForemattedString.endIndex, offsetBy: -1)
-                    beforeForemattedString = String(beforeForemattedString[..<lastIndex])
-                    if let formattedNumber = formatter.number(from: beforeForemattedString), let formattedString = formatter.string(from: formattedNumber){
-                        textField.text = formattedString
-                        return false
-                    }
-                }else{ // 문자일 때
-                    return false
-                }
-            }
-
-        }
         return true
     }
+         
 }
-
-
-/*
- 
- 문자 필터링을 extension이 아닌 함수로 해버리고 싶긴하다.
- 
- 
- 
- */

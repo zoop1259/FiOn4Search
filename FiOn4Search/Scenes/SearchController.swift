@@ -285,9 +285,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     
     
     //MARK: - FETCH
-//    아프리카tv규직
     func getRequest() {
-        //엑세스아이디찾기
+        ///엑세스 ID
         let accessid = API.getAccessId(name: self.userNickName)
         accessid.arrrequest(dataType: UserInfo.self) { [weak self] result in
             guard let self = self else { return }
@@ -298,21 +297,15 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 self.scoreTableView.isHidden = false
                 self.tierCollectionView.isHidden = false
                 self.emptyLabel.text = ""
-//                print(dict)
                 self.nameLabel.text = "\(self.userNickName)"
                 self.nameLabel.textColor = .black
                 self.levelLabel.text = "감독레벨 : \(dict.level)"
                 self.levelLabel.textColor = .black
-            //티어찾기.
+            //MARK: - Tier FETCH
             let tier = API.getTier(accessId: dict.accessId)
             tier.arrrequest(dataType: [TierInfo].self) { tierresult in
             switch tierresult {
             case .success(let tier):
-//                print(tier)
-                print("여기서는 옵셔널값인가?", tier)
-                
-                print("공경 수 :", tier.count)
-                
                 //카운트를 만들고
                 //언랭크 append용.
                 for un in tier {
@@ -325,10 +318,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         let soloData = findTier(rankType: 50, tier: un.division ?? 3200, achievementDate: changeDate ?? "언랭크")
                         self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: soloData.achievementDate, tierFilter: 1))
                         break solo
-                        
                     } else if un.matchType != 50 && un.matchType != 52 {
                         let soloData = findTier(rankType: 50, tier: 3200, achievementDate: "언랭크")
-
                         self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: "1:1 공경전적이 없습니다.", tierFilter: 1))
                         break solo
                     }
@@ -357,7 +348,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 print("1",error)
             }
                 }
-        //매치 목록 id 구하기.
+        //MARK: - 매치 목록 id FETCH
         let matchId = API.getMatchId(accessId: dict.accessId, limit: 10)
         matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
             //모델을 위한 임시 변수
@@ -370,10 +361,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 
             switch matchIdresult {
             case .success(let matchIdresult):
-//                print("matchId fin:",matchIdresult)
-                //print("만들어야될 카운트",matchIdresult.count)
                 for match in matchIdresult  {
-                    
                     //매치 정보 구하기.
                     let matchInfo = API.getMatchInfo(matchId: match)
                     matchInfo.arrrequest(dataType: Match.self) { matchresult in
@@ -384,16 +372,17 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                             //0. Match //공통
                             //1. Match에서 matchDate
                             //2022-07-01T20:39:47 <<포맷해야한다.
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-                            let convertDate = dateFormatter.date(from: matchresult.matchDate) // Date 타입으로 변환
-                            let myDateFormatter = DateFormatter()
-                            myDateFormatter.dateFormat = "yyyy.MM.dd a hh시 mm분" // 2020.08.13 오후 04시 30분
-                            myDateFormatter.locale = Locale(identifier:"ko_KR") // PM, AM을 언어에 맞게 setting (ex: PM -> 오후)
-                            let convertStr = myDateFormatter.string(from: convertDate!)
+//                            let dateFormatter = DateFormatter()
+//                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+//                            let convertDate = dateFormatter.date(from: matchresult.matchDate) // Date 타입으로 변환
+//                            let myDateFormatter = DateFormatter()
+//                            myDateFormatter.dateFormat = "yyyy.MM.dd a hh시 mm분" // 2020.08.13 오후 04시 30분
+//                            myDateFormatter.locale = Locale(identifier:"ko_KR") // PM, AM을 언어에 맞게 setting (ex: PM -> 오후)
+//                            let convertStr = myDateFormatter.string(from: convertDate!)
                             //print(convertStr)
                             //let convertNowStr = myDateFormatter.string(from: nowDate) // 현재 시간의 Date를 format에 맞춰 string으로 반환
                             
+                            let changeDate = changeDate(inputDate: matchresult.matchDate)
                             
                             //let matchDate = matchresult.matchDate // 매칭날짜
                             let matchInfoma = matchresult.matchInfo
@@ -443,7 +432,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                                                             
                             }
 
-                            self.myMatchModel.append(MyMatch(matchDate: convertStr, myMatchDetail: MyMatchDetail(nickname: vnickName, matchResult: vmatchResult, goalTotal: vgoalTotal, vsnickname: snickName, vsmatchResult: smatchResult, vsgoalTotal: sgoalTotal)))
+                            self.myMatchModel.append(MyMatch(matchDate: changeDate, myMatchDetail: MyMatchDetail(nickname: vnickName, matchResult: vmatchResult, goalTotal: vgoalTotal, vsnickname: snickName, vsmatchResult: smatchResult, vsgoalTotal: sgoalTotal)))
                             //print(self.myMatchModel)
 //                            print(self.myMatchModel.count)
                             
