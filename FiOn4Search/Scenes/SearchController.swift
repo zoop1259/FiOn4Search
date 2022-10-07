@@ -315,10 +315,10 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                     //solo를 통해 구문레이블.
                     solo : if un.matchType == 50 {
                         //티어 fetch
-                        let soloData = findTier(rankType: 50, tier: un.division ?? 3200, achievementDate: changeDate ?? "언랭크")
+                        let soloData = findTier(rankType: 50, tier: un.division, achievementDate: changeDate)
                         self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: soloData.achievementDate, tierFilter: 1))
                         break solo
-                    } else if un.matchType != 50 && un.matchType != 52 {
+                    } else if un.matchType != 50 && un.matchType != 52 && un.matchType != 214 {
                         let soloData = findTier(rankType: 50, tier: 3200, achievementDate: "언랭크")
                         self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: "1:1 공경전적이 없습니다.", tierFilter: 1))
                         break solo
@@ -327,18 +327,20 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                     //continue사용.
                     if duoCount == 0 {
                         if un.matchType == 52 {
-                            let duoData = findTier22(rankType: 52, tier: un.division ?? 3200, achievementDate22: changeDate ?? "언랭크")
+                            let duoData = findTier22(rankType: 52, tier: un.division, achievementDate22: changeDate)
                             self.tierData.append(TierData(tierName: duoData.tierName22, tierUrl: duoData.tierImgUrl22, tierTime: duoData.achievementDate22, tierFilter: 2))
                             print("여기서의 카운트1: ", duoCount)
                             duoCount += 1
                             continue
                             print("여기서의 카운트2: ", duoCount)
-                        } else if un.matchType != 52 && un.matchType != 50 {
+                        } else if un.matchType != 52 && un.matchType != 50 && un.matchType != 214 {
                             let duoData = findTier22(rankType: 52, tier: 3200, achievementDate22: "언랭크")
                             self.tierData.append(TierData(tierName: "언랭크", tierUrl: duoData.tierImgUrl22, tierTime: "2:2 공경전적이 없습니다.", tierFilter: 2))
                             print("여기서의 카운트3: ", duoCount)
                             duoCount += 1
+                            continue
                             print("여기서의 카운트4: ", duoCount)
+                            
                         }
                     }
                 }
@@ -511,6 +513,10 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
          
     }
     
+    //키보드 내리기
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        self.view.endEditing(true)
+    }
 }
 
 //MARK: - CollectionView Extension

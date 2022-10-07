@@ -11,7 +11,7 @@ let search = SearchController()
 
 // MARK: - WelcomeElement
 struct TierInfo: Codable {
-    let matchType, division: Int?
+    let matchType, division: Int
     let achievementDate: String
 }
 

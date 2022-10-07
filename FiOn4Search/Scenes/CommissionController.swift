@@ -42,6 +42,10 @@ class CommissionController: UIViewController {
         $0.text = "선수금액"
         $0.layer.borderColor = UIColor.black.cgColor
         $0.textAlignment = .left
+        $0.layer.cornerRadius = 5.0
+        $0.layer.shadowColor = UIColor.black.cgColor
+        $0.layer.shadowOpacity = 0.2
+        $0.layer.shadowRadius = 10
         //라이브러리의 제약조건
         $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
@@ -67,6 +71,10 @@ class CommissionController: UIViewController {
         $0.text = "수수료%"
         $0.layer.borderColor = UIColor.black.cgColor
         $0.textAlignment = .left
+        $0.layer.cornerRadius = 5.0
+        $0.layer.shadowColor = UIColor.black.cgColor
+        $0.layer.shadowOpacity = 0.2
+        $0.layer.shadowRadius = 10
         //라이브러리의 제약조건
         $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
@@ -96,6 +104,10 @@ class CommissionController: UIViewController {
         $0.text = "할인금액"
         $0.layer.borderColor = UIColor.black.cgColor
         $0.textAlignment = .left
+        $0.layer.cornerRadius = 5.0
+        $0.layer.shadowColor = UIColor.black.cgColor
+        $0.layer.shadowOpacity = 0.2
+        $0.layer.shadowRadius = 10
         //라이브러리의 제약조건
         $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
@@ -121,6 +133,10 @@ class CommissionController: UIViewController {
         $0.text = "받을금액"
         $0.layer.borderColor = UIColor.black.cgColor
         $0.textAlignment = .left
+        $0.layer.cornerRadius = 5.0
+        $0.layer.shadowColor = UIColor.black.cgColor
+        $0.layer.shadowOpacity = 0.2
+        $0.layer.shadowRadius = 10
         //라이브러리의 제약조건
         //$0.setContentCompressionResistancePriority(.init(rawValue: 749), for: .horizontal)
         $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -140,6 +156,10 @@ class CommissionController: UIViewController {
         $0.frame.size.height = 50
         $0.layer.borderWidth = 0.5
         $0.layer.borderColor = UIColor.black.cgColor
+        $0.layer.cornerRadius = 5.0
+        $0.layer.shadowColor = UIColor.black.cgColor
+        $0.layer.shadowOpacity = 0.2
+        $0.layer.shadowRadius = 10
     }
     
     //목록을 위해 생성한 arr items를 넣어주려면 lazy var로 바꿔줘야한다.
@@ -416,6 +436,12 @@ class CommissionController: UIViewController {
 //            $0.height.equalTo(50)
 //        }
     }
+    
+    //키보드 내리기
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        self.view.endEditing(true)
+    }
+    
 }
 
 
