@@ -25,18 +25,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         //이것만 해놓으면 탭바는 만들어져있지만 탭바아이템이 설정되어있지않아 아무것도 출력도지 않는다.
         let tabbarController = UITabBarController()
-        tabbarController.setViewControllers([searchVC, navigationController], animated: true)
+        tabbarController.setViewControllers([navigationController, searchVC], animated: true)
         
         
         //그래서 탭바아이템 설정을 해준다.
         if let tabbarItem = tabbarController.tabBar.items {
-            tabbarItem[0].image = UIImage(systemName: "person")
-            tabbarItem[0].selectedImage = UIImage(systemName: "person.fill")
-            tabbarItem[0].title = "유저검색"
-            
-            tabbarItem[1].image = UIImage(systemName: "gear")
-            tabbarItem[1].selectedImage = UIImage(systemName: "gear.fill")
-            tabbarItem[1].title = "수수료계산기"
+            tabbarItem[0].image = UIImage(systemName: "dollarsign.circle")
+            tabbarItem[0].selectedImage = UIImage(systemName: "dollarsign.circle.fill")
+            tabbarItem[0].title = "수수료계산기"
+
+            tabbarItem[1].image = UIImage(systemName: "person")
+            tabbarItem[1].selectedImage = UIImage(systemName: "person.fill")
+            tabbarItem[1].title = "유저검색"            
         }
         
         /*

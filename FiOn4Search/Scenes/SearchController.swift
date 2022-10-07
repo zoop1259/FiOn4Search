@@ -316,11 +316,10 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 //카운트를 만들고
                 //언랭크 append용.
                 for un in tier {
-                    var count = 0
                     var duoCount = 0
                     //날짜 포맷
                     let changeDate = changeDate(inputDate: un.achievementDate)
-                
+                    //solo를 통해 구문레이블.
                     solo : if un.matchType == 50 {
                         //티어 fetch
                         let soloData = findTier(rankType: 50, tier: un.division ?? 3200, achievementDate: changeDate ?? "언랭크")
@@ -333,25 +332,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: "1:1 공경전적이 없습니다.", tierFilter: 1))
                         break solo
                     }
-                
                     
-//                    if count == 0 {
-//
-//                        if un.matchType == 50 {
-//                            //티어 fetch
-//                            let soloData = findTier(rankType: 50, tier: un.division ?? 3200, achievementDate: changeDate ?? "언랭크")
-//
-//                            self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: soloData.achievementDate, tierFilter: 1))
-//                            count += 1
-//                            continue
-//                        } else if un.matchType != 50 && un.matchType != 52 {
-//                            let soloData = findTier(rankType: 50, tier: 3200, achievementDate: "언랭크")
-//
-//                            self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: "1:1 공경전적이 없습니다.", tierFilter: 1))
-//                            count += 1
-//                        }
-//                    }
-                    
+                    //continue사용.
                     if duoCount == 0 {
                         if un.matchType == 52 {
                             let duoData = findTier22(rankType: 52, tier: un.division ?? 3200, achievementDate22: changeDate ?? "언랭크")
@@ -369,65 +351,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                         }
                     }
                 }
+                //컬렉션뷰 리로딩.
                 self.tierCollectionView.reloadData()
-                
-                print("티어제작중", self.tierData)
-                
-//                for list in tier {
-//
-//                    let oneone = 50
-//                    let twotwo = 52
-//
-//                    if list.matchType == 50 {
-//
-//                        let changeDate = changeDate(inputDate: list.achievementDate)
-//
-////                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
-//                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 3200, achievementDate: changeDate ?? "")
-//
-//                        //모든티어 더해보기
-//                        //티어 fetch
-//                        self.tierData.append(TierData(tierName: oneoneData.tierName, tierUrl: oneoneData.tierImgUrl, tierTime: oneoneData.achievementDate, tierFilter: 1))
-//
-//                        tierNameArr.append(oneoneData.tierName)
-//                        tierTimeArr.append(oneoneData.achievementDate)
-//                        tierImgUrlArr.append(oneoneData.tierImgUrl)
-//
-//                        let asd = oneoneData.tierImgUrl
-////                        print("url",asd)
-//                        let asdasd = oneoneData.tierName
-////                        print("tier이름",asdasd)
-////                        self.tierTimeLabel.text = oneoneData.achievementDate
-////                        self.tierDivLabel.text = oneoneData.tierName
-//
-//                        let oneoneUrl = URL(string:oneoneData.tierImgUrl)
-//
-//                    } else if list.matchType == 52 {
-//
-//                        //let changeDate = changeDate(inputDate: list.achievementDate)
-//
-////                        print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
-////                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
-//                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 3200, achievementDate22: changeDate(inputDate: list.achievementDate) ?? "")
-//
-//
-//                        tierNameArr.append(twotwoData.tierName22)
-//                        tierTimeArr.append(twotwoData.achievementDate22)
-//                        tierImgUrlArr.append(twotwoData.tierImgUrl22)
-//
-//                        let asd = twotwoData.tierImgUrl22
-////                        print("url",asd)
-//                        let asdasd = twotwoData.tierName22
-////                        print("tier이름",asdasd)
-//
-//                        //모든티어 데이터 더해보기
-//                        self.tierData.append(TierData(tierName: twotwoData.tierName22, tierUrl: twotwoData.tierImgUrl22, tierTime: twotwoData.achievementDate22, tierFilter: 2))
-//
-//                        print(self.tierData)
-//                        let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
-//                    }
-//                    self.tierCollectionView.reloadData()
-//                }
             case .failure(let error):
                 print("1",error)
             }
@@ -617,5 +542,4 @@ extension SearchController: UICollectionViewDelegate, UICollectionViewDataSource
         cell.tierImgView.kf.setImage(with: tierUrl, placeholder: nil, options: [.transition(.fade(1.0))], completionHandler: nil)
         return cell
     }
-    
 }
