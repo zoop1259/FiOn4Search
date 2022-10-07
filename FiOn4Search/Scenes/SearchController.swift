@@ -106,8 +106,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     
 //    var tierCollectionView = UICollectionView(frame: .zero, collectionViewLayout: .init()).then {
 //        $0.register(TierCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-//        //$0.frame = CGRect(x: 0, y: 0, width: 150, height: 150)
-//        //$0.backgroundColor = .red
+//        $0.frame = CGRect(x: 0, y: 0, width: 150, height: 150)
+//        $0.backgroundColor = .red
 //    }
     
     lazy var tierCollectionView : UICollectionView = {
@@ -116,12 +116,12 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
         layout.estimatedItemSize = CGSize(width: view.frame.width - 10.0, height: 150)
-        
+
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.delegate = self
         cv.dataSource = self
         cv.register(TierCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        
+
         return cv
     }()
     
@@ -289,14 +289,15 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     func getRequest() {
         //엑세스아이디찾기
         let accessid = API.getAccessId(name: self.userNickName)
-        accessid.arrrequest(dataType: UserInfo.self) { result in
+        accessid.arrrequest(dataType: UserInfo.self) { [weak self] result in
+            guard let self = self else { return }
 //            print(result)
             switch result {
             case .success(let dict):
                 
                 self.scoreTableView.isHidden = false
                 self.tierCollectionView.isHidden = false
-                
+                self.emptyLabel.text = ""
 //                print(dict)
                 self.nameLabel.text = "\(self.userNickName)"
                 self.nameLabel.textColor = .black
@@ -309,15 +310,9 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             case .success(let tier):
 //                print(tier)
                 print("여기서는 옵셔널값인가?", tier)
-                var tierNameArr = [String]()
-                var tierTimeArr = [String]()
-                var tierImgUrlArr = [String]()
                 
                 print("공경 수 :", tier.count)
                 
-                var imsiTier = [TierData]()
-                var imsiarr = [String]()
-            
                 //카운트를 만들고
                 //언랭크 append용.
                 for un in tier {
@@ -325,92 +320,114 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                     var duoCount = 0
                     //날짜 포맷
                     let changeDate = changeDate(inputDate: un.achievementDate)
-                    
-                    if count == 0 {
-                        if un.matchType == 50 {
-                            imsiarr.append("있다.")
-                            let soloData = findTier(rankType: 50, tier: un.division ?? 3200, achievementDate: changeDate ?? "언랭크")
-                            
-                            //모든티어 더해보기
-                            //티어 fetch
-                            imsiTier.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: soloData.achievementDate, tierFilter: 1))
-                            count += 1
-                        } else {
-                            imsiarr.append("없다.")
-                            count += 1
-                        }
+                
+                    solo : if un.matchType == 50 {
+                        //티어 fetch
+                        let soloData = findTier(rankType: 50, tier: un.division ?? 3200, achievementDate: changeDate ?? "언랭크")
+                        self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: soloData.achievementDate, tierFilter: 1))
+                        break solo
+                        
+                    } else if un.matchType != 50 && un.matchType != 52 {
+                        let soloData = findTier(rankType: 50, tier: 3200, achievementDate: "언랭크")
+
+                        self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: "1:1 공경전적이 없습니다.", tierFilter: 1))
+                        break solo
                     }
+                
+                    
+//                    if count == 0 {
+//
+//                        if un.matchType == 50 {
+//                            //티어 fetch
+//                            let soloData = findTier(rankType: 50, tier: un.division ?? 3200, achievementDate: changeDate ?? "언랭크")
+//
+//                            self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: soloData.achievementDate, tierFilter: 1))
+//                            count += 1
+//                            continue
+//                        } else if un.matchType != 50 && un.matchType != 52 {
+//                            let soloData = findTier(rankType: 50, tier: 3200, achievementDate: "언랭크")
+//
+//                            self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: "1:1 공경전적이 없습니다.", tierFilter: 1))
+//                            count += 1
+//                        }
+//                    }
                     
                     if duoCount == 0 {
                         if un.matchType == 52 {
-                            imsiarr.append("22있다.")
+                            let duoData = findTier22(rankType: 52, tier: un.division ?? 3200, achievementDate22: changeDate ?? "언랭크")
+                            self.tierData.append(TierData(tierName: duoData.tierName22, tierUrl: duoData.tierImgUrl22, tierTime: duoData.achievementDate22, tierFilter: 2))
+                            print("여기서의 카운트1: ", duoCount)
                             duoCount += 1
-                        } else {
-                            imsiarr.append("없다.")
+                            continue
+                            print("여기서의 카운트2: ", duoCount)
+                        } else if un.matchType != 52 && un.matchType != 50 {
                             let duoData = findTier22(rankType: 52, tier: 3200, achievementDate22: "언랭크")
-                            imsiTier.append(TierData(tierName: "언랭크", tierUrl: duoData.tierImgUrl22, tierTime: "랭크전적이 없습니다.", tierFilter: 2))
+                            self.tierData.append(TierData(tierName: "언랭크", tierUrl: duoData.tierImgUrl22, tierTime: "2:2 공경전적이 없습니다.", tierFilter: 2))
+                            print("여기서의 카운트3: ", duoCount)
                             duoCount += 1
+                            print("여기서의 카운트4: ", duoCount)
                         }
                     }
                 }
+                self.tierCollectionView.reloadData()
                 
-                print("티어제작중",imsiTier)
+                print("티어제작중", self.tierData)
                 
-                for list in tier {
-                    
-                    let oneone = 50
-                    let twotwo = 52
-                    
-                    if list.matchType == 50 {
-                        
-                        let changeDate = changeDate(inputDate: list.achievementDate)
-                        
-//                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
-                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 3200, achievementDate: changeDate ?? "")
-                        
-                        //모든티어 더해보기
-                        //티어 fetch
-                        self.tierData.append(TierData(tierName: oneoneData.tierName, tierUrl: oneoneData.tierImgUrl, tierTime: oneoneData.achievementDate, tierFilter: 1))
-                        
-                        tierNameArr.append(oneoneData.tierName)
-                        tierTimeArr.append(oneoneData.achievementDate)
-                        tierImgUrlArr.append(oneoneData.tierImgUrl)
-
-                        let asd = oneoneData.tierImgUrl
-//                        print("url",asd)
-                        let asdasd = oneoneData.tierName
-//                        print("tier이름",asdasd)
-//                        self.tierTimeLabel.text = oneoneData.achievementDate
-//                        self.tierDivLabel.text = oneoneData.tierName
-                        
-                        let oneoneUrl = URL(string:oneoneData.tierImgUrl)
-
-                    } else if list.matchType == 52 {
-                        
-                        //let changeDate = changeDate(inputDate: list.achievementDate)
-                        
-//                        print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
-//                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
-                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 3200, achievementDate22: changeDate(inputDate: list.achievementDate) ?? "")
-                        
-                        
-                        tierNameArr.append(twotwoData.tierName22)
-                        tierTimeArr.append(twotwoData.achievementDate22)
-                        tierImgUrlArr.append(twotwoData.tierImgUrl22)
-                        
-                        let asd = twotwoData.tierImgUrl22
-//                        print("url",asd)
-                        let asdasd = twotwoData.tierName22
-//                        print("tier이름",asdasd)
-
-                        //모든티어 데이터 더해보기
-                        self.tierData.append(TierData(tierName: twotwoData.tierName22, tierUrl: twotwoData.tierImgUrl22, tierTime: twotwoData.achievementDate22, tierFilter: 2))
-                        
-                        print(self.tierData)
-                        let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
-                    }
-                    self.tierCollectionView.reloadData()
-                }
+//                for list in tier {
+//
+//                    let oneone = 50
+//                    let twotwo = 52
+//
+//                    if list.matchType == 50 {
+//
+//                        let changeDate = changeDate(inputDate: list.achievementDate)
+//
+////                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 0, achievementDate: list.achievementDate ?? "")
+//                        let oneoneData = findTier(rankType: oneone ?? 50, tier: list.division ?? 3200, achievementDate: changeDate ?? "")
+//
+//                        //모든티어 더해보기
+//                        //티어 fetch
+//                        self.tierData.append(TierData(tierName: oneoneData.tierName, tierUrl: oneoneData.tierImgUrl, tierTime: oneoneData.achievementDate, tierFilter: 1))
+//
+//                        tierNameArr.append(oneoneData.tierName)
+//                        tierTimeArr.append(oneoneData.achievementDate)
+//                        tierImgUrlArr.append(oneoneData.tierImgUrl)
+//
+//                        let asd = oneoneData.tierImgUrl
+////                        print("url",asd)
+//                        let asdasd = oneoneData.tierName
+////                        print("tier이름",asdasd)
+////                        self.tierTimeLabel.text = oneoneData.achievementDate
+////                        self.tierDivLabel.text = oneoneData.tierName
+//
+//                        let oneoneUrl = URL(string:oneoneData.tierImgUrl)
+//
+//                    } else if list.matchType == 52 {
+//
+//                        //let changeDate = changeDate(inputDate: list.achievementDate)
+//
+////                        print(findTier22(rankType: twotwo ?? 52, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? ""))
+////                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 0, achievementDate22: list.achievementDate ?? "")
+//                        let twotwoData = findTier22(rankType: twotwo ?? 50, tier: list.division ?? 3200, achievementDate22: changeDate(inputDate: list.achievementDate) ?? "")
+//
+//
+//                        tierNameArr.append(twotwoData.tierName22)
+//                        tierTimeArr.append(twotwoData.achievementDate22)
+//                        tierImgUrlArr.append(twotwoData.tierImgUrl22)
+//
+//                        let asd = twotwoData.tierImgUrl22
+////                        print("url",asd)
+//                        let asdasd = twotwoData.tierName22
+////                        print("tier이름",asdasd)
+//
+//                        //모든티어 데이터 더해보기
+//                        self.tierData.append(TierData(tierName: twotwoData.tierName22, tierUrl: twotwoData.tierImgUrl22, tierTime: twotwoData.achievementDate22, tierFilter: 2))
+//
+//                        print(self.tierData)
+//                        let twotwoUrl = URL(string:twotwoData.tierImgUrl22)
+//                    }
+//                    self.tierCollectionView.reloadData()
+//                }
             case .failure(let error):
                 print("1",error)
             }
@@ -467,30 +484,34 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
                                             vmatchResult = "몰수승"
+                                            vgoalTotal = 3
                                             //print("PK승")
                                         } else if info.matchDetail.matchResult == "패" {
                                             //print("PK패")
                                             vmatchResult = "몰수패"
+                                            vgoalTotal = 0
                                         }
                                     } else {
                                         vmatchResult = info.matchDetail.matchResult //승패
+                                        vgoalTotal = info.shoot.goalTotal //골수
                                     }
-                                    vgoalTotal = info.shoot.goalTotal //골수
                                     vnickName = info.nickname
                                     
                                 } else {
                                     if info.shoot.goalTotal == 0 {
                                         if info.matchDetail.matchResult == "승" {
                                             smatchResult = "몰수승"
+                                            sgoalTotal = 3
                                             //print("PK승")
                                         } else if info.matchDetail.matchResult == "패" {
                                             //print("PK패")
                                             smatchResult = "몰수패"
+                                            sgoalTotal = 0
                                         }
                                     } else {
                                         smatchResult = info.matchDetail.matchResult //승패
+                                        sgoalTotal = info.shoot.goalTotal //골수
                                     }
-                                    sgoalTotal = info.shoot.goalTotal //골수
                                     snickName = info.nickname
                                     
                                 }
@@ -505,7 +526,6 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                             
                             //각각 리로드데이터를 해줘야한다. 멍충아 ㅠㅠ
                             //self.scoreTableView.contentOffset = .zero //리로드시 값 비우기.
-                            
                             self.scoreTableView.reloadData()
                             
                         case .failure(let error):
@@ -516,8 +536,6 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             case .failure(let error):
                 print("matchId error : ",error)
             }
-            
-            
                 }
             case .failure(let error):
                 print("3",error)
@@ -564,7 +582,7 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     
         let label = UILabel()
-        label.text = "경기 결과"
+        label.text = "최근 경기 결과"
         label.font = .boldSystemFont(ofSize: 22)
         label.textColor = .label
         label.backgroundColor = .clear
@@ -573,15 +591,11 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: self.scoreTableView.frame.width, height: 25))
         headerView.addSubview(label)
-        //label.leftAnchor.constraint(equalTo: headerView.leftAnchor).isActive = true
+        label.leftAnchor.constraint(equalTo: headerView.leftAnchor).isActive = true
         
         return headerView
          
     }
-    
-//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        return "경기결과"
-//    }
     
 }
 
@@ -595,8 +609,8 @@ extension SearchController: UICollectionViewDelegate, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = tierCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! TierCollectionViewCell
         
-        cell.tierNameLabel.text = tierData[indexPath.row].tierName
-        cell.tierTimeLabel.text = tierData[indexPath.row].tierTime
+        cell.tierNameLabel.text = "\(1 + indexPath.row)VS\(1 + indexPath.row) 랭크 티어\n" + tierData[indexPath.row].tierName
+        cell.tierTimeLabel.text = "최초 티어 달성 날짜\n" +  tierData[indexPath.row].tierTime
         
         let tierUrl = URL(string:tierData[indexPath.row].tierUrl)
         cell.tierImgView.kf.indicatorType = .activity

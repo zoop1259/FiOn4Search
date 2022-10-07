@@ -17,17 +17,20 @@ class TierCollectionViewCell: UICollectionViewCell {
     let tierNameLabel = UILabel().then {
         $0.textAlignment = .center
         $0.text = "구단주명"
+        $0.numberOfLines = 2
         $0.font = .systemFont(ofSize: 18, weight: .bold)
     }
     
     let tierTimeLabel = UILabel().then {
         $0.textAlignment = .center
         $0.text = "달성날짜"
+        $0.numberOfLines = 2
         $0.font = .systemFont(ofSize: 16, weight: .medium)
     }
     
     let stackView = UIStackView().then {
         $0.axis = .vertical
+        $0.spacing = 10
         
     }
 
