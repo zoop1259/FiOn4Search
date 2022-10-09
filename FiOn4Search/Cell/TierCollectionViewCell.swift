@@ -19,6 +19,7 @@ class TierCollectionViewCell: UICollectionViewCell {
         $0.text = "구단주명"
         $0.numberOfLines = 2
         $0.font = .systemFont(ofSize: 18, weight: .bold)
+        
     }
     
     let tierTimeLabel = UILabel().then {
@@ -52,6 +53,8 @@ class TierCollectionViewCell: UICollectionViewCell {
         addSubview(stackView)
         stackView.addArrangedSubview(self.tierNameLabel)
         stackView.addArrangedSubview(self.tierTimeLabel)
+        
+        
     }
     //넉쨔
     func configure() {
@@ -65,8 +68,8 @@ class TierCollectionViewCell: UICollectionViewCell {
             //trailing은 끝나는 방향 -24만큼 띄워져서 끝남?
 //            $0.trailing.equalToSuperview().offset(-5)
             $0.bottom.equalToSuperview().offset(-5)
-            $0.height.equalTo(120)
-            $0.width.equalTo(120)
+            $0.height.equalTo(130)
+            $0.width.equalTo(130)
         }
         
         stackView.snp.makeConstraints {
