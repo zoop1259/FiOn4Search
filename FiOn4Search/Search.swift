@@ -59,13 +59,30 @@ class Search {
             switch tierresult {
             case .success(let tier):
                 print("이거성공 : ",tier)
-                
+
             case .failure(let error):
                 print("이거실패", error)
             }
         }
     }
     
+    func matchReq(str: String) {
+        let mat = API.getMatchId(accessId: str, limit: 10)
+    
+        mat.arrrequest(dataType: MatchList.self) { matchIdresult in
+        switch matchIdresult {
+        case .success(let mat):
+            print("매치성공 : ",mat)
+            
+        case .failure(let error):
+            print("매치실패", error)
+        }
+    }
+    
+    
+}
+        
+        
 }
 
 /*

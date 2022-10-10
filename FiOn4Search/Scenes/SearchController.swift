@@ -83,7 +83,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
 
     //전적을 나타낼 테이블뷰
     var scoreTableView = UITableView().then {
-        $0.register(MatchTableViewCell.self, forCellReuseIdentifier: "cell")
+        $0.register(MatchTableViewCell.self, forCellReuseIdentifier: "tableCell")
     }
     
 //    var tierCollectionView = UICollectionView(frame: .zero, collectionViewLayout: .init()).then {
@@ -96,8 +96,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         var layout = UICollectionViewFlowLayout()
         //layout.minimumLineSpacing = 5
         layout.scrollDirection = .horizontal
-        layout.sectionInset = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
-        layout.estimatedItemSize = CGSize(width: view.frame.width - 10.0, height: 150)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layout.estimatedItemSize = CGSize(width: view.frame.width - 10.0, height: 140)
 
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.delegate = self
@@ -134,31 +134,22 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 self.tierData.removeAll()
                 self.scoreTableView.reloadData()//초기화하고 시작하자.
                 self.tierCollectionView.reloadData()
-                
-                
                 self.getRequest()
-                
-//                self.imsireq { str in
-//                    //self.imsitier(reStr: str)
-//                    self.imstr = str
-//                }
                 
                 //self.search.obsearch() //textfield의 값을 제대로 전달하는지
                 self.search.accessidReq { str in
                     print("전달하고 전달받은 값 :",str)
                     self.imsi = str
+                    
                 }
                 
                 self.search.tierReq(str: self.imsi)
+                self.search.matchReq(str: self.imsi)
                 
             }).disposed(by: bag)
     }
     
     //MARK: - 임시 Fetch
-
-    
-    
-    
     var imsi: String = ""
     
     //rx를 통해 데이터 넘겨주기.
@@ -242,7 +233,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             $0.leading.equalToSuperview().offset(10)
             $0.trailing.equalToSuperview().offset(-10)
             //높이와 너비는 이런식으로!
-            $0.height.equalTo(150)
+            $0.height.equalTo(140)
         }
         
         self.scoreTableView.snp.makeConstraints {
@@ -263,10 +254,6 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             let index = count.index(count.startIndex, offsetBy: 15)
             self.searchTextField.text = String(count[..<index])
         }
-    }
-    
-    func resetData() {
-        
     }
     
     //MARK: - FETCH
@@ -325,6 +312,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                     }
                 }
                 //컬렉션뷰 리로딩.
+                self.tierData.sort(by: {$0.tierFilter < $1.tierFilter})
                 self.tierCollectionView.reloadData()
             case .failure(let error):
                 print("1",error)
@@ -349,27 +337,12 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                     matchInfo.arrrequest(dataType: Match.self) { matchresult in
                         switch matchresult {
                         case .success(let matchresult):
-                            //print(matchresult)
-                            //print("성공")
-                            //0. Match //공통
-                            //1. Match에서 matchDate
-                            //2022-07-01T20:39:47 <<포맷해야한다.
-//                            let dateFormatter = DateFormatter()
-//                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-//                            let convertDate = dateFormatter.date(from: matchresult.matchDate) // Date 타입으로 변환
-//                            let myDateFormatter = DateFormatter()
-//                            myDateFormatter.dateFormat = "yyyy.MM.dd a hh시 mm분" // 2020.08.13 오후 04시 30분
-//                            myDateFormatter.locale = Locale(identifier:"ko_KR") // PM, AM을 언어에 맞게 setting (ex: PM -> 오후)
-//                            let convertStr = myDateFormatter.string(from: convertDate!)
-                            //print(convertStr)
-                            //let convertNowStr = myDateFormatter.string(from: nowDate) // 현재 시간의 Date를 format에 맞춰 string으로 반환
                             
                             let changeDate = changeDate(inputDate: matchresult.matchDate)
                             
                             //let matchDate = matchresult.matchDate // 매칭날짜
                             let matchInfoma = matchresult.matchInfo
                             //닉네임으로 sort해도..
-                            
                             //2. Match에서 matchInfo에서 nickname
                             //3. Match에서 matchInfo에서 matchDetail에서 matchResult
                             //4. Match에서 matchInfo에서 shoot에서 goalTotal //몇대몇
@@ -448,7 +421,6 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
-    
 }
 
 

@@ -279,6 +279,7 @@ class CommissionController: UIViewController {
             let index = count.index(count.startIndex, offsetBy: 2)
             self.couponTextField.text = String(count[..<index])
         }
+        
         //게다가 현재는 50퍼 할인이 끝이기 떄문에.
         if let count = Int(count) {
             if count > 50 {
@@ -429,12 +430,6 @@ class CommissionController: UIViewController {
             $0.leading.equalTo(self.receivestackView)
         }
         
-//        view.addSubview(self.asdView)
-//        self.asdView.snp.makeConstraints {
-//            $0.top.equalTo(self.cancelBtn.snp.bottom).offset(10)
-//            $0.leading.equalTo(self.receivestackView)
-//            $0.height.equalTo(50)
-//        }
     }
     
     //키보드 내리기
