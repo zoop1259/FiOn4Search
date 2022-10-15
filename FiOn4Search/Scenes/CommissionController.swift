@@ -180,30 +180,11 @@ class CommissionController: UIViewController {
         
         configure()
         cashTextField.delegate = self
-        
-        //이벤트가 발생했을 때
-//        cashTextField.rx.controlEvent([.editingChanged])
-//            .asObservable()
-//            .subscribe(onNext: {_ in
-//                print("터치되었다")
-//            }).disposed(by: bag)
+        bind()
 
-        //delegate에 의해 이것들은 값이 nil때만 호출이 된다.
-        //textfield.rx.text의 변경이 있을 때
-//        cashTextField.rx.text
-//            .subscribe(onNext: { newValue in
-//                self.cashTextField.text = self.changeValue(newValue)
-//                print(newValue)
-//            }).disposed(by: bag)
-        
-        //textfield.text는 옵셔널 값을 반환하기 떄문에 orEmpty를 써보자
-//        cashTextField.rx.text.orEmpty
-//            .skip(1)  //공백없애기
-//            .subscribe(onNext: { newValue in
-//                self.receiveTextField.text = nil
-//                self.discountamountTextField.text = nil
-//            }).disposed(by: bag)
-        
+    }
+    
+    func bind() {
         //값이 변경됐을'때만' 호출.
         cashTextField.rx.text.orEmpty
             .distinctUntilChanged()
@@ -217,40 +198,14 @@ class CommissionController: UIViewController {
             }).disposed(by: bag)
         
         couponTextField.rx.text.orEmpty
-            .distinctUntilChanged()
+            //.distinctUntilChanged()
             .skip(1)
-            .subscribe(onNext: {count in
+            .subscribe(onNext: { count in
                 print("couponTextField가 변경됨 :", count)
                 self.couponCount(count)
                 self.culc()
-
-//                if let count = self.couponTextField.text {
-//                    self.couponCount(count)
-//                    self.culc()
-//                }
-                
-//                if count.count >= 3 {
-//                    self.couponTextField.text = String("50")
-//                }
                 
             }, onCompleted: {print("완료됨")}).disposed(by: bag)
-        
-        
-        
-       //textfield.text의 변경이 있을 때
-//        cashTextField.rx.observe(String.self, "text")
-//            .subscribe(onNext: {str in
-//                //입력이 될때마다 culc호출
-//                //self.culc()
-//            }).disposed(by: bag)
-        
-//        couponTextField.rx.observe(String.self, "text")
-//            .subscribe(onNext: {count in
-//                if let count = self.couponTextField.text {
-//                    self.couponCount(count)
-//                    self.culc()
-//                }
-//            }).disposed(by: bag)
         
         //선택이 안됐을때도 호출이 되네..
         discountSegControl.rx.selectedSegmentIndex
@@ -262,7 +217,8 @@ class CommissionController: UIViewController {
         
         //취소버튼 눌렀을때
         cancelBtn.rx.tap
-            .subscribe(onNext: {_ in
+            .subscribe(onNext: {[weak self] in
+                guard let self = self else { return }
                 self.cashTextField.text = nil
                 self.couponTextField.text = nil
                 self.discountamountTextField.text = nil
@@ -295,21 +251,6 @@ class CommissionController: UIViewController {
         return format.string(from: NSNumber(value: number))!
     }
     
-    func changeValue(_ change: String?) -> String {
-        var returnValue = ""
-
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal // 1,000,000
-        formatter.locale = Locale.current
-        formatter.maximumFractionDigits = 0 // 허용하는 소숫점 자리수
-
-        if let receiveChange = change {
-            if let changeInt = Int(receiveChange) {
-                returnValue = formatter.string(from: NSNumber(value: changeInt))!
-            }
-        }
-        return returnValue
-    }
     //MARK: - culc
     func culc() {
         var cash = 0
@@ -363,10 +304,10 @@ class CommissionController: UIViewController {
             self.receiveTextField.text = nil
         } else if Int(coupon + segValue) == 1 {
             self.receiveTextField.text = self.cashTextField.text
-            self.discountamountTextField.text = self.changeValue(String(basicValue))
+            self.discountamountTextField.text = changeValue(String(basicValue))
         } else {
-            self.discountamountTextField.text = self.changeValue(String(discount))
-            self.receiveTextField.text = self.changeValue(String(cash))
+            self.discountamountTextField.text = changeValue(String(discount))
+            self.receiveTextField.text = changeValue(String(cash))
         }
          
         

@@ -4,10 +4,6 @@
 //
 //  Created by 강대민 on 2022/08/16.
 //
-
-//수정해야할 것.
-//1. 임시 apikey를 허가받아 새로운 정식 apikey를 얻고 수정해야한다.
-
 import Foundation
 import Alamofire
 
@@ -29,12 +25,6 @@ enum API {
 }
 
 extension API {
-    
-//    Bundle.main.Fifa_API_Key
-    
-    //발급받은 키
-//    private var authorization : String { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE0MDkzMDI3MDAiLCJhdXRoX2lkIjoiMiIsImV4cCI6MTY3NDg5NjIxMCwiaWF0IjoxNjU5MzQ0MjEwLCJuYmYiOjE2NTkzNDQyMTAsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.nwgL3AMU216uu88opO2R4br3uMRE1_86V9w0Uh7TbN0"}
-    
     private var authorization : String {Bundle.main.Fifa_API_Key}
     
     //메인? 도메인
@@ -87,7 +77,7 @@ extension API {
     //통신 헤더
     private var header: HTTPHeaders {
 
-        var result = HTTPHeaders([HTTPHeader(name: "Authorization", value: authorization)])
+        let result = HTTPHeaders([HTTPHeader(name: "Authorization", value: authorization)])
         
 //        if isNeedAPIKey {
 //            var result = HTTPHeader(name:"Authorization", value: authorization)
@@ -103,7 +93,7 @@ extension API {
     }
     
     //배열로 시작하는 경우가 있었기 떄문에 제네릭값을 수정하여 원했던 결과를 받아낸다!
-    func arrrequest(complete: @escaping ((Result<Any?,CustomError>)->())) {
+    func request(complete: @escaping ((Result<Any?,CustomError>)->())) {
 //    func arrrequest(complete: @escaping ((Result<NSArray?,CustomError>)->())) {
         var url = domain
 
@@ -150,10 +140,9 @@ extension API {
             }
     }
     
-    func arrrequest<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,CustomError>)->())) {
-        
+    func request<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,CustomError>)->())) {
         // 1. 위에 선언한 요청 메소드를 통해 NSDictionary를 받는다.
-        arrrequest { result in
+        request { result in
             //print(result)
             switch result {
             case .success(let dict):
@@ -184,41 +173,6 @@ extension API {
             }
         }
     }
-    
-    
-//    func apirequest<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,CustomError>)->())) {
-//
-//        // 1. 위에 선언한 요청 메소드를 통해 NSDictionary를 받는다.
-//        apirequest(dataType: T.self) { result in
-//            switch result {
-//            case .success(let dict):
-//
-//                // 2. 데이터 존재 확인
-//    //                guard let dicData = dict else {
-//    //                    // 데이터 미존재 에러
-//    //                    complete(.failure(.invalidData))
-//    //                    return
-//    //                }
-//
-//                // 3. 얻은 NSDictionary를 JSON 데이터로 바꾼뒤 T형태로 Decode 해준다.
-//                guard
-//                    let json = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted),
-//                    let data = try? JSONDecoder().decode(T.self, from: json)
-//                else {
-//                    // 4. Decode실패
-//                    complete(.failure(.invalidState))
-//                    return
-//                }
-//
-//                // 5. T 객체 생성 성공!
-//                complete(.success(data))
-//
-//            case .failure(let e):
-//                // 6. Request 실패
-//                complete(.failure(e))
-//            }
-//        }
-//    }
     
 }
 

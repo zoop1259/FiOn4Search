@@ -30,7 +30,7 @@
 		C5ACF9B128BEF26200901134 /* MatchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9B028BEF26200901134 /* MatchTableViewCell.swift */; };
 		C5ACF9B328BF928500901134 /* TierCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9B228BF928500901134 /* TierCollectionViewCell.swift */; };
 		C5ACF9B528C24D4400901134 /* MyTierModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ACF9B428C24D4300901134 /* MyTierModel.swift */; };
-		C5DA1FB528DAEBD700F6E180 /* MyDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DA1FB428DAEBD700F6E180 /* MyDateFormatter.swift */; };
+		C5DA1FB528DAEBD700F6E180 /* MyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DA1FB428DAEBD700F6E180 /* MyFormatter.swift */; };
 		C5DA1FB728DAF08100F6E180 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DA1FB628DAF08100F6E180 /* Search.swift */; };
 		C5DA1FBB28E29C9100F6E180 /* SecretData.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5DA1FBA28E29C9100F6E180 /* SecretData.plist */; };
 /* End PBXBuildFile section */
@@ -54,7 +54,7 @@
 		C5ACF9B028BEF26200901134 /* MatchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchTableViewCell.swift; sourceTree = "<group>"; };
 		C5ACF9B228BF928500901134 /* TierCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierCollectionViewCell.swift; sourceTree = "<group>"; };
 		C5ACF9B428C24D4300901134 /* MyTierModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTierModel.swift; sourceTree = "<group>"; };
-		C5DA1FB428DAEBD700F6E180 /* MyDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDateFormatter.swift; sourceTree = "<group>"; };
+		C5DA1FB428DAEBD700F6E180 /* MyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFormatter.swift; sourceTree = "<group>"; };
 		C5DA1FB628DAF08100F6E180 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		C5DA1FBA28E29C9100F6E180 /* SecretData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SecretData.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,6 +77,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C578256428F93651001590A5 /* 제거된코드들 */ = {
+			isa = PBXGroup;
+			children = (
+				C5ACF98128B29AFE00901134 /* mytrashCode.swift */,
+				C5DA1FB628DAF08100F6E180 /* Search.swift */,
+			);
+			name = "제거된코드들";
+			path = "제거된코드들";
+			sourceTree = "<group>";
+		};
 		C5995465289A32A700D0D617 = {
 			isa = PBXGroup;
 			children = (
@@ -100,10 +110,9 @@
 				C5DA1FB328DAE9A700F6E180 /* Cell */,
 				C5DA1FB228DAE99700F6E180 /* Delegate */,
 				C5DA1FB128DAD6A200F6E180 /* Model */,
-				C5DA1FB628DAF08100F6E180 /* Search.swift */,
 				C574E8B128ABDCB200F547A8 /* APIManager.swift */,
-				C5DA1FB428DAEBD700F6E180 /* MyDateFormatter.swift */,
-				C5ACF98128B29AFE00901134 /* mytrashCode.swift */,
+				C5DA1FB428DAEBD700F6E180 /* MyFormatter.swift */,
+				C578256428F93651001590A5 /* 제거된코드들 */,
 				C599547A289A32AB00D0D617 /* Assets.xcassets */,
 				C599547C289A32AB00D0D617 /* LaunchScreen.storyboard */,
 				C599547F289A32AB00D0D617 /* Info.plist */,
@@ -250,7 +259,7 @@
 				C5995472289A32A700D0D617 /* AppDelegate.swift in Sources */,
 				C58FB33928A1CBFD00E90968 /* UserModel.swift in Sources */,
 				C5ACF9B128BEF26200901134 /* MatchTableViewCell.swift in Sources */,
-				C5DA1FB528DAEBD700F6E180 /* MyDateFormatter.swift in Sources */,
+				C5DA1FB528DAEBD700F6E180 /* MyFormatter.swift in Sources */,
 				C5995489289A36EF00D0D617 /* CommissionController.swift in Sources */,
 				C5ACF98228B29AFE00901134 /* mytrashCode.swift in Sources */,
 				C5DA1FB728DAF08100F6E180 /* Search.swift in Sources */,

@@ -161,6 +161,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             .disposed(by: bag)
     }
     
+    
     //MARK: - configure
     func configure() {
         //요소가 보이는 부분은 view다.
@@ -260,7 +261,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     func getRequest() {
         ///엑세스 ID
         let accessid = API.getAccessId(name: self.userNickName)
-        accessid.arrrequest(dataType: UserInfo.self) { [weak self] result in
+        accessid.request(dataType: UserInfo.self) { [weak self] result in
             guard let self = self else { return }
 //            print(result)
             switch result {
@@ -275,7 +276,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 
             //MARK: - Tier FETCH
             let tier = API.getTier(accessId: dict.accessId)
-            tier.arrrequest(dataType: [TierInfo].self) { tierresult in
+            tier.request(dataType: [TierInfo].self) { tierresult in
             switch tierresult {
             case .success(let tier):
                 //카운트를 만들고
@@ -320,7 +321,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 }
         //MARK: - 매치 목록 id FETCH
         let matchId = API.getMatchId(accessId: dict.accessId, limit: 10)
-        matchId.arrrequest(dataType: MatchList.self) { matchIdresult in
+        matchId.request(dataType: MatchList.self) { matchIdresult in
             //모델을 위한 임시 변수
             var vmatchResult = ""
             var vgoalTotal = 0
@@ -334,7 +335,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 for match in matchIdresult  {
                     //매치 정보 구하기.
                     let matchInfo = API.getMatchInfo(matchId: match)
-                    matchInfo.arrrequest(dataType: Match.self) { matchresult in
+                    matchInfo.request(dataType: Match.self) { matchresult in
                         switch matchresult {
                         case .success(let matchresult):
                             
@@ -431,7 +432,7 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MatchTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tableCell", for: indexPath) as! MatchTableViewCell
         
         cell.matchDateLabel.text = myMatchModel[indexPath.row].matchDate
         
