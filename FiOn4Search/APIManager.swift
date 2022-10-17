@@ -96,7 +96,6 @@ extension API {
     func request(complete: @escaping ((Result<Any?,CustomError>)->())) {
 //    func arrrequest(complete: @escaping ((Result<NSArray?,CustomError>)->())) {
         var url = domain
-
         var apiKey : String {Bundle.main.Fifa_API_Key}
         let isHeader: HTTPHeaders = [.authorization(apiKey)]
         
@@ -110,23 +109,22 @@ extension API {
                 //print(response.result)
                 // 통신 결과 처리
                 switch response.result {
-                case .success(let dict):
+                case .success(let res):
                     // 성공
-                    let a = dict as? NSDictionary
-                    let b = dict as? NSArray
+                    let a = res as? NSDictionary
+                    let b = res as? NSArray
                     //다운캐스팅 실패시 String으로
                     if a == nil && b == nil {
-                        complete(.success(dict as? NSString))
+                        complete(.success(res as? NSString))
                     //딕셔너리 다운캐스팅 실패시 Array로
                     } else if a == nil {
-                        complete(.success(dict as? NSArray))
+                        complete(.success(res as? NSArray))
                     //어레이 다운캐스팅 실패시 Dictionary로
                     } else if b == nil {
-                        complete(.success(dict as? NSDictionary))
+                        complete(.success(res as? NSDictionary))
                     }
                     
                 case .failure:
-                    
                     // 결과는 없지만 statusCode에 따라 확인이 필요할 수 있음.
                     if let stCode = response.response?.statusCode, 200..<300 ~= stCode {
                         // 성공
@@ -146,7 +144,6 @@ extension API {
             //print(result)
             switch result {
             case .success(let dict):
-                
                 // 2. 데이터 존재 확인
                 guard let dicData = dict else {
                     // 데이터 미존재 에러

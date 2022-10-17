@@ -6,7 +6,6 @@
 //
 
 import UIKit
-//UIKit과 한줄 띄우는게 좋으며 a-z순으로 import해주는게 협업에 편할것이다.
 import SnapKit //오토레이아웃 설정에 용이한 오픈소스
 import Then    //라이브러리 설정에 용이한 오픈소스
 import RxSwift
@@ -14,7 +13,6 @@ import RxCocoa
 
 //후에 선수들의 값이 더 높아지면 Int64나 UInt를 써야할거같다.
 class CommissionController: UIViewController {
-    
     //네비게이션아이템은 네비게이션바안에 있기 떄문에 이곳에서 직접 설정은 불가능 하다.
     let navigationBar = UINavigationBar()
     //세그먼트 목록
@@ -185,17 +183,26 @@ class CommissionController: UIViewController {
     }
     
     func bind() {
-        //값이 변경됐을'때만' 호출.
+        let getcashText = BehaviorRelay<String>(value: "")
+        
+        //값 변경 감지.
         cashTextField.rx.text.orEmpty
+            //값이 변경됐을'때만' 호출.
             .distinctUntilChanged()
+            //첫 이벤트 스킵.
+            .skip(1)
             .subscribe(onNext: { newValue in
                 print("cashText가 변경됨 :", newValue)
-                self.culc()
+                //self.culc()
                 let sort = newValue.filter("0123456789.".contains)
                 if let intValue = Int(sort) {
-                       self.cashTextField.text = self.format(number: intValue)
+                       self.cashTextField.text = format(number: intValue)
                 }
             }).disposed(by: bag)
+        
+        cashTextField.rx.text.orEmpty
+            .bind(to: getcashText)
+            .disposed(by: bag)
         
         couponTextField.rx.text.orEmpty
             //.distinctUntilChanged()
@@ -242,13 +249,6 @@ class CommissionController: UIViewController {
                 self.couponTextField.text = String("50")
             }
         }
-    }
-    
-    func format(number: Int) -> String {
-        let format = NumberFormatter()
-        format.numberStyle = .decimal
-//        format.groupingSize = 3
-        return format.string(from: NSNumber(value: number))!
     }
     
     //MARK: - culc

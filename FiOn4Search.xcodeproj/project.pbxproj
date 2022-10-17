@@ -80,8 +80,8 @@
 		C578256428F93651001590A5 /* 제거된코드들 */ = {
 			isa = PBXGroup;
 			children = (
-				C5ACF98128B29AFE00901134 /* mytrashCode.swift */,
 				C5DA1FB628DAF08100F6E180 /* Search.swift */,
+				C5ACF98128B29AFE00901134 /* mytrashCode.swift */,
 			);
 			name = "제거된코드들";
 			path = "제거된코드들";

@@ -33,8 +33,15 @@ func changeValue(_ change: String?) -> String {
 
     if let receiveChange = change {
         if let changeInt = Int(receiveChange) {
-            returnValue = formatter.string(from: NSNumber(value: changeInt))!
+            returnValue = formatter.string(from: NSNumber(value: changeInt)) ?? ""
         }
     }
     return returnValue
+}
+
+func format(number: Int) -> String {
+    let format = NumberFormatter()
+    format.numberStyle = .decimal
+//        format.groupingSize = 3
+    return format.string(from: NSNumber(value: number))!
 }

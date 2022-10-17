@@ -100,8 +100,9 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         layout.estimatedItemSize = CGSize(width: view.frame.width - 10.0, height: 140)
 
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.delegate = self
-        cv.dataSource = self
+        //cv.delegate = self
+        //cv.dataSource = self
+        cv.rx.setDelegate(self).disposed(by: bag)
         cv.register(TierCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
 
         return cv
@@ -123,10 +124,14 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 self.userNickName = count
                 
                 //rx데이터넘겨주기
-                self.fetch()
+//                self.fetch()
                 //self.search.obsearch()
                 
             }).disposed(by: bag)
+        
+        searchTextField.rx.text.orEmpty
+            .bind(to: search.searchText)
+            .disposed(by: bag)
         
         searchBtn.rx.tap
             .subscribe(onNext: {_ in
@@ -147,6 +152,24 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 self.search.matchReq(str: self.imsi)
                 
             }).disposed(by: bag)
+        
+        //버튼 탭했을때!
+        searchBtn.rx.tap
+            .bind {
+                self.search.obsearch()
+                self.bindCol()
+            }
+            .disposed(by: bag)
+    }
+    
+    func bindCol() {
+        
+        self.search.accidStr
+            .bind(to: tierCollectionView.rx.items(cellIdentifier: "cell", cellType: TierCollectionViewCell.self)) { index, item, cell in
+                cell.tierTimeLabel.text = item.accessId
+            }
+            .disposed(by: bag)
+        
     }
     
     //MARK: - 임시 Fetch
