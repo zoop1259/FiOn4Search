@@ -118,15 +118,10 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         
         searchTextField.rx.text.orEmpty
             .subscribe(onNext: { [weak self] count in
-                guard let self = self else { return }                //입력이 될때마다 culc호출
+                guard let self = self else { return }
                 self.userNameCount(count)
                 print(count)
                 self.userNickName = count
-                
-                //rx데이터넘겨주기
-//                self.fetch()
-                //self.search.obsearch()
-                
             }).disposed(by: bag)
         
         searchTextField.rx.text.orEmpty
