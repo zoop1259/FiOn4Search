@@ -79,8 +79,12 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         $0.textAlignment = .center
         $0.textColor = .red
     }
+    let nexonLabel = UILabel().then {
+        $0.text = "Data based on NEXON DEVELOPERS"
+        $0.textAlignment = .center
+        $0.textColor = .lightGray
+    }
     
-
     //전적을 나타낼 테이블뷰
     var scoreTableView = UITableView().then {
         $0.register(MatchTableViewCell.self, forCellReuseIdentifier: "tableCell")
@@ -204,6 +208,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         
         //티어
         view.addSubview(self.tierCollectionView)
+        //넥슨라벨
+        view.addSubview(self.nexonLabel)
         
         //네비게이션바 타이틀 설정
         self.navigationItem.title = "유저 정보 검색"
@@ -260,12 +266,18 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         self.scoreTableView.snp.makeConstraints {
             $0.top.equalTo(self.tierCollectionView.snp.bottom).offset(10)
             $0.leading.trailing.equalTo(self.tierCollectionView)
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(10)
+            //$0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(10)
+            $0.bottom.equalTo(self.nexonLabel.snp.top)
         }
         
         self.scoreTableView.isHidden = true
         self.tierCollectionView.isHidden = true
 
+        self.nexonLabel.snp.makeConstraints {
+            $0.leading.trailing.equalTo(self.tierCollectionView)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
+        }
+        
     }
     
     //MARK: - 입력제한
