@@ -77,13 +77,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C578256428F93651001590A5 /* 제거된코드들 */ = {
+		C578256428F93651001590A5 /* 연습용코드 */ = {
 			isa = PBXGroup;
 			children = (
-				C5DA1FB628DAF08100F6E180 /* Search.swift */,
 				C5ACF98128B29AFE00901134 /* mytrashCode.swift */,
 			);
-			name = "제거된코드들";
+			name = "연습용코드";
 			path = "제거된코드들";
 			sourceTree = "<group>";
 		};
@@ -112,7 +111,8 @@
 				C5DA1FB128DAD6A200F6E180 /* Model */,
 				C574E8B128ABDCB200F547A8 /* APIManager.swift */,
 				C5DA1FB428DAEBD700F6E180 /* MyFormatter.swift */,
-				C578256428F93651001590A5 /* 제거된코드들 */,
+				C5DA1FB628DAF08100F6E180 /* Search.swift */,
+				C578256428F93651001590A5 /* 연습용코드 */,
 				C599547A289A32AB00D0D617 /* Assets.xcassets */,
 				C599547C289A32AB00D0D617 /* LaunchScreen.storyboard */,
 				C599547F289A32AB00D0D617 /* Info.plist */,

@@ -299,51 +299,6 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                 self.levelLabel.text = "감독레벨 : \(dict.level)"
                 self.levelLabel.textColor = .black
                 
-            //MARK: - Tier FETCH
-            let tier = API.getTier(accessId: dict.accessId)
-            tier.request(dataType: [TierInfo].self) { tierresult in
-            switch tierresult {
-            case .success(let tier):
-                //카운트를 만들고
-                //언랭크 append용.
-                for un in tier {
-                    var duoCount = 0
-                    //날짜 포맷
-                    let changeDate = changeDate(inputDate: un.achievementDate)
-                    //solo를 통해 구문레이블.
-                    solo : if un.matchType == 50 {
-                        //티어 fetch
-                        let soloData = findTier(rankType: 50, tier: un.division, achievementDate: changeDate)
-                        self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: soloData.achievementDate, tierFilter: 1))
-                        break solo
-                    } else if un.matchType != 50 && un.matchType != 52 && un.matchType != 214 {
-                        let soloData = findTier(rankType: 50, tier: 3200, achievementDate: "언랭크")
-                        self.tierData.append(TierData(tierName: soloData.tierName, tierUrl: soloData.tierImgUrl, tierTime: "1:1 공경전적이 없습니다.", tierFilter: 1))
-                        break solo
-                    }
-                    
-                    //continue사용.
-                    if duoCount == 0 {
-                        if un.matchType == 52 {
-                            let duoData = findTier22(rankType: 52, tier: un.division, achievementDate22: changeDate)
-                            self.tierData.append(TierData(tierName: duoData.tierName22, tierUrl: duoData.tierImgUrl22, tierTime: duoData.achievementDate22, tierFilter: 2))
-                            duoCount += 1
-                            continue
-                        } else if un.matchType != 52 && un.matchType != 50 && un.matchType != 214 {
-                            let duoData = findTier22(rankType: 52, tier: 3200, achievementDate22: "언랭크")
-                            self.tierData.append(TierData(tierName: "언랭크", tierUrl: duoData.tierImgUrl22, tierTime: "2:2 공경전적이 없습니다.", tierFilter: 2))
-                            duoCount += 1
-                            continue
-                        }
-                    }
-                }
-                //컬렉션뷰 리로딩.
-                self.tierData.sort(by: {$0.tierFilter < $1.tierFilter})
-                self.tierCollectionView.reloadData()
-            case .failure(let error):
-                print("1",error)
-            }
-                }
         //MARK: - 매치 목록 id FETCH
         let matchId = API.getMatchId(accessId: dict.accessId, limit: 10)
         matchId.request(dataType: MatchList.self) { matchIdresult in
@@ -412,19 +367,11 @@ class SearchController: UIViewController, UIScrollViewDelegate {
                                         sgoalTotal = info.shoot.goalTotal //골수
                                     }
                                     snickName = info.nickname
-                                    
                                 }
-                                                            
                             }
-
                             self.myMatchModel.append(MyMatch(matchDate: changeDate, myMatchDetail: MyMatchDetail(nickname: vnickName, matchResult: vmatchResult, goalTotal: vgoalTotal, vsnickname: snickName, vsmatchResult: smatchResult, vsgoalTotal: sgoalTotal)))
-                            //print(self.myMatchModel)
-//                            print(self.myMatchModel.count)
                             
                             self.myMatchModel.sort(by: {$0.matchDate > $1.matchDate})
-                            
-                            //각각 리로드데이터를 해줘야한다. 멍충아 ㅠㅠ
-                            //self.scoreTableView.contentOffset = .zero //리로드시 값 비우기.
                             self.scoreTableView.reloadData()
                             
                         case .failure(let error):
@@ -478,7 +425,7 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    
+        
         let label = UILabel()
         label.text = "최근 경기 결과"
         label.font = .boldSystemFont(ofSize: 22)
@@ -489,6 +436,7 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: self.scoreTableView.frame.width, height: 25))
         headerView.addSubview(label)
+        headerView.backgroundColor = .lightGray
         label.leftAnchor.constraint(equalTo: headerView.leftAnchor).isActive = true
         
         return headerView
@@ -498,25 +446,5 @@ extension SearchController: UITableViewDelegate, UITableViewDataSource {
     //키보드 내리기
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
         self.view.endEditing(true)
-    }
-}
-
-//MARK: - CollectionView Extension
-extension SearchController: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return 1
-        return tierData.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = tierCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! TierCollectionViewCell
-        
-        cell.tierNameLabel.text = "\(1 + indexPath.row)VS\(1 + indexPath.row) 랭크 티어\n" + tierData[indexPath.row].tierName
-        cell.tierTimeLabel.text = "최초 티어 달성 날짜\n" +  tierData[indexPath.row].tierTime
-        
-        let tierUrl = URL(string:tierData[indexPath.row].tierUrl)
-        cell.tierImgView.kf.indicatorType = .activity
-        cell.tierImgView.kf.setImage(with: tierUrl, placeholder: nil, options: [.transition(.fade(1.0))], completionHandler: nil)
-        return cell
     }
 }
