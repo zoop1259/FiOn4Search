@@ -139,7 +139,7 @@ extension API {
     }
     
     func request<T: Decodable>(dataType: T.Type, complete: @escaping ((Result<T,CustomError>)->())) {
-        // 1. 위에 선언한 요청 메소드를 통해 NSDictionary를 받는다.
+        // 1. 위에 선언한 요청 메소드를 통해 예를들어: NSDictionary를 받는다.
         request { result in
             //print(result)
             switch result {

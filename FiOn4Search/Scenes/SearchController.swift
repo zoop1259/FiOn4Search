@@ -23,7 +23,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
     //$0.text = "Data based on NEXON DEVELOPERS"
     private var bag = DisposeBag()
     private var myMatchModel = [MyMatch]()
-    private var tierData = [TierData]()
+    var tierData = [TierData]()
     
     var userNickName = ""
     //스토리보드로 라이브러리를 추가하는게 아니라 코드로 라이브러리를 추가해줘야하기 때문에.
@@ -63,7 +63,7 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         $0.textAlignment = .center
         $0.textColor = .lightGray
     }
-    let levelLabel = UILabel().then {
+    var levelLabel = UILabel().then {
         $0.text = ""
         $0.textAlignment = .center
         $0.textColor = .lightGray
@@ -117,8 +117,8 @@ class SearchController: UIViewController, UIScrollViewDelegate {
         configure()
         
         searchTextField.rx.text.orEmpty
-            .subscribe(onNext: { count in
-                //입력이 될때마다 culc호출
+            .subscribe(onNext: { [weak self] count in
+                guard let self = self else { return }                //입력이 될때마다 culc호출
                 self.userNameCount(count)
                 print(count)
                 self.userNickName = count
@@ -134,46 +134,48 @@ class SearchController: UIViewController, UIScrollViewDelegate {
             .disposed(by: bag)
         
         searchBtn.rx.tap
-            .subscribe(onNext: {_ in
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
                 self.myMatchModel.removeAll() //리로드전에 값 비우기.
                 self.tierData.removeAll()
                 self.scoreTableView.reloadData()//초기화하고 시작하자.
-                self.tierCollectionView.reloadData()
+                //self.tierCollectionView.reloadData()
                 self.getRequest()
                 
                 //self.search.obsearch() //textfield의 값을 제대로 전달하는지
-                self.search.accessidReq { str in
-                    print("전달하고 전달받은 값 :",str)
-                    self.imsi = str
-                    
-                }
-                
-                self.search.tierReq(str: self.imsi)
-                self.search.matchReq(str: self.imsi)
+//                self.search.accessidReq { str in
+//                    print("전달하고 전달받은 값 :",str)
+//                }
                 
             }).disposed(by: bag)
         
         //버튼 탭했을때!
         searchBtn.rx.tap
-            .bind {
-                self.search.obsearch()
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                self.search.accessidReq()
                 self.bindCol()
             }
             .disposed(by: bag)
     }
     
-    func bindCol() {
+    func bindCol() { 
+        tierCollectionView.delegate = nil
+        tierCollectionView.dataSource = nil
         
-        self.search.accidStr
+        self.search.tierDatas
             .bind(to: tierCollectionView.rx.items(cellIdentifier: "cell", cellType: TierCollectionViewCell.self)) { index, item, cell in
-                cell.tierTimeLabel.text = item.accessId
+                
+                cell.tierTimeLabel.text = item.tierTime
+                cell.tierNameLabel.text = item.tierName
+                
+                let tierUrl = URL(string: item.tierUrl)
+                cell.tierImgView.kf.indicatorType = .activity
+                cell.tierImgView.kf.setImage(with: tierUrl, placeholder: nil, options: [.transition(.fade(1.0))], completionHandler: nil)
             }
             .disposed(by: bag)
         
     }
-    
-    //MARK: - 임시 Fetch
-    var imsi: String = ""
     
     //rx를 통해 데이터 넘겨주기.
     var search = Search()
