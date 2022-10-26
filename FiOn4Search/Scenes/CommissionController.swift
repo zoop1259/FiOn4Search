@@ -183,7 +183,7 @@ class CommissionController: UIViewController {
     }
     
     func bind() {
-        let getcashText = BehaviorRelay<String>(value: "")
+//        let getcashText = BehaviorRelay<String>(value: "")
         
         //값 변경 감지.
         cashTextField.rx.text.orEmpty
@@ -193,16 +193,16 @@ class CommissionController: UIViewController {
             .skip(1)
             .subscribe(onNext: { newValue in
                 print("cashText가 변경됨 :", newValue)
-                //self.culc()
+                self.culc()
                 let sort = newValue.filter("0123456789.".contains)
                 if let intValue = Int(sort) {
                        self.cashTextField.text = format(number: intValue)
                 }
             }).disposed(by: bag)
         
-        cashTextField.rx.text.orEmpty
-            .bind(to: getcashText)
-            .disposed(by: bag)
+//        cashTextField.rx.text.orEmpty
+//            .bind(to: getcashText)
+//            .disposed(by: bag)
         
         couponTextField.rx.text.orEmpty
             //.distinctUntilChanged()
